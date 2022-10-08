@@ -65,15 +65,15 @@ model VerificationToken {
 
 model SpySession {
   id         String      @id @default(cuid())
-  startTime  DateTime
-  endTime    DateTime
+  startTime  DateTime @default(now())
+  endTime    DateTime?
   recordings Recording[]
 }
 
 model Recording {
   id        String     @id @default(cuid())
-  startTime DateTime
-  endTime   DateTime
+  startTime DateTime @default(now())
+  endTime   DateTime?
   session   SpySession @relation(fields: [sessionId], references: [id])
   sessionId String
 }
