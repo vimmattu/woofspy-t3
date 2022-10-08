@@ -7,15 +7,11 @@ import { AppRouter } from "../server/trpc/router";
 
 const Sessions: NextPage = () => {
   const { data, isLoading } = trpc.sessions.getSessions.useQuery();
-  const { mutate } = trpc.sessions.createSession.useMutation();
+  const { mutate: createSession } = trpc.sessions.createSession.useMutation();
 
   if (isLoading) {
     return <p>loading...</p>;
   }
-
-  const startSession = () => {
-    mutate();
-  };
 
   return (
     <>
@@ -26,7 +22,7 @@ const Sessions: NextPage = () => {
       <main>
         <button
           className="rounder border-2 border-gray-500 bg-gray-500 text-white"
-          onClick={startSession}
+          onClick={() => createSession()}
         >
           Start session
         </button>
@@ -50,11 +46,8 @@ const SessionItem: React.FC<{ session: InferredSessionType }> = ({
   const { data } = trpc.sessions.getRecordings.useQuery({
     sessionId: session.id,
   });
-  const { mutate } = trpc.sessions.createRecording.useMutation();
-
-  const createRecording = () => {
-    mutate({ sessionId: session.id });
-  };
+  const { mutate: createRecording } =
+    trpc.sessions.createRecording.useMutation();
 
   return (
     <li>
@@ -65,7 +58,7 @@ const SessionItem: React.FC<{ session: InferredSessionType }> = ({
       </ul>
       <button
         className="rounder border-2 border-gray-500 bg-gray-500 text-white"
-        onClick={createRecording}
+        onClick={() => createRecording({ sessionId: session.id })}
       >
         Create recording for {session.id}
       </button>
