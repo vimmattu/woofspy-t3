@@ -4,14 +4,16 @@ import Navigation from "../components/Navigation";
 import { useUnauthenticatedRedirect } from "../hooks/auth";
 import { useActiveSession, useCreateSession } from "../hooks/sessions";
 
-// TODO: If an ongoing session exists, redirect to the ongoing session.
-// otherwise stay in this page
 const Home: NextPage = () => {
   const { mutate: createSession, isLoading } = useCreateSession();
-  const { data, isLoading: isFetchingActiveSession } = useActiveSession(true);
+  const { data: activeSession, isLoading: isFetchingActiveSession } =
+    useActiveSession(true);
   const shouldRender = useUnauthenticatedRedirect("/auth/signin");
 
-  if (!shouldRender || isFetchingActiveSession || !!data) return null;
+  // Display spinner if fetching user data or active session is in loading state,
+  // or if an active session is found. (If active session is found, then useActiveSession redirects user to session details)
+  // TODO: Replace null with spinner
+  if (!shouldRender || isFetchingActiveSession || !!activeSession) return null;
 
   return (
     <>
