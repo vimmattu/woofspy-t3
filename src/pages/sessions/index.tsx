@@ -6,6 +6,9 @@ import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from "../../server/trpc/router";
 import { useCreateSession } from "../../hooks/sessions";
 
+// TODO: Remove session creation & ending logic from here.
+// This page should only list ended sessions and provide a way to navigate to session details
+
 const Sessions: NextPage = () => {
   const { data, isLoading } = trpc.sessions.getSessions.useQuery();
   const { mutate: createSession } = useCreateSession();
