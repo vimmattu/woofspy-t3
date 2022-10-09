@@ -4,8 +4,8 @@ import Link from "next/link";
 const Navigation = () => {
   return (
     <nav className="mb-2 flex h-min space-x-8">
-      <NavItem type="link" href="/" text="Spy" />
-      <NavItem type="link" href="/sessions" text="Events" />
+      <NavItem type="link" href="/" text="Woof spy" />
+      <NavItem type="link" href="/sessions" text="Woof history" />
       <NavItem type="button" onClick={signOut} text="Sign out" />
     </nav>
   );
