@@ -7,7 +7,11 @@ async function assertSessionBelongsToUser(userId: string, sessionId: string) {
   const session = await prisma.spySession.findFirst({
     where: { id: sessionId },
   });
-  if (session?.userId !== userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+  if (session?.userId !== userId)
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Session does not belong to the requesting user.",
+    });
 
   // TODO: change so returning session here would be more intuitive
   return session;
