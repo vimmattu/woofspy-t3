@@ -33,3 +33,7 @@ export function useSessions() {
 export function useSessionDetails(id: string) {
   return trpc.sessions.getSession.useQuery({ id });
 }
+
+export function useCreateRecording() {
+  return trpc.sessions.createRecording.useMutation();
+}

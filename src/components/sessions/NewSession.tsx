@@ -23,8 +23,10 @@ const NewSession: React.FC<Props> = ({ session }) => {
   const { mutate: endSession, isLoading } = useEndSession();
   const videoRef = useRef<HTMLVideoElement>(null);
   const stream = useMediaStream();
-  const { detectorState, startDetector, detectorStarted } =
-    useActivityRecorder(stream);
+  const { detectorState, startDetector, detectorStarted } = useActivityRecorder(
+    session.id,
+    stream
+  );
 
   useEffect(() => {
     !detectorStarted && startDetector();

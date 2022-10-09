@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ActivityDetector from "../utils/activity";
 import ActivityRecorder from "../utils/recorder";
+import { useCreateRecording } from "./sessions";
 
 export function useMediaDevices() {
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
@@ -47,7 +48,8 @@ export enum DetectorState {
   PROCESSING,
 }
 
-export function useActivityRecorder(stream?: MediaStream) {
+export function useActivityRecorder(sessionId: string, stream?: MediaStream) {
+  const { mutate: createRecording } = useCreateRecording();
   const [detectorState, setDetectorState] = useState<DetectorState>(
     DetectorState.IDLE
   );
@@ -65,12 +67,13 @@ export function useActivityRecorder(stream?: MediaStream) {
       a.click();
       URL.revokeObjectURL(url);
       setDetectorState(DetectorState.IDLE);
+      createRecording({ sessionId });
     };
     recorder.on("recording-available", listener);
     return () => {
       recorder.off("recording-available", listener);
     };
-  }, [recorder]);
+  }, [recorder, sessionId, createRecording]);
 
   useEffect(() => {
     const startListener = () => {
