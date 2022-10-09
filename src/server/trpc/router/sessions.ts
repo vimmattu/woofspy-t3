@@ -39,7 +39,16 @@ export const sessionsRouter = t.router({
   endSession: authedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await assertSessionBelongsToUser(ctx.session.user.id, input.id);
+      const session = await assertSessionBelongsToUser(
+        ctx.session.user.id,
+        input.id
+      );
+
+      if (!!session.endTime)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Can't end already ended session.",
+        });
 
       return ctx.prisma.spySession.update({
         where: { id: input.id },
