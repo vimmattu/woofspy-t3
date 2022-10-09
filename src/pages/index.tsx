@@ -4,6 +4,8 @@ import Navigation from "../components/Navigation";
 import { useUnauthenticatedRedirect } from "../hooks/auth";
 import { useCreateSession } from "../hooks/sessions";
 
+// TODO: If an ongoing session exists, redirect to the ongoing session.
+// otherwise stay in this page
 const Home: NextPage = () => {
   const { mutate: createSession, isLoading } = useCreateSession();
   const shouldRender = useUnauthenticatedRedirect("/auth/signin");
