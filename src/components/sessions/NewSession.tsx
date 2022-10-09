@@ -1,26 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useMediaStream } from "../../hooks/recorder";
+
+// TODO: Confirm page leave from user
 
 const NewSession = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [stream, setStream] = useState<MediaStream>();
+  const stream = useMediaStream();
 
   useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then(setStream);
-  }, []);
-
-  useEffect(() => {
-    if (!stream || !videoRef.current) return;
+    if (!videoRef.current || !stream) return;
     videoRef.current.srcObject = stream;
-    return () => {
-      stream?.getTracks().forEach((t) => t.stop());
-    };
   }, [stream]);
 
   return (
     <div>
-      <video ref={videoRef} muted autoPlay />
+      <video ref={videoRef} autoPlay muted />
     </div>
   );
 };
