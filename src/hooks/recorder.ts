@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import ActivityDetector from "../utils/activity";
 import ActivityRecorder from "../utils/recorder";
 
