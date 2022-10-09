@@ -4,10 +4,11 @@ import { trpc } from "../utils/trpc";
 import React from "react";
 import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from "../server/trpc/router";
+import { useCreateSession } from "../hooks/sessions";
 
 const Sessions: NextPage = () => {
   const { data, isLoading } = trpc.sessions.getSessions.useQuery();
-  const { mutate: createSession } = trpc.sessions.createSession.useMutation();
+  const { mutate: createSession } = useCreateSession();
 
   if (isLoading) {
     return <p>loading...</p>;
