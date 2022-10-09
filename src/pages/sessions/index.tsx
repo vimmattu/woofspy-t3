@@ -49,10 +49,13 @@ const SessionItem: React.FC<{ session: InferredSessionType }> = ({
   });
   const { mutate: createRecording } =
     trpc.sessions.createRecording.useMutation();
+  const { mutate: endSession } = trpc.sessions.endSession.useMutation();
 
   return (
     <li>
-      <p>{session.id}</p>
+      <p>
+        {session.id} {session.endTime && "ENDED!"}
+      </p>
       <ul>
         {data &&
           data.map((recording) => <li key={recording.id}>- {recording.id}</li>)}
@@ -62,6 +65,13 @@ const SessionItem: React.FC<{ session: InferredSessionType }> = ({
         onClick={() => createRecording({ sessionId: session.id })}
       >
         Create recording for {session.id}
+      </button>
+      <br />
+      <button
+        className="rounder border-2 border-gray-500 bg-gray-500 text-white"
+        onClick={() => endSession({ id: session.id })}
+      >
+        End {session.id}
       </button>
     </li>
   );
