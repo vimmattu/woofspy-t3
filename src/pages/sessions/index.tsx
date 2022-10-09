@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../../utils/trpc";
 import React from "react";
 import { inferProcedureOutput } from "@trpc/server";
-import { AppRouter } from "../server/trpc/router";
-import { useCreateSession } from "../hooks/sessions";
+import { AppRouter } from "../../server/trpc/router";
+import { useCreateSession } from "../../hooks/sessions";
 
 const Sessions: NextPage = () => {
   const { data, isLoading } = trpc.sessions.getSessions.useQuery();

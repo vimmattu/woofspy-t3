@@ -4,6 +4,6 @@ import { trpc } from "../utils/trpc";
 export function useCreateSession() {
   const router = useRouter();
   return trpc.sessions.createSession.useMutation({
-    onSuccess: (data) => router.push(`/sessions/${data.id}`),
+    onSuccess: ({ id }) => router.push(`/sessions/${id}`),
   });
 }
