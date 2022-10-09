@@ -25,6 +25,16 @@ export const sessionsRouter = t.router({
       },
     });
   }),
+  endSession: authedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await assertSessionBelongsToUser(ctx.session.user.id, input.id);
+
+      return ctx.prisma.spySession.update({
+        where: { id: input.id },
+        data: { endTime: new Date() },
+      });
+    }),
   getRecordings: authedProcedure
     .input(z.object({ sessionId: z.string() }))
     .query(async ({ ctx, input }) => {
