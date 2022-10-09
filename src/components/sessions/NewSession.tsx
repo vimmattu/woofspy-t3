@@ -13,6 +13,9 @@ const NewSession = () => {
   useEffect(() => {
     if (!stream || !videoRef.current) return;
     videoRef.current.srcObject = stream;
+    return () => {
+      stream?.getTracks().forEach((t) => t.stop());
+    };
   }, [stream]);
 
   return (
