@@ -8,7 +8,11 @@ const SessionPage: NextPage = () => {
   const router = useRouter();
   const { data, isLoading } = useSessionDetails(router.query.id as string);
   if (isLoading || !data) return null;
-  return !data.endTime ? <NewSession /> : <PastSession />;
+  return !data.endTime ? (
+    <NewSession session={data} />
+  ) : (
+    <PastSession session={data} />
+  );
 };
 
 export default SessionPage;

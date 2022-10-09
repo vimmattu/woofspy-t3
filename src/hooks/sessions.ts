@@ -19,6 +19,10 @@ export function useActiveSession(redirect?: boolean) {
   return query;
 }
 
+export function useSessions() {
+  return trpc.sessions.getSessions.useQuery();
+}
+
 export function useSessionDetails(id: string) {
   return trpc.sessions.getSession.useQuery({ id });
 }
