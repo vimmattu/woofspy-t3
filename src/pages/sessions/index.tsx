@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import React, { Fragment } from "react";
+import React from "react";
 import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from "../../server/trpc/router";
 import { useSessions } from "../../hooks/sessions";
