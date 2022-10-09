@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { signOut } from "next-auth/react";
 import Head from "next/head";
 import { useUnauthenticatedRedirect } from "../hooks/auth";
 
@@ -18,6 +19,7 @@ const Home: NextPage = () => {
         <h1 className="text-5xl font-extrabold leading-normal text-gray-700 md:text-[5rem]">
           Create <span className="text-purple-300">T3</span> App
         </h1>
+        <button onClick={() => signOut()}>Log out</button>
       </main>
     </>
   );
