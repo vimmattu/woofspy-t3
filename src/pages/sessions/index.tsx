@@ -19,7 +19,7 @@ const Sessions: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="w-1/4">
-        <h1 className="my-2 text-center text-3xl">Woof history</h1>
+        <h1 className="mb-2 text-center text-3xl">Woof history</h1>
         <ul>
           {Object.entries(data).map(([date, sessions]) => (
             <div key={date}>
