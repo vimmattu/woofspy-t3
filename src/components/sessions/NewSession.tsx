@@ -1,9 +1,14 @@
 import { useEffect, useRef } from "react";
 import { useMediaStream } from "../../hooks/recorder";
+import { InferredSessionType } from "./types";
 
 // TODO: Confirm page leave from user
 
-const NewSession = () => {
+interface Props {
+  session: InferredSessionType;
+}
+
+const NewSession: React.FC<Props> = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const stream = useMediaStream();
 
