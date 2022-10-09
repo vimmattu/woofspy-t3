@@ -24,7 +24,8 @@ type NavButton = {
 type NavItem = (NavLink | NavButton) & { text: string };
 
 const NavItem: React.FC<NavItem> = (props) => {
-  const className = "text-xl transition-colors hover:text-gray-500";
+  const className =
+    "text-xl transition-colors hover:text-gray-500 focus:text-gray-500";
 
   return props.type === "link" ? (
     <Link href={props.href}>

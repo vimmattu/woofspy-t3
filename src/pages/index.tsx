@@ -17,7 +17,7 @@ const Home: NextPage = () => {
       <div className="flex h-screen w-screen flex-col items-center">
         <Navigation />
         <main className="flex h-full items-center">
-          <button className="h-64 w-64 rounded-full bg-gray-500 text-2xl text-white transition-colors hover:bg-gray-400">
+          <button className="h-64 w-64 rounded-full bg-gray-500 text-2xl text-white transition-colors hover:bg-gray-400 focus:bg-gray-400">
             Start session
           </button>
         </main>
