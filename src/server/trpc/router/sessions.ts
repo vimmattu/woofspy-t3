@@ -2,6 +2,7 @@ import { t, authedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { prisma } from "../../db/client";
+import dayjs from "dayjs";
 
 async function assertSessionBelongsToUser(userId: string, sessionId: string) {
   const session = await prisma.spySession.findFirst({
@@ -18,11 +19,24 @@ async function assertSessionBelongsToUser(userId: string, sessionId: string) {
 }
 
 export const sessionsRouter = t.router({
-  getSessions: authedProcedure.query(({ ctx }) => {
-    return ctx.prisma.spySession.findMany({
-      where: { userId: ctx.session.user.id },
+  getSessions: authedProcedure.query(async ({ ctx }) => {
+    // TODO: Refactor
+    const sessions = await ctx.prisma.spySession.findMany({
+      where: {
+        userId: ctx.session.user.id,
+        startTime: { gte: dayjs().subtract(1, "month").toDate() },
+      },
       orderBy: { startTime: "desc" },
+      include: {
+        recordings: true,
+      },
     });
+    return sessions.reduce((prev: Record<string, typeof sessions>, curr) => {
+      const formattedDate = dayjs(curr.startTime).format("YYYY-MM-DD");
+      if (!prev[formattedDate]) prev[formattedDate] = [];
+      prev[formattedDate]?.push(curr);
+      return prev;
+    }, {});
   }),
   getSession: authedProcedure
     .input(z.object({ id: z.string() }))
