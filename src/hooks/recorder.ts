@@ -41,9 +41,16 @@ export function useMediaStream(id?: string) {
   return stream;
 }
 
-export function useActivityRecorder(
-  stream?: MediaStream
-): [boolean, () => void] {
+export enum DetectorState {
+  IDLE,
+  RECORDING,
+  PROCESSING,
+}
+
+export function useActivityRecorder(stream?: MediaStream) {
+  const [detectorState, setDetectorState] = useState<DetectorState>(
+    DetectorState.IDLE
+  );
   const [recorder] = useState(new ActivityRecorder());
   const [activityDetector, setActivityDetector] = useState<ActivityDetector>();
 
@@ -57,6 +64,7 @@ export function useActivityRecorder(
       a.download = "test.webm";
       a.click();
       URL.revokeObjectURL(url);
+      setDetectorState(DetectorState.IDLE);
     };
     recorder.on("recording-available", listener);
     return () => {
@@ -65,8 +73,14 @@ export function useActivityRecorder(
   }, [recorder]);
 
   useEffect(() => {
-    const startListener = () => recorder.start();
-    const stopListener = () => recorder.stop();
+    const startListener = () => {
+      setDetectorState(DetectorState.RECORDING);
+      recorder.start();
+    };
+    const stopListener = () => {
+      setDetectorState(DetectorState.PROCESSING);
+      recorder.stop();
+    };
     activityDetector?.on("start", startListener);
     activityDetector?.on("stop", stopListener);
     return () => {
@@ -85,5 +99,9 @@ export function useActivityRecorder(
     setActivityDetector(new ActivityDetector());
   }
 
-  return [!!activityDetector, start];
+  return {
+    detectorStarted: !!activityDetector,
+    startDetector: start,
+    detectorState,
+  };
 }
