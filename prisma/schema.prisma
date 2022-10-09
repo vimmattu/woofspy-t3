@@ -42,13 +42,14 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?      @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  spySessions   SpySession[]
 }
 
 model VerificationToken {
@@ -61,15 +62,17 @@ model VerificationToken {
 
 model SpySession {
   id         String      @id @default(cuid())
-  startTime  DateTime @default(now())
+  startTime  DateTime    @default(now())
   endTime    DateTime?
   recordings Recording[]
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
 }
 
 model Recording {
   id        String     @id @default(cuid())
-  startTime DateTime @default(now())
+  startTime DateTime   @default(now())
   endTime   DateTime?
-  session   SpySession @relation(fields: [sessionId], references: [id])
+  session   SpySession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   sessionId String
 }
