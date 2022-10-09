@@ -1,17 +1,11 @@
 import type { NextPage } from "next";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
+import { useAuthenticatedRedirect } from "../../hooks/auth";
 
 const SignIn: NextPage = () => {
-  const session = useSession();
-  const router = useRouter();
+  const shouldRender = useAuthenticatedRedirect("/");
 
-  if (session.status === "loading") return <p>loading...</p>;
-
-  if (session.status === "authenticated") {
-    router.push("/");
-    return null;
-  }
+  if (!shouldRender) return null;
 
   return (
     <div>
