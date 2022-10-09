@@ -18,7 +18,7 @@ const Sessions: NextPage = () => {
         <title>Sessions list</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="w-1/4">
+      <main className="w-full px-4 md:w-1/2 xl:w-1/3">
         <h1 className="mb-2 text-center text-3xl">Woof history</h1>
         <ul>
           {Object.entries(data).map(([date, sessions]) => (
