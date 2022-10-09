@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useMediaStream } from "../../hooks/recorder";
+import { useActivityRecorder, useMediaStream } from "../../hooks/recorder";
 import { useEndSession } from "../../hooks/sessions";
 import { InferredSessionType } from "./types";
 
@@ -13,6 +13,7 @@ const NewSession: React.FC<Props> = ({ session }) => {
   const { mutate: endSession, isLoading } = useEndSession();
   const videoRef = useRef<HTMLVideoElement>(null);
   const stream = useMediaStream();
+  useActivityRecorder(stream);
 
   useEffect(() => {
     if (!videoRef.current || !stream) return;

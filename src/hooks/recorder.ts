@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import ActivityDetector from "../utils/activity";
 
 export function useMediaDevices() {
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
@@ -29,4 +30,16 @@ export function useMediaStream(id?: string) {
   }, [stream]);
 
   return stream;
+}
+
+export function useActivityRecorder(stream?: MediaStream) {
+  const activity = useRef(new ActivityDetector());
+
+  useEffect(() => {
+    activity.current.on("start", () => console.log("START!"));
+  }, []);
+
+  useEffect(() => {
+    stream && activity.current.setSource(stream);
+  }, [stream]);
 }
