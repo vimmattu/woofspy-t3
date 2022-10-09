@@ -1,5 +1,25 @@
+import { useEffect, useRef, useState } from "react";
+
 const NewSession = () => {
-  return <div>New session</div>;
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [stream, setStream] = useState<MediaStream>();
+
+  useEffect(() => {
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then(setStream);
+  }, []);
+
+  useEffect(() => {
+    if (!stream || !videoRef.current) return;
+    videoRef.current.srcObject = stream;
+  }, [stream]);
+
+  return (
+    <div>
+      <video ref={videoRef} muted autoPlay />
+    </div>
+  );
 };
 
 export default NewSession;
