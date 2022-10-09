@@ -70,12 +70,14 @@ const SessionItem: React.FC<{ session: InferredSessionType }> = ({
         Create recording for {session.id}
       </button>
       <br />
-      <button
-        className="rounder border-2 border-gray-500 bg-gray-500 text-white"
-        onClick={() => endSession({ id: session.id })}
-      >
-        End {session.id}
-      </button>
+      {!session.endTime && (
+        <button
+          className="rounder border-2 border-gray-500 bg-gray-500 text-white"
+          onClick={() => endSession({ id: session.id })}
+        >
+          End {session.id}
+        </button>
+      )}
     </li>
   );
 };
