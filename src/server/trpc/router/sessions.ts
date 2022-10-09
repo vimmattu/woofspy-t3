@@ -24,6 +24,11 @@ export const sessionsRouter = t.router({
       orderBy: { startTime: "desc" },
     });
   }),
+  getActiveSession: authedProcedure.query(({ ctx }) => {
+    return ctx.prisma.spySession.findFirst({
+      where: { endTime: null },
+    });
+  }),
   createSession: authedProcedure.mutation(({ ctx }) => {
     return ctx.prisma.spySession.create({
       data: {

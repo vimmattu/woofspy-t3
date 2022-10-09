@@ -7,3 +7,14 @@ export function useCreateSession() {
     onSuccess: ({ id }) => router.push(`/sessions/${id}`),
   });
 }
+
+export function useActiveSession(redirect?: boolean) {
+  const router = useRouter();
+  const query = trpc.sessions.getActiveSession.useQuery();
+
+  if (!!query.data && redirect) {
+    router.push(`/sessions/${query.data.id}`);
+  }
+
+  return query;
+}
