@@ -1,21 +1,16 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { trpc } from "../../utils/trpc";
-import React from "react";
+import React, { Fragment } from "react";
 import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from "../../server/trpc/router";
-import { useCreateSession } from "../../hooks/sessions";
-
-// TODO: Remove session creation & ending logic from here.
-// This page should only list ended sessions and provide a way to navigate to session details
+import { useSessions } from "../../hooks/sessions";
+import Link from "next/link";
+import dayjs from "dayjs";
 
 const Sessions: NextPage = () => {
-  const { data, isLoading } = trpc.sessions.getSessions.useQuery();
-  const { mutate: createSession } = useCreateSession();
+  const { data, isLoading } = useSessions();
 
-  if (isLoading) {
-    return <p>loading...</p>;
-  }
+  if (isLoading || !data) return <p>loading...</p>;
 
   return (
     <>
@@ -23,16 +18,18 @@ const Sessions: NextPage = () => {
         <title>Sessions list</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <button
-          className="rounder border-2 border-gray-500 bg-gray-500 text-white"
-          onClick={() => createSession()}
-        >
-          Start session
-        </button>
+      <main className="w-1/4">
+        <h1 className="my-2 text-center text-3xl">Woof history</h1>
         <ul>
-          {data?.map((session) => (
-            <SessionItem session={session} key={session.id} />
+          {Object.entries(data).map(([date, sessions]) => (
+            <div key={date}>
+              <h2 className="font-bold">{dayjs(date).format("DD.MM.YYYY")}</h2>
+              <ul className="mt-1 mb-2 ml-8 bg-white p-1 shadow ">
+                {sessions.map((s) => (
+                  <SessionItem session={s} key={s.id} />
+                ))}
+              </ul>
+            </div>
           ))}
         </ul>
       </main>
@@ -42,44 +39,28 @@ const Sessions: NextPage = () => {
 
 type InferredSessionType = inferProcedureOutput<
   AppRouter["sessions"]["getSessions"]
->[0];
+>[""][0];
 
 const SessionItem: React.FC<{ session: InferredSessionType }> = ({
   session,
 }) => {
-  const { data } = trpc.sessions.getRecordings.useQuery({
-    sessionId: session.id,
-  });
-  const { mutate: createRecording } =
-    trpc.sessions.createRecording.useMutation();
-  const { mutate: endSession } = trpc.sessions.endSession.useMutation();
+  const timeDisplay = !session.endTime
+    ? `${formatTime(session.startTime)} - still spying`
+    : `${formatTime(session.startTime)} - ${formatTime(session.endTime)}`;
 
   return (
-    <li>
-      <p>
-        {session.id} {session.endTime && "ENDED!"}
-      </p>
-      <ul>
-        {data &&
-          data.map((recording) => <li key={recording.id}>- {recording.id}</li>)}
-      </ul>
-      <button
-        className="rounder border-2 border-gray-500 bg-gray-500 text-white"
-        onClick={() => createRecording({ sessionId: session.id })}
-      >
-        Create recording for {session.id}
-      </button>
-      <br />
-      {!session.endTime && (
-        <button
-          className="rounder border-2 border-gray-500 bg-gray-500 text-white"
-          onClick={() => endSession({ id: session.id })}
-        >
-          End {session.id}
-        </button>
-      )}
+    <li className="mb-1 flex items-center justify-between px-2 transition-colors hover:bg-gray-200">
+      <div>
+        <p>{timeDisplay}</p>
+        <p className="text-sm italic">{session.recordings.length} events</p>
+      </div>
+      <Link href={`/sessions/${session.id}`}>
+        <a className="text-blue-500">View</a>
+      </Link>
     </li>
   );
 };
+
+const formatTime = (date: Date) => dayjs(date).format("HH:mm:ss");
 
 export default Sessions;
