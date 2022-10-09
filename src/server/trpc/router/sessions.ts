@@ -24,6 +24,13 @@ export const sessionsRouter = t.router({
       orderBy: { startTime: "desc" },
     });
   }),
+  getSession: authedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.spySession.findFirst({
+        where: { userId: ctx.session.user.id, id: input.id },
+      });
+    }),
   getActiveSession: authedProcedure.query(({ ctx }) => {
     return ctx.prisma.spySession.findFirst({
       where: { endTime: null },
