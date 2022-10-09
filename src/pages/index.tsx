@@ -21,18 +21,15 @@ const Home: NextPage = () => {
         <title>Woofspy</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="flex h-screen w-screen flex-col items-center bg-gray-50">
-        <Navigation />
-        <main className="flex h-full items-center">
-          <button
-            disabled={isLoading}
-            className="h-56 w-56 rounded-full bg-red-600 text-2xl text-white shadow-lg transition-colors hover:bg-red-700 focus:bg-red-700"
-            onClick={() => createSession()}
-          >
-            Start session
-          </button>
-        </main>
-      </div>
+      <main className="flex h-full items-center">
+        <button
+          disabled={isLoading}
+          className="h-56 w-56 rounded-full bg-red-600 text-2xl text-white shadow-lg transition-colors hover:bg-red-700 focus:bg-red-700"
+          onClick={() => createSession()}
+        >
+          Start session
+        </button>
+      </main>
     </>
   );
 };
