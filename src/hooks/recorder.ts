@@ -40,14 +40,28 @@ export function useMediaStream(id?: string) {
   return stream;
 }
 
-export function useActivityRecorder(stream?: MediaStream) {
-  const activity = useRef(new ActivityDetector());
+export function useActivityRecorder(
+  stream?: MediaStream
+): [boolean, () => void] {
+  const [activityDetector, setActivityDetector] = useState<ActivityDetector>();
 
   useEffect(() => {
-    activity.current.on("start", () => console.log("START!"));
-  }, []);
+    const startListener = () => console.log("start");
+    const stopListener = () => console.log("stop");
+    activityDetector?.on("start", startListener);
+    activityDetector?.on("stop", stopListener);
+    return () => {
+      activityDetector?.off("start", stopListener);
+    };
+  }, [activityDetector]);
 
   useEffect(() => {
-    stream && activity.current.setSource(stream);
-  }, [stream]);
+    stream && activityDetector && activityDetector.setSource(stream);
+  }, [stream, activityDetector]);
+
+  function start() {
+    setActivityDetector(new ActivityDetector());
+  }
+
+  return [!!activityDetector, start];
 }
