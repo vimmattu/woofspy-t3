@@ -8,7 +8,9 @@ async function assertSessionBelongsToUser(userId: string, sessionId: string) {
     where: { id: sessionId },
   });
   if (session?.userId !== userId) throw new TRPCError({ code: "UNAUTHORIZED" });
-  return true;
+
+  // TODO: change so returning session here would be more intuitive
+  return session;
 }
 
 export const sessionsRouter = t.router({
@@ -48,7 +50,16 @@ export const sessionsRouter = t.router({
   createRecording: authedProcedure
     .input(z.object({ sessionId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await assertSessionBelongsToUser(ctx.session.user.id, input.sessionId);
+      const session = await assertSessionBelongsToUser(
+        ctx.session.user.id,
+        input.sessionId
+      );
+
+      if (!!session.endTime)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Can't create recording for an ended session.",
+        });
 
       return ctx.prisma.recording.create({
         data: { sessionId: input.sessionId },
