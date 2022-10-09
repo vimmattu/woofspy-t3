@@ -4,8 +4,8 @@ import Link from "next/link";
 const Navigation = () => {
   return (
     <nav className="flex h-min space-x-8">
-      <NavItem type="link" href="/" text="Start" />
-      <NavItem type="link" href="/sessions" text="Past sessions" />
+      <NavItem type="link" href="/" text="Spy" />
+      <NavItem type="link" href="/sessions" text="Events" />
       <NavItem type="button" onClick={signOut} text="Sign out" />
     </nav>
   );
