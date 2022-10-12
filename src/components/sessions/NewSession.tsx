@@ -15,11 +15,17 @@ const NewSession: React.FC<Props> = ({ session }) => {
   const { mutate: endSession, isLoading } = useEndSession();
   const videoRef = useRef<HTMLVideoElement>(null);
   const stream = useMediaStream();
+
+  const onRecordingAvailable = (event: BlobEvent) => {
+    console.log(event);
+  };
+
   const { start: onStart, end: onEnd } = useActivityRecorder({
     stream,
-    onFinish: (ev) => console.log("EVENT!", ev),
+    onFinish: onRecordingAvailable,
   });
-  useActivityDetector({
+
+  const detectActive = useActivityDetector({
     stream,
     onStart,
     onEnd,
@@ -37,6 +43,7 @@ const NewSession: React.FC<Props> = ({ session }) => {
       <div className="mb-2 bg-black">
         <video ref={videoRef} autoPlay muted />
       </div>
+      {detectActive && <p>Recording some woofs!</p>}
       <button
         className="padding-2 rounded bg-red-600 px-4 py-2 text-xl text-white shadow transition-colors hover:bg-red-700 focus:bg-red-700"
         onClick={() => endSession({ id: session.id })}

@@ -88,4 +88,6 @@ export const useActivityDetector = ({
     }
     active ? onStart() : onEnd();
   }, [active]);
+
+  return active;
 };
