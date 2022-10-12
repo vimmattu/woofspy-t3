@@ -9,8 +9,8 @@ import { env } from "../../../env/server.mjs";
 const s3 = new AWS.S3({
   region: "eu-north-1",
   credentials: {
-    accessKeyId: env.AWS_ACCESS_KEY,
-    secretAccessKey: env.AWS_SECRET_KEY,
+    accessKeyId: env.AWS_S3_ACCESS_KEY,
+    secretAccessKey: env.AWS_S3_SECRET_KEY,
   },
 });
 
@@ -123,7 +123,7 @@ export const sessionsRouter = t.router({
           ["starts-with", "$Content-Type", "video/"],
         ],
         Expires: 30,
-        Bucket: env.AWS_S3_BUCKET,
+        Bucket: env.AWS_S3_BUCKET_NAME,
       });
     }),
 });
