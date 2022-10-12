@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useActivityDetector } from "../../hooks/detector";
 import { useMediaStream } from "../../hooks/devices";
 import { useActivityRecorder } from "../../hooks/recorder";
-import { useEndSession } from "../../hooks/sessions";
+import { useCreateRecording, useEndSession } from "../../hooks/sessions";
 import { InferredSessionType } from "./types";
 
 // TODO: Confirm page leave from user
@@ -12,12 +12,28 @@ interface Props {
 }
 
 const NewSession: React.FC<Props> = ({ session }) => {
+  const { mutateAsync: createRecording } = useCreateRecording();
   const { mutate: endSession, isLoading } = useEndSession();
   const videoRef = useRef<HTMLVideoElement>(null);
   const stream = useMediaStream();
 
-  const onRecordingAvailable = (event: BlobEvent) => {
+  const onRecordingAvailable = async (event: BlobEvent) => {
     console.log(event);
+    const { url, fields } = await createRecording({ sessionId: session.id });
+
+    const data = {
+      ...fields,
+      "Content-Type": event.data.type,
+      file: new File([event.data], "filename.webm"),
+    };
+
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, val]) => formData.append(key, val));
+
+    fetch(url, {
+      method: "POST",
+      body: formData,
+    });
   };
 
   const { start: onStart, end: onEnd } = useActivityRecorder({

@@ -3,6 +3,16 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { prisma } from "../../db/client";
 import dayjs from "dayjs";
+import AWS from "aws-sdk";
+import { env } from "../../../env/server.mjs";
+
+const s3 = new AWS.S3({
+  region: "eu-north-1",
+  credentials: {
+    accessKeyId: env.AWS_ACCESS_KEY,
+    secretAccessKey: env.AWS_SECRET_KEY,
+  },
+});
 
 async function assertSessionBelongsToUser(userId: string, sessionId: string) {
   const session = await prisma.spySession.findFirst({
@@ -100,8 +110,20 @@ export const sessionsRouter = t.router({
           message: "Can't create recording for an ended session.",
         });
 
-      return ctx.prisma.recording.create({
+      const recording = await ctx.prisma.recording.create({
         data: { sessionId: input.sessionId },
+      });
+
+      return s3.createPresignedPost({
+        Fields: {
+          key: `${ctx.session.user.id}/${recording.id}`,
+        },
+        Conditions: [
+          ["content-length-range", 0, 10000000],
+          ["starts-with", "$Content-Type", "video/"],
+        ],
+        Expires: 30,
+        Bucket: env.AWS_S3_BUCKET,
       });
     }),
 });
