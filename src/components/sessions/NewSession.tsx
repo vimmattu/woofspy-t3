@@ -1,9 +1,7 @@
 import { useEffect, useRef } from "react";
-import {
-  DetectorState,
-  useActivityRecorder,
-  useMediaStream,
-} from "../../hooks/recorder";
+import { useActivityDetector } from "../../hooks/detector";
+import { useMediaStream } from "../../hooks/devices";
+import { useActivityRecorder } from "../../hooks/recorder";
 import { useEndSession } from "../../hooks/sessions";
 import { InferredSessionType } from "./types";
 
@@ -13,24 +11,20 @@ interface Props {
   session: InferredSessionType;
 }
 
-const DETECTOR_STATE = {
-  [DetectorState.IDLE]: "Idle",
-  [DetectorState.RECORDING]: "Recording",
-  [DetectorState.PROCESSING]: "Processing",
-};
-
 const NewSession: React.FC<Props> = ({ session }) => {
   const { mutate: endSession, isLoading } = useEndSession();
   const videoRef = useRef<HTMLVideoElement>(null);
   const stream = useMediaStream();
-  const { detectorState, startDetector, detectorStarted } = useActivityRecorder(
-    session.id,
-    stream
-  );
-
-  useEffect(() => {
-    !detectorStarted && startDetector();
-  }, [detectorStarted, startDetector]);
+  const { start: onStart, end: onEnd } = useActivityRecorder({
+    stream,
+    onFinish: (ev) => console.log("EVENT!", ev),
+  });
+  useActivityDetector({
+    stream,
+    onStart,
+    onEnd,
+    sensitivity: 1.5,
+  });
 
   useEffect(() => {
     if (!videoRef.current || !stream) return;
@@ -43,7 +37,6 @@ const NewSession: React.FC<Props> = ({ session }) => {
       <div className="mb-2 bg-black">
         <video ref={videoRef} autoPlay muted />
       </div>
-      <p>Detector State: {DETECTOR_STATE[detectorState]}</p>
       <button
         className="padding-2 rounded bg-red-600 px-4 py-2 text-xl text-white shadow transition-colors hover:bg-red-700 focus:bg-red-700"
         onClick={() => endSession({ id: session.id })}
