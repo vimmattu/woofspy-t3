@@ -53,6 +53,7 @@ export const sessionsRouter = t.router({
     .query(({ ctx, input }) => {
       return ctx.prisma.spySession.findFirst({
         where: { userId: ctx.session.user.id, id: input.id },
+        include: { recordings: true },
       });
     }),
   getActiveSession: authedProcedure.query(({ ctx }) => {
@@ -124,6 +125,30 @@ export const sessionsRouter = t.router({
         ],
         Expires: 30,
         Bucket: env.AWS_S3_BUCKET_NAME,
+      });
+    }),
+  getRecordingSignedUrl: authedProcedure
+    .input(z.object({ recordingId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const recording = await ctx.prisma.recording.findFirst({
+        where: { id: input.recordingId },
+      });
+
+      if (!recording) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Could not find recording with given id.",
+        });
+      }
+
+      await assertSessionBelongsToUser(
+        ctx.session.user.id,
+        recording.sessionId
+      );
+
+      return s3.getSignedUrlPromise("getObject", {
+        Bucket: env.AWS_S3_BUCKET_NAME,
+        Key: `${ctx.session.user.id}/${recording.id}`,
       });
     }),
 });

@@ -37,3 +37,10 @@ export function useSessionDetails(id: string) {
 export function useCreateRecording() {
   return trpc.sessions.createRecording.useMutation();
 }
+
+export function useRecordingFile(recordingId: string) {
+  return trpc.sessions.getRecordingSignedUrl.useQuery(
+    { recordingId },
+    { enabled: false }
+  );
+}
