@@ -120,7 +120,7 @@ export const sessionsRouter = t.router({
         },
         Conditions: [
           ["content-length-range", 0, 10000000],
-          ["starts-with", "$Content-Type", "video/"],
+          //["starts-with", "$Content-Type", "video/"], //TODO: Add content-type requirement
         ],
         Expires: 30,
         Bucket: env.AWS_S3_BUCKET_NAME,

@@ -23,8 +23,8 @@ const NewSession: React.FC<Props> = ({ session }) => {
 
     const data = {
       ...fields,
-      "Content-Type": event.data.type,
-      file: new File([event.data], "filename.webm"),
+      //"Content-Type": event.data.type, // TODO: add content-type
+      file: event.data,
     };
 
     const formData = new FormData();
