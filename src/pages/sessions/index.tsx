@@ -15,7 +15,7 @@ const Sessions: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Sessions list</title>
+        <title>Woof history</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="w-full px-4 md:w-1/2 xl:w-1/3">
