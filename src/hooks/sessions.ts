@@ -41,6 +41,5 @@ export function useCreateRecording() {
 export function useRecordingFile(recordingId: string) {
   return trpc.sessions.getRecordingSignedUrl.useQuery(
     { recordingId },
-    { enabled: false }
   );
 }
