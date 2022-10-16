@@ -117,7 +117,7 @@ export const sessionsRouter = t.router({
 
       return s3.createPresignedPost({
         Fields: {
-          key: `${ctx.session.user.id}/${recording.id}`,
+          key: `recording/${ctx.session.user.id}/${recording.id}`,
         },
         Conditions: [
           ["content-length-range", 0, 10000000],
@@ -148,7 +148,7 @@ export const sessionsRouter = t.router({
 
       return s3.getSignedUrlPromise("getObject", {
         Bucket: env.AWS_S3_BUCKET_NAME,
-        Key: `${ctx.session.user.id}/${recording.id}`,
+        Key: `recording/${ctx.session.user.id}/${recording.id}`,
       });
     }),
 });
