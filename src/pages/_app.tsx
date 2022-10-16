@@ -5,6 +5,7 @@ import type { Session } from "next-auth";
 import type { AppType } from "next/app";
 import { trpc } from "../utils/trpc";
 import Layout from "../components/Layout";
+import { AuthGuard } from "../components/AuthGuard";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -13,7 +14,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <Layout>
-        <Component {...pageProps} />
+        <AuthGuard>
+          <Component {...pageProps} />
+        </AuthGuard>
       </Layout>
     </SessionProvider>
   );

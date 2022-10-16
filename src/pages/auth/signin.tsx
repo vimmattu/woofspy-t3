@@ -1,12 +1,6 @@
-import type { NextPage } from "next";
 import { signIn } from "next-auth/react";
-import { useAuthenticatedRedirect } from "../../hooks/auth";
 
-const SignIn: NextPage = () => {
-  const shouldRender = useAuthenticatedRedirect("/");
-
-  if (!shouldRender) return null;
-
+const SignIn = () => {
   return (
     <main className="flex h-full items-center justify-center">
       <div className="w-96 rounded border-2 border-gray-100 bg-white p-4 shadow-md">

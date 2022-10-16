@@ -1,18 +1,14 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useUnauthenticatedRedirect } from "../hooks/auth";
-import { useActiveSession, useCreateSession } from "../hooks/sessions";
+import { useCreateSession } from "../hooks/sessions";
 
 const Home: NextPage = () => {
   const { mutate: createSession, isLoading } = useCreateSession();
-  const { data: activeSession, isLoading: isFetchingActiveSession } =
-    useActiveSession(true);
-  const shouldRender = useUnauthenticatedRedirect("/auth/signin");
 
   // Display spinner if fetching user data or active session is in loading state,
   // or if an active session is found. (If active session is found, then useActiveSession redirects user to session details)
   // TODO: Replace null with spinner
-  if (!shouldRender || isFetchingActiveSession || !!activeSession) return null;
+  // if (!shouldRender || isFetchingActiveSession || !!activeSession) return null;
 
   return (
     <>
