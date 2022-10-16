@@ -21,6 +21,7 @@ function getConstraintForType(
 
 export function useMediaStream(id?: string) {
   const devices = useMediaDevices();
+  const [error, setError] = useState<Error>();
   const [stream, setStream] = useState<MediaStream>();
 
   useEffect(() => {
@@ -30,11 +31,15 @@ export function useMediaStream(id?: string) {
         video: getConstraintForType(devices, "videoinput", id),
         audio: getConstraintForType(devices, "audioinput", id) || true,
       })
-      .then(setStream);
+      .then(setStream)
+      .catch((e) => {
+        const error = e as Error;
+        setError(error);
+      });
   }, [id, devices]);
 
   // Stop each track of stream on unmount
   useEffect(() => () => stream?.getTracks().forEach((t) => t.stop()), [stream]);
 
-  return stream;
+  return { error, stream };
 }
