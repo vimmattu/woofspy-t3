@@ -11,9 +11,23 @@ import { verify } from "argon2";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
+  jwt: {
+    secret: "test",
+    maxAge: 24 * 30 * 60,
+  },
   callbacks: {
-    session({ session, user }) {
-      if (session.user) {
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+      }
+      return token;
+    },
+    session({ session, user, token }) {
+      console.log("session", token, user);
+      if (token) {
+        session.id = token.id;
+      } else if (session.user) {
         session.user.id = user.id;
       }
       return session;
