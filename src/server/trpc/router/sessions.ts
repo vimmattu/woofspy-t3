@@ -61,7 +61,12 @@ export const sessionsRouter = t.router({
       where: { endTime: null },
     });
   }),
-  createSession: authedProcedure.mutation(({ ctx }) => {
+  createSession: authedProcedure.mutation(async ({ ctx }) => {
+    await ctx.prisma.spySession.updateMany({
+      where: { endTime: null, userId: ctx.session.user.id },
+      data: { endTime: new Date() },
+    });
+
     return ctx.prisma.spySession.create({
       data: {
         userId: ctx.session.user.id,
