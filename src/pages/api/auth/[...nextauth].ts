@@ -24,7 +24,6 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     session({ session, user, token }) {
-      console.log("session", token, user);
       if (token) {
         session.id = token.id;
       } else if (session.user) {
