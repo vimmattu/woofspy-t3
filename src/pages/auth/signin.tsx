@@ -17,6 +17,12 @@ const SignIn = () => {
           >
             Github
           </button>
+          <button
+            className="w-full rounded bg-gray-500 p-2 text-center text-white transition-colors hover:bg-gray-600 focus:bg-gray-600"
+            onClick={() => signIn("google")}
+          >
+            Google
+          </button>
         </div>
       </main>
     </>
