@@ -1,11 +1,9 @@
 import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
 import CameraSelection from "../../components/spy/SelectCamera";
-// import MicrophoneSelection from "../../components/spy/SelectMicrophone";
 import SetSensitivity from "../../components/spy/SetSensitivity";
 import SpyView from "../../components/spy/SpyView";
-import Video from "../../components/Video";
-import { useMediaDevices, useMediaStream } from "../../hooks/devices";
+import { useMediaStream } from "../../hooks/devices";
 
 const MicrophoneSelection = dynamic(
   () => import("../../components/spy/SelectMicrophone"),
