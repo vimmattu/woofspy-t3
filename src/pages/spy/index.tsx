@@ -1,11 +1,8 @@
 import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
-// import CameraSelection from "../../components/spy/SelectCamera";
-// import SetSensitivity from "../../components/spy/SetSensitivity";
-// import SpyView from "../../components/spy/SpyView";
 import { ActiveDevice } from "../../components/spy/types";
 import { useMediaStream } from "../../hooks/devices";
-import { useCreateSession } from "../../hooks/sessions";
+import { useCreateSession, useEndSession } from "../../hooks/sessions";
 
 const CameraSelection = dynamic(
   () => import("../../components/spy/SelectCamera"),
@@ -22,12 +19,12 @@ const SpyView = dynamic(() => import("../../components/spy/SpyView"), {
 enum Step {
   SELECT_CAMERA,
   SELECT_MICROPHONE,
-  //SET_SENSITIVITY,
   DONE,
 }
 
 export default function SpyPage() {
   const { data, mutateAsync: createSession } = useCreateSession();
+  const { mutateAsync: endSession } = useEndSession();
   const [step, setStep] = useState<Step>(Step.SELECT_CAMERA);
   const [cameraId, setCameraId] = useState<string | null>();
   const [microphoneId, setMicrophoneId] = useState<string>();
@@ -60,6 +57,11 @@ export default function SpyPage() {
     setStep(Step.DONE);
   }
 
+  async function triggerEndSession() {
+    if (!data) return;
+    await endSession({ id: data.id });
+  }
+
   const renderView = () => {
     switch (step) {
       case Step.SELECT_CAMERA:
@@ -82,19 +84,12 @@ export default function SpyPage() {
             error={error}
           />
         );
-      // case Step.SET_SENSITIVITY:
-      //   return (
-      //     <SetSensitivity
-      //       proceedSetup={() => setStep(Step.DONE)}
-      //       error={error}
-      //     />
-      //   );
       case Step.DONE:
         return (
           <SpyView
             stream={stream}
             error={error}
-            proceedSetup={() => {}}
+            proceedSetup={triggerEndSession}
             sessionId={data?.id}
           />
         );

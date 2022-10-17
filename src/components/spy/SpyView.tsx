@@ -55,6 +55,12 @@ const SpyView: React.FC<BaseProps & { sessionId?: string }> = ({
       <h1 className="mb-2 text-center text-2xl">Spy</h1>
       {hasVideoTracks && <Video stream={stream} />}
       <WaveForm stream={stream} />
+      <button
+        className="w-full rounded bg-red-500 p-2 text-white"
+        onClick={() => proceedSetup()}
+      >
+        End spy
+      </button>
     </>
   );
 };
