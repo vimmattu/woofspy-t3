@@ -2,10 +2,7 @@ import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 
 export function useCreateSession() {
-  const router = useRouter();
-  return trpc.sessions.createSession.useMutation({
-    onSuccess: ({ id }) => router.push(`/sessions/${id}`),
-  });
+  return trpc.sessions.createSession.useMutation();
 }
 
 export function useEndSession() {
@@ -39,7 +36,5 @@ export function useCreateRecording() {
 }
 
 export function useRecordingFile(recordingId: string) {
-  return trpc.sessions.getRecordingSignedUrl.useQuery(
-    { recordingId },
-  );
+  return trpc.sessions.getRecordingSignedUrl.useQuery({ recordingId });
 }

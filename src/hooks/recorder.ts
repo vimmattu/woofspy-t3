@@ -27,10 +27,14 @@ export const useActivityRecorder = ({
       if (recorder.current?.state === "recording") recorder.current?.stop();
       recorder.current?.removeEventListener("dataavailable", onFinish);
     };
-  }, [stream]);
+  }, [stream, onFinish]);
 
   return {
-    start: () => recorder.current?.start(),
-    end: () => recorder.current?.stop(),
+    start: () => {
+      recorder.current?.start()
+    },
+    end: () => {
+      recorder.current?.state === "recording" && recorder.current?.stop();
+    },
   };
 };

@@ -72,7 +72,7 @@ export const useActivityDetector = ({
 
     setActive(true);
     triggerTimer();
-  }, [sensitivity]);
+  }, [sensitivity, triggerTimer]);
 
   useAnimationFrame(handleAnimationFrame);
 
@@ -87,7 +87,7 @@ export const useActivityDetector = ({
       return;
     }
     active ? onStart() : onEnd();
-  }, [active]);
+  }, [active, onStart, onEnd]);
 
   return active;
 };
