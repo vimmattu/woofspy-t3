@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
 import CameraSelection from "../../components/spy/SelectCamera";
-import SetSensitivity from "../../components/spy/SetSensitivity";
+// import SetSensitivity from "../../components/spy/SetSensitivity";
 import SpyView from "../../components/spy/SpyView";
 import { ActiveDevice } from "../../components/spy/types";
 import { useMediaStream } from "../../hooks/devices";
@@ -14,7 +14,7 @@ const MicrophoneSelection = dynamic(
 enum Step {
   SELECT_CAMERA,
   SELECT_MICROPHONE,
-  SET_SENSITIVITY,
+  //SET_SENSITIVITY,
   DONE,
 }
 
@@ -47,7 +47,7 @@ export default function SpyPage() {
   }
 
   function proceedToSetSensitivity() {
-    setStep(Step.SET_SENSITIVITY);
+    setStep(Step.DONE);
   }
 
   const renderView = () => {
@@ -72,15 +72,17 @@ export default function SpyPage() {
             error={error}
           />
         );
-      case Step.SET_SENSITIVITY:
-        return (
-          <SetSensitivity
-            proceedSetup={() => setStep(Step.DONE)}
-            error={error}
-          />
-        );
+      // case Step.SET_SENSITIVITY:
+      //   return (
+      //     <SetSensitivity
+      //       proceedSetup={() => setStep(Step.DONE)}
+      //       error={error}
+      //     />
+      //   );
       case Step.DONE:
-        return <SpyView />;
+        return (
+          <SpyView stream={stream} error={error} proceedSetup={() => {}} />
+        );
     }
   };
 
