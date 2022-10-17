@@ -44,10 +44,11 @@ const MicrophonePreview: React.FC<BaseDeviceAskProps> = ({
   error,
   proceedSetup,
   onChangeDevice,
+  sensitivity,
+  setSensitivity,
 }) => {
   const devices = useMediaDevices();
   const [selected, setSelected] = useState<string>();
-  const [sensitivity, setSensitivity] = useState<number>(1.5);
 
   const detectActive = useActivityDetector({
     stream,

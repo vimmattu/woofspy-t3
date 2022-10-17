@@ -10,6 +10,8 @@ const SpyView: React.FC<BaseProps & { sessionId?: string }> = ({
   stream,
   proceedSetup,
   sessionId,
+  sensitivity,
+  setSensitivity,
 }) => {
   const { mutateAsync: createRecording } = useCreateRecording();
 
@@ -45,7 +47,7 @@ const SpyView: React.FC<BaseProps & { sessionId?: string }> = ({
     stream,
     onStart,
     onEnd,
-    sensitivity: 1.5,
+    sensitivity,
   });
 
   const hasVideoTracks = !!stream?.getTracks().filter((d) => d.kind === "video")
@@ -58,6 +60,17 @@ const SpyView: React.FC<BaseProps & { sessionId?: string }> = ({
       <p>
         Status: {detectActive ? "Recording activity" : "Listening for activity"}
       </p>
+      <div className="w-full">
+        <input
+          type="range"
+          className="w-full"
+          value={sensitivity}
+          max={2}
+          min={1}
+          step={0.01}
+          onChange={(e) => setSensitivity(Number(e.target.value))}
+        />
+      </div>
       <button
         className="w-full rounded bg-red-500 p-2 text-white"
         onClick={() => proceedSetup()}

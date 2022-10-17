@@ -28,6 +28,7 @@ export default function SpyPage() {
   const [step, setStep] = useState<Step>(Step.SELECT_CAMERA);
   const [cameraId, setCameraId] = useState<string | null>();
   const [microphoneId, setMicrophoneId] = useState<string>();
+  const [sensitivity, setSensitivity] = useState<number>(1.5);
   const { stream, error, askForDevice, clearStream } = useMediaStream({
     cameraId,
     microphoneId,
@@ -72,6 +73,8 @@ export default function SpyPage() {
             askForDevice={askVideo}
             error={error}
             onChangeDevice={(id) => setCameraId(id)}
+            sensitivity={sensitivity}
+            setSensitivity={setSensitivity}
           />
         );
       case Step.SELECT_MICROPHONE:
@@ -82,6 +85,8 @@ export default function SpyPage() {
             proceedSetup={proceedToSetSensitivity}
             onChangeDevice={(id) => setMicrophoneId(id)}
             error={error}
+            sensitivity={sensitivity}
+            setSensitivity={setSensitivity}
           />
         );
       case Step.DONE:
@@ -91,6 +96,8 @@ export default function SpyPage() {
             error={error}
             proceedSetup={triggerEndSession}
             sessionId={data?.id}
+            sensitivity={sensitivity}
+            setSensitivity={setSensitivity}
           />
         );
     }

@@ -51,7 +51,7 @@ export function useMediaStream({
     if (activeDeviceType === ActiveDevice.MICROPHONE && !audioInitialized)
       return;
     if (activeDeviceType === ActiveDevice.CAMERA && !cameraInitialized) return;
-    stopTracks();
+    stream?.getTracks().forEach((t) => t.stop());
     navigator.mediaDevices
       .getUserMedia({
         video: getConstraintForType(
@@ -82,7 +82,6 @@ export function useMediaStream({
     activeDeviceType,
     cameraInitialized,
     audioInitialized,
-    stopTracks,
   ]);
 
   const clearStream = () => {
