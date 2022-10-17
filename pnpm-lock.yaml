@@ -19,6 +19,7 @@ specifiers:
   dayjs: ^1.11.5
   eslint: 8.22.0
   eslint-config-next: 12.3.1
+  husky: ^8.0.0
   next: 12.3.1
   next-auth: ~4.10.2
   postcss: ^8.4.14
@@ -61,6 +62,7 @@ devDependencies:
   autoprefixer: 10.4.12_postcss@8.4.17
   eslint: 8.22.0
   eslint-config-next: 12.3.1_yv3nvntfnealqm77uomj2fi4ki
+  husky: 8.0.1
   postcss: 8.4.17
   prettier: 2.7.1
   prettier-plugin-tailwindcss: 0.1.13_prettier@2.7.1
@@ -1514,6 +1516,12 @@ packages:
     engines: {node: '>= 0.4.0'}
     dependencies:
       function-bind: 1.1.1
+
+  /husky/8.0.1:
+    resolution: {integrity: sha512-xs7/chUH/CKdOCs7Zy0Aev9e/dKOMZf3K1Az1nar3tzlv0jfqnYtu235bstsWTmXOR0EfINrPa97yy4Lz6RiKw==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dev: true
 
   /ieee754/1.1.13:
     resolution: {integrity: sha512-4vf7I2LYV/HaWerSo3XmlMkp5eZ83i+/CDluXi/IGTs/O1sejBNhTtnxzmRZfvOUqj7lZjqHkeTvpgSFDlWZTg==}
