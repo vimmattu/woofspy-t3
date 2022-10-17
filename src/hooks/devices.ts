@@ -41,6 +41,10 @@ export function useMediaStream({
   const [cameraInitialized, setCameraInitialized] = useState<boolean>(false);
   const [audioInitialized, setAudioInitialized] = useState<boolean>(false);
 
+  const stopTracks = useCallback(() => {
+    stream?.getTracks().forEach((t) => t.stop());
+  }, [stream]);
+
   useEffect(() => {
     if (!devices.length) return;
     if (!cameraInitialized && !audioInitialized) return;
@@ -80,10 +84,6 @@ export function useMediaStream({
     audioInitialized,
     stopTracks,
   ]);
-
-  const stopTracks = useCallback(() => {
-    stream?.getTracks().forEach((t) => t.stop());
-  }, [stream]);
 
   const clearStream = () => {
     stopTracks();
