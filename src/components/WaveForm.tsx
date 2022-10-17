@@ -31,7 +31,7 @@ const WaveForm = ({ stream }: { stream?: MediaStream }) => {
       ws.destroy();
       source.disconnect();
       audioScriptProcessor.disconnect();
-      audioScriptProcessor.onaudioprocess = undefined;
+      audioScriptProcessor.onaudioprocess = null;
     };
   }, [stream]);
 
