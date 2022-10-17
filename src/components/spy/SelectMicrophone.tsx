@@ -79,7 +79,7 @@ const MicrophonePreview: React.FC<BaseDeviceAskProps> = ({
         className="w-full rounded bg-blue-500 p-2 text-white"
         onClick={proceedSetup}
       >
-        Next
+        Start spy
       </button>
     </>
   );
