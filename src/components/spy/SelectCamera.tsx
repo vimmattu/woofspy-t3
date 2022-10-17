@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useMediaDevices } from "../../hooks/devices";
 import Video from "../Video";
 import { BaseDeviceAskProps } from "./types";
@@ -53,9 +53,10 @@ const CameraPreview: React.FC<BaseDeviceAskProps> = ({
   stream,
   error,
   proceedSetup,
+  onChangeDevice,
 }) => {
   const devices = useMediaDevices();
-  const selectRef = useRef<HTMLSelectElement>(null);
+  const [selected, setSelected] = useState<string>();
 
   const videoDevices = devices.filter((d) => d.kind === "videoinput");
   if (error)
@@ -66,11 +67,21 @@ const CameraPreview: React.FC<BaseDeviceAskProps> = ({
       </>
     );
 
+  function handleChange(id: string) {
+    setSelected(id);
+    onChangeDevice && onChangeDevice(id);
+  }
+
+  function proceed() {
+    proceedSetup(selected || devices[0]?.deviceId);
+  }
+
   return (
     <>
       <Video stream={stream} />
       <select
-        ref={selectRef}
+        onChange={(e) => handleChange(e.target.value)}
+        value={selected}
         className="my-2 w-full rounded-sm border-2 border-gray-300 p-1"
       >
         {videoDevices.map((device) => (
@@ -81,7 +92,7 @@ const CameraPreview: React.FC<BaseDeviceAskProps> = ({
       </select>
       <button
         className="w-full rounded bg-blue-500 p-2 text-white"
-        onClick={() => proceedSetup(selectRef.current?.value)}
+        onClick={proceed}
       >
         Next
       </button>

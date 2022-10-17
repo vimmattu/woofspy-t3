@@ -6,4 +6,5 @@ export interface BaseProps {
 
 export interface BaseDeviceAskProps extends BaseProps {
   askForDevice: () => void;
+  onChangeDevice?: (id?: string) => void;
 }
