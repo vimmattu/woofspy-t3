@@ -41,7 +41,7 @@ const InitialPrompt: React.FC<BaseDeviceAskProps> = ({
       <button
         title="You will be redirected to select microphone"
         className="w-full rounded bg-red-500 p-2 text-white"
-        onClick={() => proceedSetup(null)}
+        onClick={() => proceedSetup()}
       >
         I don&apos;t want to use camera
       </button>
