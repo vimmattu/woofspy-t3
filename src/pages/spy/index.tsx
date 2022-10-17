@@ -41,15 +41,12 @@ export default function SpyPage() {
     askForDevice("audio");
   }, [askForDevice]);
 
-  function proceedToMicrophoneSelection(id?: string | null) {
+  function proceedToMicrophoneSelection() {
     clearStream();
-    setCameraId(id);
     setStep(Step.SELECT_MICROPHONE);
   }
 
-  function proceedToSetSensitivity(id?: string | null) {
-    if (!id) return;
-    setMicrophoneId(id);
+  function proceedToSetSensitivity() {
     setStep(Step.SET_SENSITIVITY);
   }
 

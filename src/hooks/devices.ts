@@ -19,14 +19,10 @@ function getConstraintForType(
   id?: string | null
 ) {
   if (!devices.filter((d) => d.kind === kind).length) return false;
-
   if (!allowed) return false;
-
   if (active === ActiveDevice.CAMERA && kind === "audioinput") return false;
   if (active === ActiveDevice.MICROPHONE && kind === "videoinput") return false;
-
   if (id) return { deviceId: { exact: id } };
-
   return true;
 }
 

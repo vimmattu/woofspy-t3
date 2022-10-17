@@ -61,10 +61,6 @@ const MicrophonePreview: React.FC<BaseDeviceAskProps> = ({
     onChangeDevice && onChangeDevice(id);
   }
 
-  function proceed() {
-    proceedSetup(selected || devices[0]?.deviceId);
-  }
-
   return (
     <>
       <WaveForm stream={stream} />
@@ -81,7 +77,7 @@ const MicrophonePreview: React.FC<BaseDeviceAskProps> = ({
       </select>
       <button
         className="w-full rounded bg-blue-500 p-2 text-white"
-        onClick={proceed}
+        onClick={proceedSetup}
       >
         Next
       </button>
