@@ -31,7 +31,7 @@ export const useActivityRecorder = ({
 
   return {
     start: () => {
-      recorder.current?.start()
+      recorder.current?.state !== "recording" && recorder.current?.start();
     },
     end: () => {
       recorder.current?.state === "recording" && recorder.current?.stop();
