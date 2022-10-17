@@ -37,7 +37,7 @@ export function AuthGuard({ children }: { children: JSX.Element }) {
     if (action === Action.REDIRECT_AUTHENTICATED) router.push("/");
     else if (action === Action.REDIRECT_UNAUTHENTICATED)
       router.push("/auth/signin");
-  }, [action]);
+  }, [action, router]);
 
   if (action === Action.RENDER) return <>{children}</>;
 

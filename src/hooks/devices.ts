@@ -78,6 +78,7 @@ export function useMediaStream({
     activeDeviceType,
     cameraInitialized,
     audioInitialized,
+    stopTracks,
   ]);
 
   const stopTracks = useCallback(() => {

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useMediaDevices } from "../../hooks/devices";
 import Video from "../Video";
 import { BaseDeviceAskProps } from "./types";

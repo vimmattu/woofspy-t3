@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback } from "react";
 
 interface Props {
   stream?: MediaStream;
@@ -6,12 +6,6 @@ interface Props {
 }
 
 const Video: React.FC<Props> = ({ stream, src }) => {
-  // const ref = useRef<HTMLVideoElement>(null);
-
-  // useEffect(() => {
-  //   if (stream && ref.current) ref.current.srcObject = stream;
-  // }, [stream]);
-
   const ref = useCallback(
     (elem: HTMLVideoElement) => {
       if (stream && elem) elem.srcObject = stream;
