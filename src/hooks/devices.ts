@@ -23,7 +23,7 @@ export function useMediaStream({
   cameraId,
   microphoneId,
 }: {
-  cameraId?: string;
+  cameraId?: string | null;
   microphoneId?: string;
 }) {
   const devices = useMediaDevices();
@@ -46,6 +46,15 @@ export function useMediaStream({
   //     });
   // }, [cameraId, microphoneId, devices]);
 
+  const stopTracks = useCallback(() => {
+    stream?.getTracks().forEach((t) => t.stop());
+  }, [stream]);
+
+  const clearStream = () => {
+    stopTracks();
+    setStream(undefined);
+  };
+
   const askForDevice = useCallback(
     (type: "video" | "audio") => {
       if (stream) return;
@@ -63,5 +72,5 @@ export function useMediaStream({
   // Stop each track of stream on unmount
   useEffect(() => () => stream?.getTracks().forEach((t) => t.stop()), [stream]);
 
-  return { error, stream, askForDevice };
+  return { error, stream, askForDevice, clearStream };
 }

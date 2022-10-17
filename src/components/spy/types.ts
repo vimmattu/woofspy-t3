@@ -1,5 +1,5 @@
 export interface BaseProps {
-  proceedSetup: () => void;
+  proceedSetup: (id?: string | null) => void;
   stream?: MediaStream;
   error?: Error;
 }

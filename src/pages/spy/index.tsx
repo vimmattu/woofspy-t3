@@ -15,9 +15,9 @@ enum Step {
 
 export default function SpyPage() {
   const [step, setStep] = useState<Step>(Step.SELECT_CAMERA);
-  const [cameraId, setCameraId] = useState<string>();
+  const [cameraId, setCameraId] = useState<string | null>();
   const [microphoneId, setMicrophoneId] = useState<string>();
-  const { stream, error, askForDevice } = useMediaStream({
+  const { stream, error, askForDevice, clearStream } = useMediaStream({
     cameraId,
     microphoneId,
   });
@@ -25,13 +25,25 @@ export default function SpyPage() {
   const askVideo = useCallback(() => askForDevice("video"), [askForDevice]);
   const askAudio = useCallback(() => askForDevice("audio"), [askForDevice]);
 
+  function proceedToMicrophoneSelection(id?: string | null) {
+    clearStream();
+    setCameraId(id);
+    setStep(Step.SELECT_MICROPHONE);
+  }
+
+  function proceedToSetSensitivity(id?: string | null) {
+    if (!id) return;
+    setMicrophoneId(id);
+    setStep(Step.SET_SENSITIVITY);
+  }
+
   const renderView = () => {
     switch (step) {
       case Step.SELECT_CAMERA:
         return (
           <CameraSelection
             stream={stream}
-            proceedSetup={() => setStep(Step.SELECT_MICROPHONE)}
+            proceedSetup={proceedToMicrophoneSelection}
             askForDevice={askVideo}
             error={error}
           />
@@ -40,8 +52,8 @@ export default function SpyPage() {
         return (
           <MicrophoneSelection
             stream={stream}
-            askForDevice={() => askForDevice("audio")}
-            proceedSetup={askAudio}
+            askForDevice={askAudio}
+            proceedSetup={proceedToSetSensitivity}
             error={error}
           />
         );
