@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import CameraSelection from "../../components/spy/SelectCamera";
 import SetSensitivity from "../../components/spy/SetSensitivity";
 import SpyView from "../../components/spy/SpyView";
+import { ActiveDevice } from "../../components/spy/types";
 import { useMediaStream } from "../../hooks/devices";
 
 const MicrophoneSelection = dynamic(
@@ -21,30 +22,29 @@ export default function SpyPage() {
   const [step, setStep] = useState<Step>(Step.SELECT_CAMERA);
   const [cameraId, setCameraId] = useState<string | null>();
   const [microphoneId, setMicrophoneId] = useState<string>();
-  const [autoUpdate, setAutoUpdate] = useState<boolean>(false);
   const { stream, error, askForDevice, clearStream } = useMediaStream({
     cameraId,
     microphoneId,
-    allowAutoUpdate: autoUpdate,
+    activeDeviceType:
+      step === Step.SELECT_CAMERA
+        ? ActiveDevice.CAMERA
+        : step === Step.SELECT_MICROPHONE
+        ? ActiveDevice.MICROPHONE
+        : ActiveDevice.BOTH,
   });
-
-  console.log(step);
 
   const askVideo = useCallback(() => {
     askForDevice("video");
-    setAutoUpdate(true);
   }, [askForDevice]);
 
   const askAudio = useCallback(() => {
     askForDevice("audio");
-    setAutoUpdate(true);
   }, [askForDevice]);
 
   function proceedToMicrophoneSelection(id?: string | null) {
     clearStream();
     setCameraId(id);
     setStep(Step.SELECT_MICROPHONE);
-    setAutoUpdate(false);
   }
 
   function proceedToSetSensitivity(id?: string | null) {

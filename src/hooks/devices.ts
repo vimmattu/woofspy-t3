@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { ActiveDevice } from "../components/spy/types";
 
 export function useMediaDevices() {
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
@@ -13,45 +14,73 @@ export function useMediaDevices() {
 function getConstraintForType(
   devices: MediaDeviceInfo[],
   kind: "videoinput" | "audioinput",
+  active: ActiveDevice,
+  allowed: boolean,
   id?: string | null
 ) {
-  const hasDevices = devices.filter((d) => d.kind === kind).length;
-  return !hasDevices || id === null
-    ? false
-    : id
-    ? { deviceId: { exact: id } }
-    : true;
+  if (!devices.filter((d) => d.kind === kind).length) return false;
+
+  if (id) return { deviceId: { exact: id } };
+  if (!allowed) return false;
+
+  if (active === ActiveDevice.CAMERA && kind === "audioinput") return false;
+  if (active === ActiveDevice.MICROPHONE && kind === "videoinput") return false;
+
+  return true;
 }
 
 export function useMediaStream({
   cameraId,
   microphoneId,
-  allowAutoUpdate,
+  activeDeviceType,
 }: {
   cameraId?: string | null;
   microphoneId?: string;
-  allowAutoUpdate?: boolean;
+  activeDeviceType: ActiveDevice;
 }) {
   const devices = useMediaDevices();
   const [error, setError] = useState<Error>();
   const [stream, setStream] = useState<MediaStream>();
+  const [cameraInitialized, setCameraInitialized] = useState<boolean>(false);
+  const [audioInitialized, setAudioInitialized] = useState<boolean>(false);
 
   useEffect(() => {
     if (!devices.length) return;
-    if (allowAutoUpdate === false) return;
+    if (!cameraInitialized && !audioInitialized) return;
+    if (activeDeviceType === ActiveDevice.MICROPHONE && !audioInitialized)
+      return;
+    if (activeDeviceType === ActiveDevice.CAMERA && !cameraInitialized) return;
     stopTracks();
     navigator.mediaDevices
       .getUserMedia({
-        video: getConstraintForType(devices, "videoinput", cameraId),
-        audio:
-          getConstraintForType(devices, "audioinput", microphoneId) || true,
+        video: getConstraintForType(
+          devices,
+          "videoinput",
+          activeDeviceType,
+          cameraInitialized,
+          cameraId
+        ),
+        audio: getConstraintForType(
+          devices,
+          "audioinput",
+          activeDeviceType,
+          audioInitialized,
+          microphoneId
+        ),
       })
       .then(setStream)
       .catch((e) => {
         const error = e as Error;
         setError(error);
       });
-  }, [cameraId, microphoneId, devices, allowAutoUpdate]);
+  }, [
+    cameraId,
+    microphoneId,
+    devices,
+    activeDeviceType,
+    cameraInitialized,
+    audioInitialized,
+  ]);
 
   const stopTracks = useCallback(() => {
     stream?.getTracks().forEach((t) => t.stop());
@@ -67,7 +96,12 @@ export function useMediaStream({
       if (stream) return;
       navigator.mediaDevices
         .getUserMedia(type === "video" ? { video: true } : { audio: true })
-        .then(setStream)
+        .then((stream) => {
+          setStream(stream);
+          if (type === "video") setCameraInitialized(true);
+          else setAudioInitialized(true);
+          console.log("should be set", type);
+        })
         .catch((e) => {
           const error = e as Error;
           setError(error);

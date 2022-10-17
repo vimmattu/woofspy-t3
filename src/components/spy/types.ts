@@ -8,3 +8,9 @@ export interface BaseDeviceAskProps extends BaseProps {
   askForDevice: () => void;
   onChangeDevice?: (id?: string) => void;
 }
+
+export enum ActiveDevice {
+  CAMERA,
+  MICROPHONE,
+  BOTH,
+}
