@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useActivityDetector } from "../../hooks/detector";
 import { useMediaDevices } from "../../hooks/devices";
 import WaveForm from "../WaveForm";
 import { BaseDeviceAskProps } from "./types";
@@ -46,6 +47,12 @@ const MicrophonePreview: React.FC<BaseDeviceAskProps> = ({
 }) => {
   const devices = useMediaDevices();
   const [selected, setSelected] = useState<string>();
+  const [sensitivity, setSensitivity] = useState<number>(1.5);
+
+  const detectActive = useActivityDetector({
+    stream,
+    sensitivity,
+  });
 
   const videoDevices = devices.filter((d) => d.kind === "audioinput");
   if (error)
@@ -64,6 +71,7 @@ const MicrophonePreview: React.FC<BaseDeviceAskProps> = ({
   return (
     <>
       <WaveForm stream={stream} />
+      <p>{detectActive ? "Detecting activity" : "Idle"}</p>
       <select
         onChange={(e) => handleChange(e.target.value)}
         value={selected}
@@ -75,6 +83,17 @@ const MicrophonePreview: React.FC<BaseDeviceAskProps> = ({
           </option>
         ))}
       </select>
+      <div className="w-full">
+        <input
+          type="range"
+          className="w-full"
+          value={sensitivity}
+          max={2}
+          min={1}
+          step={0.01}
+          onChange={(e) => setSensitivity(Number(e.target.value))}
+        />
+      </div>
       <button
         className="w-full rounded bg-blue-500 p-2 text-white"
         onClick={proceedSetup}

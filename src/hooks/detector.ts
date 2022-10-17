@@ -40,8 +40,8 @@ const useTimer = (callback: () => void, delay: number) => {
 interface IActivityDetector {
   stream?: MediaStream;
   sensitivity: number;
-  onStart: () => void | undefined;
-  onEnd: () => void | undefined;
+  onStart?: () => void | undefined;
+  onEnd?: () => void | undefined;
 }
 
 export const useActivityDetector = ({
@@ -86,7 +86,8 @@ export const useActivityDetector = ({
       initialRender.current = false;
       return;
     }
-    active ? onStart() : onEnd();
+    if (active) onStart && onStart();
+    else onEnd && onEnd();
   }, [active, onStart, onEnd]);
 
   return active;
