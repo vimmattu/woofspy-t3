@@ -20,11 +20,12 @@ function getConstraintForType(
 ) {
   if (!devices.filter((d) => d.kind === kind).length) return false;
 
-  if (id) return { deviceId: { exact: id } };
   if (!allowed) return false;
 
   if (active === ActiveDevice.CAMERA && kind === "audioinput") return false;
   if (active === ActiveDevice.MICROPHONE && kind === "videoinput") return false;
+
+  if (id) return { deviceId: { exact: id } };
 
   return true;
 }
@@ -71,6 +72,7 @@ export function useMediaStream({
       .then(setStream)
       .catch((e) => {
         const error = e as Error;
+        console.error(e);
         setError(error);
       });
   }, [
@@ -104,6 +106,7 @@ export function useMediaStream({
         })
         .catch((e) => {
           const error = e as Error;
+          console.error(e);
           setError(error);
         });
     },
