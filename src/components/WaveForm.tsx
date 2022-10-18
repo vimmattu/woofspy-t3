@@ -9,13 +9,19 @@ const WaveForm = ({ stream }: { stream?: MediaStream }) => {
 
     const audioContext = new AudioContext();
     const source = audioContext.createMediaStreamSource(stream);
-    const audioScriptProcessor = audioContext.createScriptProcessor(4096, 1, 1);
+    const audioScriptProcessor = audioContext.createScriptProcessor(
+      4096 * 2,
+      1,
+      1
+    );
 
     const ws = WaveSurfer.create({
       container: containerRef.current,
       audioContext,
       audioScriptProcessor,
       barWidth: 2,
+      barMinHeight: 2,
+      barHeight: 4,
       interact: false,
     });
 
