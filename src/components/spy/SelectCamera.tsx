@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Head from "next/head";
 import { useMediaDevices } from "../../hooks/devices";
 import Video from "../Video";
 import { BaseDeviceAskProps } from "./types";
@@ -8,6 +9,10 @@ const CameraSelection: React.FC<BaseDeviceAskProps> = (props) => {
 
   return (
     <>
+      <Head>
+        <title>Camera selection</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <h1 className="mb-2 text-center text-2xl">Camera selection</h1>
       {displayInfo ? (
         <InitialPrompt {...props} />

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Head from "next/head";
 import { useActivityDetector } from "../../hooks/detector";
 import { useMediaDevices } from "../../hooks/devices";
 import WaveForm from "../WaveForm";
@@ -9,6 +10,10 @@ const MicrophoneSelection: React.FC<BaseDeviceAskProps> = (props) => {
 
   return (
     <>
+      <Head>
+        <title>Microphone selection</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <h1 className="mb-2 text-center text-2xl">Microphone selection</h1>
       {displayInfo ? (
         <InitialPrompt {...props} />

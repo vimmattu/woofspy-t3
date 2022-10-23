@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import Head from "next/head";
 import { useActivityDetector } from "../../hooks/detector";
 import { useActivityRecorder } from "../../hooks/recorder";
 import { useCreateRecording } from "../../hooks/sessions";
@@ -54,6 +55,10 @@ const SpyView: React.FC<BaseProps & { sessionId?: string }> = ({
     .length;
   return (
     <>
+      <Head>
+        <title>Spy</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <h1 className="mb-2 text-center text-2xl">Spy</h1>
       {hasVideoTracks && <Video stream={stream} />}
       <WaveForm stream={stream} />
