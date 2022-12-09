@@ -7,6 +7,7 @@ specifiers:
   '@trpc/client': 10.4.3
   '@trpc/next': 10.4.3
   '@trpc/react': 9.27.4
+  '@trpc/react-query': ^10.4.3
   '@trpc/server': 10.4.3
   '@types/node': 18.11.12
   '@types/react': 18.0.26
@@ -41,8 +42,9 @@ dependencies:
   '@prisma/client': 4.7.1_prisma@4.7.1
   '@tanstack/react-query': 4.19.1_biqbaboplfbrettd7655fr4n2y
   '@trpc/client': 10.4.3_@trpc+server@10.4.3
-  '@trpc/next': 10.4.3_nuqw5ptpqsrxgg5cw2lujbk6je
+  '@trpc/next': 10.4.3_diwvdd2upbq3oxpk4kmtk7r6my
   '@trpc/react': 9.27.4_bndh7l6d7khfaliksatwlk2dby
+  '@trpc/react-query': 10.4.3_x72ucuwg27nhluiflrpycjcdya
   '@trpc/server': 10.4.3
   aws-sdk: 2.1272.0
   dayjs: 1.11.7
@@ -367,7 +369,7 @@ packages:
       '@trpc/server': 10.4.3
     dev: false
 
-  /@trpc/next/10.4.3_nuqw5ptpqsrxgg5cw2lujbk6je:
+  /@trpc/next/10.4.3_diwvdd2upbq3oxpk4kmtk7r6my:
     resolution: {integrity: sha512-H4sM3lrtA2seFFkgXcW3ZQLCqGS7YqJNYDQx8FOlvcoH+klmQ+UNNgurdP2R/i50nGFwc4aN9kENrsvq0xfH5A==}
     peerDependencies:
       '@tanstack/react-query': ^4.3.8
@@ -380,11 +382,28 @@ packages:
     dependencies:
       '@tanstack/react-query': 4.19.1_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.4.3_@trpc+server@10.4.3
+      '@trpc/react-query': 10.4.3_x72ucuwg27nhluiflrpycjcdya
       '@trpc/server': 10.4.3
       next: 13.0.6_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-ssr-prepass: 1.5.0_react@18.2.0
+    dev: false
+
+  /@trpc/react-query/10.4.3_x72ucuwg27nhluiflrpycjcdya:
+    resolution: {integrity: sha512-gm8hnV8Q7RPc0am0paSuu30+jk9cQoJhKByAdrTRoLUEkuDb7r78sebN6RM3OYMPfWfSBGutIoWHkjJzP2kdtw==}
+    peerDependencies:
+      '@tanstack/react-query': ^4.3.8
+      '@trpc/client': 10.4.3
+      '@trpc/server': 10.4.3
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@tanstack/react-query': 4.19.1_biqbaboplfbrettd7655fr4n2y
+      '@trpc/client': 10.4.3_@trpc+server@10.4.3
+      '@trpc/server': 10.4.3
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /@trpc/react/9.27.4_bndh7l6d7khfaliksatwlk2dby:
