@@ -15,7 +15,7 @@ import dayjs from "dayjs";
 interface Props {
   id: string;
   startTime: Date;
-  endTime: Date;
+  endTime?: Date;
   eventCount: number;
 }
 
@@ -35,7 +35,8 @@ export const SessionCard = ({ id, startTime, endTime, eventCount }: Props) => {
     >
       <VStack spacing={4} textAlign="left">
         <Text fontWeight="bold" w="full">
-          {formatTime(startTime)} - {formatTime(endTime)}
+          {formatTime(startTime)} -{" "}
+          {endTime ? formatTime(endTime) : "Still spying"}
         </Text>
         <Text w="full">{eventCount} detected events</Text>
       </VStack>

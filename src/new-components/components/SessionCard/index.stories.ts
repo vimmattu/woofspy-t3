@@ -21,3 +21,11 @@ export const Default: Story = {
     id: "#",
   },
 };
+
+export const WithoutEndTime: Story = {
+  args: {
+    startTime: new Date("2022-10-11 10:01:04"),
+    eventCount: 65,
+    id: "#",
+  },
+};
