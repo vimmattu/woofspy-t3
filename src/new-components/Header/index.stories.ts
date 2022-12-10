@@ -13,8 +13,15 @@ export default meta;
 type Story = StoryObj<typeof Header>;
 
 // More on writing stories with args: https://storybook.js.org/docs/7.0/react/writing-stories/args
-export const Default: Story = {
+export const WithoutUserImage: Story = {
   args: {
     userName: "John Doe",
+  },
+};
+
+export const WithUserImage: Story = {
+  args: {
+    userName: "John Doe",
+    userImage: "https://github.com/joelkur.png",
   },
 };
