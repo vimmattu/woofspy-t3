@@ -37,7 +37,7 @@ export const SessionCard = ({ id, startTime, endTime, eventCount }: Props) => {
       <VStack spacing={4} textAlign="left">
         <Text fontWeight="bold" w="full">
           {formatTime(startTime)} -{" "}
-          {endTime ? formatTime(endTime) : "Still spying"}
+          {endTime ? formatTime(endTime) : "still spying"}
         </Text>
         <Text w="full">{eventCount} detected events</Text>
       </VStack>
