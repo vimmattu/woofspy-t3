@@ -1,9 +1,6 @@
 import {
-  Box,
   Button,
   Flex,
-  HStack,
-  Link,
   LinkBox,
   LinkOverlay,
   Spacer,
