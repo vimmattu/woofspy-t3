@@ -37,25 +37,27 @@ export const Header = ({ userImage, userName, onLogout }: Props) => {
         Logo
       </Link>
       <Spacer />
-      <Popover placement="bottom-start">
-        <PopoverTrigger>
-          <Button rounded="full" variant="link" cursor="pointer" minW={0}>
-            <Avatar name={userName} size={["sm", "md"]} src={userImage} />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent>
-          <PopoverArrow />
-          <PopoverCloseButton />
-          <PopoverHeader>
-            <Text fontWeight="bold">{userName}</Text>
-          </PopoverHeader>
-          <PopoverContent p={4}>
-            <Button onClick={onLogout} colorScheme="gray" variant="outline">
-              Sign out
+      {userName && (
+        <Popover placement="bottom-start">
+          <PopoverTrigger>
+            <Button rounded="full" variant="link" cursor="pointer" minW={0}>
+              <Avatar name={userName} size={["sm", "md"]} src={userImage} />
             </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverHeader>
+              <Text fontWeight="bold">{userName}</Text>
+            </PopoverHeader>
+            <PopoverContent p={4}>
+              <Button onClick={onLogout} colorScheme="gray" variant="outline">
+                Sign out
+              </Button>
+            </PopoverContent>
           </PopoverContent>
-        </PopoverContent>
-      </Popover>
+        </Popover>
+      )}
     </Flex>
   );
 };
