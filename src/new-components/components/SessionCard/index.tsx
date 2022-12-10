@@ -15,6 +15,7 @@ import NextLink from "next/link";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 
 interface Props {
+  id: string;
   startTime: Date;
   endTime: Date;
   eventCount: number;
@@ -39,11 +40,13 @@ export const SessionCard = ({ startTime, endTime, eventCount }: Props) => {
         <Text w="full">{eventCount} detected events</Text>
       </VStack>
       <Spacer />
-      <LinkOverlay>
-        <Button variant="outline">
-          <ChevronRightIcon />
-        </Button>
-      </LinkOverlay>
+      <NextLink href={id} passHref>
+        <LinkOverlay>
+          <Button variant="outline">
+            <ChevronRightIcon />
+          </Button>
+        </LinkOverlay>
+      </NextLink>
     </Flex>
   );
 };
