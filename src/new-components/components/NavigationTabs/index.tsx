@@ -12,10 +12,10 @@ interface Props {
   /**
    * Tabs to be displayed. Each tab must be given a href and a title, and optionally a tab can be flagged as active.
    */
-  tabs: Tab[];
+  children: React.ReactNode;
 }
 
-export const NavigationTabs = ({ tabs }: Props) => {
+export const NavigationTabs = ({ children }: Props) => {
   return (
     <Flex
       as="nav"
@@ -25,14 +25,12 @@ export const NavigationTabs = ({ tabs }: Props) => {
       borderBottomWidth="thin"
       borderBottomStyle="solid"
     >
-      {tabs.map((tab) => (
-        <TabItem key={tab.href} {...tab} />
-      ))}
+      {children}
     </Flex>
   );
 };
 
-const TabItem = ({ href, title, active }: Tab) => {
+export const TabItem = ({ href, title, active }: Tab) => {
   return (
     <Link
       as={NextLink}
