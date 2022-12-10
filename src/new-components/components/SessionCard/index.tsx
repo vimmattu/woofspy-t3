@@ -13,6 +13,7 @@ import {
 import React from "react";
 import NextLink from "next/link";
 import { ChevronRightIcon } from "@chakra-ui/icons";
+import dayjs from "dayjs";
 
 interface Props {
   id: string;
@@ -21,7 +22,9 @@ interface Props {
   eventCount: number;
 }
 
-export const SessionCard = ({ startTime, endTime, eventCount }: Props) => {
+const formatTime = (date: Date) => dayjs(date).format("HH:mm:ss");
+
+export const SessionCard = ({ id, startTime, endTime, eventCount }: Props) => {
   return (
     <Flex
       as={LinkBox}
@@ -35,7 +38,7 @@ export const SessionCard = ({ startTime, endTime, eventCount }: Props) => {
     >
       <VStack spacing={4} textAlign="left">
         <Text fontWeight="bold" w="full">
-          {startTime.toLocaleTimeString()} - {endTime.toLocaleTimeString()}
+          {formatTime(startTime)} - {formatTime(endTime)}
         </Text>
         <Text w="full">{eventCount} detected events</Text>
       </VStack>
