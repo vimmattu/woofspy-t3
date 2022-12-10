@@ -43,7 +43,7 @@ export const Header = ({ userImage, userName, onLogout }: Props) => {
         Logo
       </Link>
       <Spacer />
-      <Popover>
+      <Popover placement="bottom-start">
         <PopoverTrigger>
           <Button rounded="full" variant="link" cursor="pointer" minW={0}>
             <Avatar name={userName} size={["sm", "md"]} src={userImage} />
