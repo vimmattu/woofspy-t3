@@ -6,6 +6,7 @@ module.exports = {
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
     "@chakra-ui/storybook-addon",
+    "@tomfreudenberg/next-auth-mock/storybook",
   ],
   framework: {
     name: "@storybook/nextjs",
@@ -16,5 +17,11 @@ module.exports = {
   },
   features: {
     emotionAlias: false,
+  },
+  webpackFinal: async (config) => {
+    config.resolve.alias[
+      "@tomfreudenberg/next-auth-mock/storybook/preview-mock-auth-states"
+    ] = path.resolve(__dirname, "previewMockAuthStates.js");
+    return config;
   },
 };
