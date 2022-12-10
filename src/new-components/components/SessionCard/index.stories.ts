@@ -18,5 +18,6 @@ export const Default: Story = {
     startTime: new Date("2022-10-11 10:01:04"),
     endTime: new Date("2022-10-11 13:32:42"),
     eventCount: 65,
+    id: "#",
   },
 };
