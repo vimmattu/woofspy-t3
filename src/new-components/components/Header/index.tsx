@@ -37,7 +37,7 @@ export const Header = ({ userImage, userName, onLogout }: Props) => {
       shadow={["", "md"]}
       p="0.5rem"
       alignItems="center"
-      mb="1rem"
+      mb={["none", "1rem"]}
     >
       <Link as={NextLink} href="/" fontSize="xl" fontWeight="bold">
         Logo

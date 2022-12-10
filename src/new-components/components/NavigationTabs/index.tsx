@@ -40,10 +40,10 @@ const TabItem = ({ href, title, active }: Tab) => {
       fontSize="xl"
       textAlign="center"
       w="full"
-      borderRadius="md"
+      borderRadius="sm"
       borderBottomRadius="none"
-      bg={active ? "gray.100" : "none"}
-      _hover={{ textDecoration: "none", bg: "gray.100" }}
+      bg={active ? "gray.50" : "none"}
+      _hover={{ textDecoration: "none", bg: "gray.50" }}
       p="0.5rem"
     >
       {title}
