@@ -31,7 +31,8 @@ export const SessionCard = ({ id, startTime, endTime, eventCount }: Props) => {
       borderColor="gray.200"
       borderRadius="md"
       shadow="xs"
-      p="0.5rem"
+      p={2}
+      mb={2}
     >
       <VStack spacing={4} textAlign="left">
         <Text fontWeight="bold" w="full">

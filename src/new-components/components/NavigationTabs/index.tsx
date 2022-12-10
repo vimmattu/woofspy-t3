@@ -42,7 +42,7 @@ export const TabItem = ({ href, title, active }: Tab) => {
       borderBottomRadius="none"
       bg={active ? "gray.50" : "none"}
       _hover={{ textDecoration: "none", bg: "gray.50" }}
-      p="0.5rem"
+      p={2}
     >
       {title}
     </Link>

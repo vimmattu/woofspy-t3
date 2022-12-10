@@ -32,13 +32,7 @@ interface Props {
 
 export const Header = ({ userImage, userName, onLogout }: Props) => {
   return (
-    <Flex
-      as="header"
-      shadow={["", "md"]}
-      p="0.5rem"
-      alignItems="center"
-      mb={["none", "1rem"]}
-    >
+    <Flex as="header" shadow={["", "md"]} p={2} alignItems="center" mb={[0, 2]}>
       <Link as={NextLink} href="/" fontSize="xl" fontWeight="bold">
         Logo
       </Link>
@@ -55,7 +49,7 @@ export const Header = ({ userImage, userName, onLogout }: Props) => {
           <PopoverHeader>
             <Text fontWeight="bold">{userName}</Text>
           </PopoverHeader>
-          <PopoverContent p="1rem">
+          <PopoverContent p={4}>
             <Button onClick={onLogout} colorScheme="gray" variant="outline">
               Sign out
             </Button>
