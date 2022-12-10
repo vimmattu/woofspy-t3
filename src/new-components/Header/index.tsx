@@ -32,7 +32,13 @@ interface Props {
 
 export const Header = ({ userImage, userName, onLogout }: Props) => {
   return (
-    <Flex shadow={["", "md"]} p="0.5rem" alignItems="center">
+    <Flex
+      as="header"
+      shadow={["", "md"]}
+      p="0.5rem"
+      alignItems="center"
+      mb="1rem"
+    >
       <Link as={NextLink} href="/" fontSize="xl" fontWeight="bold">
         Logo
       </Link>
