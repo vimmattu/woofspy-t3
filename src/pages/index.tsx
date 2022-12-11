@@ -1,9 +1,14 @@
+import { Box, Button, Heading, VStack } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { useSessions } from "../hooks/sessions";
+import { SessionList } from "../new-components/components/SectionList";
 
 const Home: NextPage = () => {
   const router = useRouter();
+  const { data, isLoading } = useSessions();
 
   // Display spinner if fetching user data or active session is in loading state,
   // or if an active session is found. (If active session is found, then useActiveSession redirects user to session details)
@@ -16,14 +21,17 @@ const Home: NextPage = () => {
         <title>Woofspy</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex h-full items-center">
-        <button
-          className="h-56 w-56 rounded-full bg-red-600 text-2xl text-white shadow-lg transition-colors hover:bg-red-700 focus:bg-red-700"
-          onClick={() => router.push("/spy")}
-        >
-          Start session
-        </button>
-      </main>
+      <VStack as="main" mt={4}>
+        <Button as={Link} href="/spy" colorScheme="green" w="full">
+          Start spy
+        </Button>
+
+        <Heading as="h2" w="full" size="lg">
+          Past sessions
+        </Heading>
+
+        {data && <SessionList sessions={data} />}
+      </VStack>
     </>
   );
 };
