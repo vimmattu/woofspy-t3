@@ -1,13 +1,4 @@
-import {
-  Button,
-  Flex,
-  Heading,
-  LinkBox,
-  LinkOverlay,
-  Spacer,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "../../../server/trpc/router";
 import { SessionCard } from "../SessionCard";
@@ -22,7 +13,7 @@ interface Props {
 
 export const SessionList = ({ sessions }: Props) => {
   return (
-    <>
+    <Box w="full">
       {Object.entries(sessions).map(([date, sessions]) => (
         <>
           <Text fontWeight="bold" fontSize="xl" mb={2}>
@@ -39,12 +30,6 @@ export const SessionList = ({ sessions }: Props) => {
           ))}
         </>
       ))}
-      {/*
-    {Object.entries(sessions).map(([date, s]) => (
-      <Heading>{date}</Heading>
-
-    )}
-      */}
-    </>
+    </Box>
   );
 };
