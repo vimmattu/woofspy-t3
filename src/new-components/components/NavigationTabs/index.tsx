@@ -31,11 +31,7 @@ export const NavigationTabs = ({ children }: Props) => {
   );
 };
 
-export const TabItem = ({ href, title }: Tab) => {
-  const router = useRouter();
-
-  const active = router.pathname === href;
-
+export const TabItem = ({ href, title, active }: Tab) => {
   return (
     <Link
       as={NextLink}
