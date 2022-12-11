@@ -1,7 +1,7 @@
-import { Box, Button, Heading, VStack } from "@chakra-ui/react";
+import { Link, Button, Heading, VStack } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useSessions } from "../hooks/sessions";
 import { SessionList } from "../new-components/components/SectionList";
@@ -22,7 +22,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <VStack as="main" mt={4}>
-        <Button as={Link} href="/spy" colorScheme="green" w="full">
+        <Button as={NextLink} href="/spy" colorScheme="green" w="full">
           Start spy
         </Button>
 
@@ -30,7 +30,14 @@ const Home: NextPage = () => {
           Past sessions
         </Heading>
 
-        {data && <SessionList sessions={data} />}
+        {data && (
+          <>
+            <SessionList sessions={data} />
+            <Link color="blue.400" as={NextLink} href="/sessions">
+              View more
+            </Link>
+          </>
+        )}
       </VStack>
     </>
   );
