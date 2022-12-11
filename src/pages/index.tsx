@@ -8,7 +8,10 @@ import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const { data, isLoading } = trpc.sessions.getSessions.useQuery({ length: 4 });
+  const { data, isLoading } = trpc.sessions.getSessions.useQuery({
+    length: 4,
+    excludeActive: true,
+  });
 
   // Display spinner if fetching user data or active session is in loading state,
   // or if an active session is found. (If active session is found, then useActiveSession redirects user to session details)

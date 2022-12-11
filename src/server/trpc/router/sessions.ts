@@ -33,7 +33,11 @@ async function assertSessionBelongsToUser(userId: string, sessionId: string) {
 export const sessionsRouter = t.router({
   getSessions: authedProcedure
     .input(
-      z.object({ length: z.number().optional(), page: z.number().optional() })
+      z.object({
+        length: z.number().optional(),
+        page: z.number().optional(),
+        excludeActive: z.boolean().optional(),
+      })
     )
     .query(async ({ ctx, input }) => {
       // TODO: Refactor
@@ -41,6 +45,7 @@ export const sessionsRouter = t.router({
         where: {
           userId: ctx.session.user.id,
           startTime: { gte: dayjs().subtract(1, "month").toDate() },
+          endTime: input.excludeActive ? { not: null } : undefined,
         },
         orderBy: { startTime: "desc" },
         take: input.length,
