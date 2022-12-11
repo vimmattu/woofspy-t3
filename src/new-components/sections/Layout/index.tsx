@@ -12,7 +12,7 @@ export const Layout = ({ children }: Props) => {
   const session = useSession();
   return (
     <>
-      <Header userName={session.data?.user?.name || undefined} />
+      <Header />
       <Container w="full" maxW="container.md" px={[0, 4]}>
         {session.status === "authenticated" && (
           <NavigationTabs>
