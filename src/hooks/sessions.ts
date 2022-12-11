@@ -24,7 +24,7 @@ export function useActiveSession(redirect?: boolean) {
 }
 
 export function useSessions() {
-  return trpc.sessions.getSessions.useQuery();
+  return trpc.sessions.getSessions.useQuery({});
 }
 
 export function useSessionDetails(id: string) {

@@ -31,25 +31,31 @@ async function assertSessionBelongsToUser(userId: string, sessionId: string) {
 }
 
 export const sessionsRouter = t.router({
-  getSessions: authedProcedure.query(async ({ ctx }) => {
-    // TODO: Refactor
-    const sessions = await ctx.prisma.spySession.findMany({
-      where: {
-        userId: ctx.session.user.id,
-        startTime: { gte: dayjs().subtract(1, "month").toDate() },
-      },
-      orderBy: { startTime: "desc" },
-      include: {
-        recordings: true,
-      },
-    });
-    return sessions.reduce((prev: Record<string, typeof sessions>, curr) => {
-      const formattedDate = dayjs(curr.startTime).format("YYYY-MM-DD");
-      if (!prev[formattedDate]) prev[formattedDate] = [];
-      prev[formattedDate]?.push(curr);
-      return prev;
-    }, {});
-  }),
+  getSessions: authedProcedure
+    .input(
+      z.object({ length: z.number().optional(), page: z.number().optional() })
+    )
+    .query(async ({ ctx, input }) => {
+      // TODO: Refactor
+      const sessions = await ctx.prisma.spySession.findMany({
+        where: {
+          userId: ctx.session.user.id,
+          startTime: { gte: dayjs().subtract(1, "month").toDate() },
+        },
+        orderBy: { startTime: "desc" },
+        take: input.length,
+        skip: input.page && input.length && input.page * input.length,
+        include: {
+          recordings: true,
+        },
+      });
+      return sessions.reduce((prev: Record<string, typeof sessions>, curr) => {
+        const formattedDate = dayjs(curr.startTime).format("YYYY-MM-DD");
+        if (!prev[formattedDate]) prev[formattedDate] = [];
+        prev[formattedDate]?.push(curr);
+        return prev;
+      }, {});
+    }),
   getSession: authedProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
