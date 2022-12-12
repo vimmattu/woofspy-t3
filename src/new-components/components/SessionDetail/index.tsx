@@ -1,5 +1,5 @@
 import {
-    Box,
+  Box,
   Button,
   Flex,
   LinkBox,
@@ -12,10 +12,10 @@ import React from "react";
 import NextLink from "next/link";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
-import type { Session } from '../../../types/inferred'
+import type { Session } from "../../../types/inferred";
 
 interface Props {
-  session: Session
+  session: Session;
 }
 
 const formatDate = (date: Date) => dayjs(date).format("DD:MM:YYYY");
@@ -26,9 +26,11 @@ export const SessionDetail = ({ session }: Props) => {
     <Box>
       <Flex>
         <Text>{formatDate(session.startTime)}</Text>
-        <Text>{formatTime(session.startTime)} - {session.endTime ? formatTime(session.endTime): ''}</Text>
+        <Text>
+          {formatTime(session.startTime)} -{" "}
+          {session.endTime ? formatTime(session.endTime) : ""}
+        </Text>
       </Flex>
-      
     </Box>
   );
 };
