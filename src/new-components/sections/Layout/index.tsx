@@ -21,7 +21,7 @@ export const Layout = ({ children }: Props) => {
             <TabItem
               title="Dashboard"
               href="/"
-              active={router.pathname === '/'}
+              active={router.pathname === "/"}
             />
             <TabItem
               title="Spy"

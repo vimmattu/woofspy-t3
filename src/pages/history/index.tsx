@@ -27,7 +27,7 @@ const Sessions: NextPage = () => {
                       color="blue.400"
                       variant="link"
                       onClick={() => fetchNextPage()}
-                      fontWeight='normal'
+                      fontWeight="normal"
                     >
                       Load more
                     </Button>
