@@ -1,14 +1,11 @@
 import { Box, Text } from "@chakra-ui/react";
-import { inferProcedureOutput } from "@trpc/server";
-import type { AppRouter } from "../../../server/trpc/router";
 import { SessionCard } from "../SessionCard";
+import type { Session } from '../../../types/inferred';
 
-type InferredSessionType = inferProcedureOutput<
-  AppRouter["sessions"]["getSessions"]
->[""];
+
 
 interface Props {
-  sessions: Record<string, InferredSessionType>;
+  sessions: Record<string, Session[]>;
 }
 
 export const SessionList = ({ sessions }: Props) => {

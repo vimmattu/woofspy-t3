@@ -1,17 +1,12 @@
-import { Link, Button, Heading, VStack } from "@chakra-ui/react";
+import { Link, Button, Heading, VStack, Spinner } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
+import { useSessions } from "../hooks/sessions";
 import { SessionList } from "../new-components/components/SectionList";
-import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
-  const router = useRouter();
-  const { data, isLoading } = trpc.sessions.getSessions.useQuery({
-    length: 4,
-    excludeActive: true,
-  });
+  const { data, isLoading } = useSessions();
 
   // Display spinner if fetching user data or active session is in loading state,
   // or if an active session is found. (If active session is found, then useActiveSession redirects user to session details)
@@ -33,13 +28,17 @@ const Home: NextPage = () => {
           Past sessions
         </Heading>
 
-        {data && (
-          <>
-            <SessionList sessions={data} />
-            <Link color="blue.400" as={NextLink} href="/sessions">
-              View more
-            </Link>
-          </>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          data && (
+            <>
+              <SessionList sessions={data} />
+              <Link color="blue.400" as={NextLink} href="/sessions">
+                View more
+              </Link>
+            </>
+          )
         )}
       </VStack>
     </>

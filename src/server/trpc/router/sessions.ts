@@ -34,13 +34,11 @@ export const sessionsRouter = t.router({
   getSessions: authedProcedure
     .input(
       z.object({
-        length: z.number().optional(),
-        page: z.number().optional(),
+        limit: z.number().optional(),
         excludeActive: z.boolean().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
-      // TODO: Refactor
       const sessions = await ctx.prisma.spySession.findMany({
         where: {
           userId: ctx.session.user.id,
@@ -48,18 +46,43 @@ export const sessionsRouter = t.router({
           endTime: input.excludeActive ? { not: null } : undefined,
         },
         orderBy: { startTime: "desc" },
-        take: input.length,
-        skip: input.page && input.length && input.page * input.length,
+        take: input.limit,
         include: {
           recordings: true,
         },
       });
-      return sessions.reduce((prev: Record<string, typeof sessions>, curr) => {
-        const formattedDate = dayjs(curr.startTime).format("YYYY-MM-DD");
-        if (!prev[formattedDate]) prev[formattedDate] = [];
-        prev[formattedDate]?.push(curr);
-        return prev;
-      }, {});
+      return sessions;
+    }),
+  getInfiniteSessions: authedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = input.limit ?? 50;
+      const { cursor } = input;
+      const sessions = await ctx.prisma.spySession.findMany({
+        where: {
+          userId: ctx.session.user.id,
+        },
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: { startTime: "desc" },
+        include: {
+          recordings: true,
+        },
+      });
+      let nextCursor: typeof cursor | undefined;
+      if (sessions.length > limit) {
+        const nextItem = sessions.pop();
+        nextCursor = nextItem!.id;
+      }
+      return {
+        sessions,
+        nextCursor,
+      };
     }),
   getSession: authedProcedure
     .input(z.object({ id: z.string() }))
