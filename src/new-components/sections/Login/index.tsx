@@ -37,11 +37,16 @@ export const Login = () => {
             w="full"
             align="center"
           >
-            <Button colorScheme='green' w={["full", "unset"]} type="submit" mb={[2, 0]}>
+            <Button
+              colorScheme="green"
+              w={["full", "unset"]}
+              type="submit"
+              mb={[2, 0]}
+            >
               Sign in
             </Button>
             <Link
-              color='blue.400'
+              color="blue.400"
               w={["full", "unset"]}
               textAlign="center"
               as={NextLink}
@@ -59,7 +64,11 @@ export const Login = () => {
             <Divider />
           </Flex>
 
-          <Button onClick={() => signIn('github')} w={["full", "unset"]} colorScheme="gray">
+          <Button
+            onClick={() => signIn("github")}
+            w={["full", "unset"]}
+            colorScheme="gray"
+          >
             Sign in with Github
           </Button>
           <Button w={["full", "unset"]} colorScheme="green">

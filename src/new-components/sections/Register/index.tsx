@@ -28,7 +28,7 @@ export const Register = () => {
             <FormLabel>Email address</FormLabel>
             <Input type="email" />
           </FormControl>
-          <SimpleGrid columns={2} spacing={4} w='full'>
+          <SimpleGrid columns={2} spacing={4} w="full">
             <FormControl isRequired>
               <FormLabel>First name</FormLabel>
               <Input type="email" />
@@ -37,17 +37,16 @@ export const Register = () => {
               <FormLabel>Last name</FormLabel>
               <Input type="password" />
             </FormControl>
-
           </SimpleGrid>
-          <SimpleGrid columns={2} spacing={4} w='full'>
-          <FormControl isRequired>
-            <FormLabel>Password</FormLabel>
-            <Input type="password" />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Confirm password</FormLabel>
-            <Input type="password" />
-          </FormControl>
+          <SimpleGrid columns={2} spacing={4} w="full">
+            <FormControl isRequired>
+              <FormLabel>Password</FormLabel>
+              <Input type="password" />
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Confirm password</FormLabel>
+              <Input type="password" />
+            </FormControl>
           </SimpleGrid>
           <Flex
             wrap="wrap"
@@ -59,7 +58,7 @@ export const Register = () => {
               Sign up
             </Button>
             <Link
-              color='blue.400'
+              color="blue.400"
               w={["full", "unset"]}
               textAlign="center"
               as={NextLink}
