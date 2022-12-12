@@ -1,8 +1,6 @@
 import { Box, Text } from "@chakra-ui/react";
 import { SessionCard } from "../SessionCard";
-import type { Session } from '../../../types/inferred';
-
-
+import type { Session } from "../../../types/inferred";
 
 interface Props {
   sessions: Record<string, Session[]>;

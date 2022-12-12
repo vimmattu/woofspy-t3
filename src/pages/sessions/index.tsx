@@ -6,7 +6,8 @@ import { Button, Heading, Spinner, VStack } from "@chakra-ui/react";
 import { SessionList } from "../../new-components/components/SectionList";
 
 const Sessions: NextPage = () => {
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteSessions();
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteSessions();
 
   return (
     <>
@@ -15,7 +16,6 @@ const Sessions: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <VStack as="main" mt={4}>
-
         <Heading as="h2" w="full" size="lg">
           History
         </Heading>
@@ -26,12 +26,21 @@ const Sessions: NextPage = () => {
           data && (
             <>
               <SessionList sessions={data} />
-              {hasNextPage && <>
-                {!isFetchingNextPage
-                  ? <Button color='blue.400' variant='link' onClick={() => fetchNextPage()}>Load more</Button>
-                  : <Spinner />
-                }
-              </>}
+              {hasNextPage && (
+                <>
+                  {!isFetchingNextPage ? (
+                    <Button
+                      color="blue.400"
+                      variant="link"
+                      onClick={() => fetchNextPage()}
+                    >
+                      Load more
+                    </Button>
+                  ) : (
+                    <Spinner />
+                  )}
+                </>
+              )}
             </>
           )
         )}

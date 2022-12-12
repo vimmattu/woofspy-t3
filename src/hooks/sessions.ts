@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { trpc } from "../utils/trpc";
-import type { Session } from '../types/inferred'
+import type { Session } from "../types/inferred";
 
 export function useCreateSession() {
   return trpc.sessions.createSession.useMutation();
@@ -26,35 +26,46 @@ export function useActiveSession(redirect?: boolean) {
   return query;
 }
 
-const useSessionsGroupedByDate = (data?: Session[]) => useMemo(() => {
-  if (!data) return {};
-  return data.reduce((prev: Record<string, Session[]>, curr) => {
-    const formattedDate = dayjs(curr.startTime).format("YYYY-MM-DD");
-    if (!prev[formattedDate]) prev[formattedDate] = [];
-    prev[formattedDate]?.push(curr);
-    return prev;
-  }, {});
-}, [data]);
+const useSessionsGroupedByDate = (data?: Session[]) =>
+  useMemo(() => {
+    if (!data) return {};
+    return data.reduce((prev: Record<string, Session[]>, curr) => {
+      const formattedDate = dayjs(curr.startTime).format("YYYY-MM-DD");
+      if (!prev[formattedDate]) prev[formattedDate] = [];
+      prev[formattedDate]?.push(curr);
+      return prev;
+    }, {});
+  }, [data]);
 
 export function useSessions() {
-  const { data, isLoading } = trpc.sessions.getSessions.useQuery({ limit: 4, excludeActive: true });
+  const { data, isLoading } = trpc.sessions.getSessions.useQuery({
+    limit: 4,
+    excludeActive: true,
+  });
   const sessions = useSessionsGroupedByDate(data);
   return { data: sessions, isLoading };
 }
 
 export function useInfiniteSessions() {
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = trpc.sessions.getInfiniteSessions.useInfiniteQuery(
-    { limit: 2 },
-    { getNextPageParam: (lastPage) => lastPage.nextCursor }
-  );
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    trpc.sessions.getInfiniteSessions.useInfiniteQuery(
+      { limit: 2 },
+      { getNextPageParam: (lastPage) => lastPage.nextCursor }
+    );
 
   const combinedPages = useMemo(() => {
-    return data?.pages.flatMap(page => page.sessions)
+    return data?.pages.flatMap((page) => page.sessions);
   }, [data]);
 
   const sessions = useSessionsGroupedByDate(combinedPages);
 
-  return { data: sessions, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage };
+  return {
+    data: sessions,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  };
 }
 
 export function useSessionDetails(id: string) {
