@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import React from "react";
 import { useInfiniteSessions } from "../../hooks/sessions";
-import { Button, Heading, Spinner, VStack } from "@chakra-ui/react";
+import { Button, Spinner, VStack } from "@chakra-ui/react";
 import { SessionList } from "../../new-components/components/SectionList";
+import { Head } from "../../new-components/components/Head";
 
 const Sessions: NextPage = () => {
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -11,14 +11,8 @@ const Sessions: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>History</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <VStack as="main" mt={4}>
-        <Heading as="h2" w="full" size="lg">
-          History
-        </Heading>
+        <Head title="History" />
 
         {isLoading ? (
           <Spinner />
@@ -33,6 +27,7 @@ const Sessions: NextPage = () => {
                       color="blue.400"
                       variant="link"
                       onClick={() => fetchNextPage()}
+                      fontWeight='normal'
                     >
                       Load more
                     </Button>

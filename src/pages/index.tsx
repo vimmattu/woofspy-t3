@@ -1,8 +1,8 @@
 import { Link, Button, Heading, VStack, Spinner } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import Head from "next/head";
 import NextLink from "next/link";
 import { useSessions } from "../hooks/sessions";
+import { Head } from "../new-components/components/Head";
 import { SessionList } from "../new-components/components/SectionList";
 
 const Home: NextPage = () => {
@@ -15,11 +15,8 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Woofspy</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <VStack as="main" mt={4}>
+        <Head title="Dashboard" />
         <Button as={NextLink} href="/spy" colorScheme="green" w="full">
           Start spy
         </Button>
@@ -34,7 +31,7 @@ const Home: NextPage = () => {
           data && (
             <>
               <SessionList sessions={data} />
-              <Link color="blue.400" as={NextLink} href="/sessions">
+              <Link color="blue.400" as={NextLink} href="/history">
                 View more
               </Link>
             </>
