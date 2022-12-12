@@ -16,7 +16,7 @@ export const Head = ({ title, hasHiddenHeader }: Props) => {
         <link rel="icon" href="/favicon.ico" />
       </NextHead>
       <HeadingWrapper>
-        <Heading as="h1" fontSize="3xl">
+        <Heading w='full' as="h1" fontSize="3xl">
           {title}
         </Heading>
       </HeadingWrapper>
