@@ -16,10 +16,28 @@ const Home: NextPage = () => {
   return (
     <>
       <VStack as="main" mt={4}>
-        <Head title="Dashboard" />
-        <Button as={NextLink} href="/spy" colorScheme="green" w="full">
+        <Head title="Dashboard" hasHiddenHeader />
+        {/*<Button as={NextLink} href="/spy" colorScheme="green" w="full">
+          Start spy
+        </Button>*/}
+
+        <Button
+          as={NextLink}
+          href="/spy"
+          colorScheme="red"
+          w="40"
+          h="40"
+          borderRadius="full"
+          fontSize="xl"
+          shadow="lg"
+          m={8}
+        >
           Start spy
         </Button>
+
+        {/* <Button as={NextLink} href="/spy" colorScheme="red" variant='outline' borderWidth='medium' w="40" h='40' borderRadius='full' fontSize='xl' shadow='lg' m={8} color='black' borderColor='red.600' bg='red.50'>
+          View spy 
+        </Button> */}
 
         <Heading as="h2" w="full" size="lg">
           Past sessions
