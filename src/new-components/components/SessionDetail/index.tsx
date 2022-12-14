@@ -24,25 +24,31 @@ export const SessionDetail = ({ session }: Props) => {
         </Text>
       </Flex>
       <VStack w="full">
-        <Flex minH={16}>
-          <Box ml={8}>
-            <CalendarIcon boxSize={8} ml="-16px" />
-            <Divider opacity={1} orientation="vertical" />
-          </Box>
-          <Box>
-            <Text>Recorded event</Text>
-          </Box>
-        </Flex>
-        <Flex minH={16}>
-          <Box ml={8}>
-            <CalendarIcon boxSize={8} ml="-16px" zIndex={1} bg="white" />
-            <Divider opacity={1} orientation="vertical" />
-          </Box>
-          <Box>
-            <Text>Recorded event</Text>
-          </Box>
-        </Flex>
+        {session.recordings.map((recording, i) => (
+          <RecordingItem
+            key={recording.id}
+            isLast={i === session.recordings.length - 1}
+          />
+        ))}
       </VStack>
     </Box>
+  );
+};
+
+interface RecordingItemProps {
+  isLast?: boolean;
+}
+
+const RecordingItem = ({ isLast }: RecordingItemProps) => {
+  return (
+    <Flex minH={isLast ? 12 : 16} w="full">
+      <Box ml={8}>
+        <CalendarIcon boxSize={8} ml="-16px" zIndex={1} bg="white" />
+        <Divider opacity={1} orientation="vertical" />
+      </Box>
+      <Box>
+        <Text>Recorded event</Text>
+      </Box>
+    </Flex>
   );
 };
