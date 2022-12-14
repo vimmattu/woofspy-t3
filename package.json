@@ -6,7 +6,8 @@
     "build": "next build",
     "dev": "next dev",
     "postinstall": "prisma generate",
-    "lint": "next lint",
+    "lint": "prettier --check .",
+    "format": "prettier --write .",
     "start": "next start",
     "prepare": "husky install",
     "build:signaler": "tsc -p tsconfig.signaler.json",
@@ -63,6 +64,7 @@
     "eslint-config-next": "13.0.6",
     "eslint-plugin-storybook": "^0.6.8",
     "husky": "^8.0.2",
+    "lint-staged": "^13.1.0",
     "postcss-loader": "^7.0.2",
     "prettier": "^2.8.1",
     "prisma": "^4.7.1",
@@ -72,5 +74,13 @@
   },
   "ct3aMetadata": {
     "initVersion": "6.1.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*": "prettier --writer"
   }
 }
