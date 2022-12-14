@@ -24,15 +24,17 @@ const formatTime = (date: Date) => dayjs(date).format("HH:mm:ss");
 export const SessionDetail = ({ session }: Props) => {
   return (
     <Box>
-      <Flex justifyContent='space-between'>
-        <Text fontWeight='bold' fontSize='xl'>{formatDate(session.startTime)}</Text>
-        <Text fontSize='xl'>
+      <Flex justifyContent="space-between">
+        <Text fontWeight="bold" fontSize="xl">
+          {formatDate(session.startTime)}
+        </Text>
+        <Text fontSize="xl">
           {formatTime(session.startTime)} -{" "}
           {session.endTime ? formatTime(session.endTime) : ""}
         </Text>
       </Flex>
       <Box>
-        <CalendarIcon/>
+        <CalendarIcon />
       </Box>
     </Box>
   );
