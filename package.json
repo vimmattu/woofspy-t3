@@ -63,6 +63,7 @@
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
     "eslint-plugin-storybook": "^0.6.8",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^8.0.2",
     "lint-staged": "^13.1.0",
     "postcss-loader": "^7.0.2",
@@ -81,6 +82,9 @@
     }
   },
   "lint-staged": {
-    "*.tsx?": "prettier --write"
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint . --fix",
+      "prettier --write ."
+    ]
   }
 }

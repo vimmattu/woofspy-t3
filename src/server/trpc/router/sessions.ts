@@ -77,7 +77,7 @@ export const sessionsRouter = t.router({
       let nextCursor: typeof cursor | undefined;
       if (sessions.length > limit) {
         const nextItem = sessions.pop();
-        nextCursor = nextItem!.id;
+        nextCursor = nextItem?.id;
       }
       return {
         sessions,

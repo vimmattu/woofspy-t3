@@ -1,16 +1,6 @@
-import {
-  Box,
-  Button,
-  Flex,
-  LinkBox,
-  LinkOverlay,
-  Spacer,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import React from "react";
-import NextLink from "next/link";
-import { CalendarIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { CalendarIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
 import type { Session } from "../../../types/inferred";
 

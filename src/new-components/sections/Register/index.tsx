@@ -2,15 +2,12 @@ import {
   Box,
   Link,
   Button,
-  Divider,
   Flex,
   FormControl,
   FormLabel,
   Heading,
   Input,
-  Text,
   VStack,
-  Grid,
   SimpleGrid,
 } from "@chakra-ui/react";
 import NextLink from "next/link";

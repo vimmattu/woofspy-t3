@@ -1,5 +1,4 @@
 import { Box, VStack } from "@chakra-ui/react";
-import { signIn } from "next-auth/react";
 import { Head } from "../../new-components/components/Head";
 import { Login } from "../../new-components/sections/Login";
 
