@@ -5,7 +5,7 @@ import { useMediaStream } from "../../hooks/devices";
 import { useCreateSession, useEndSession } from "../../hooks/sessions";
 
 const CameraSelection = dynamic(
-  () => import("../../components/spy/SelectCamera"),
+  () => import("../../new-components/sections/Spy/SelectCamera"),
   { ssr: false }
 );
 const MicrophoneSelection = dynamic(
