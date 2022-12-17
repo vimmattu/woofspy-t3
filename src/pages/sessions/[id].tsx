@@ -11,7 +11,7 @@ const Sessions: NextPage = () => {
     query: { id },
     back,
   } = useRouter();
-  const { data, isLoading, error } = useSessionDetails(id);
+  const { data, isLoading, error } = useSessionDetails(id as string);
 
   return (
     <>
