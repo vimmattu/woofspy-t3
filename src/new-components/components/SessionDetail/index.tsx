@@ -13,7 +13,7 @@ const formatTime = (date: Date) => dayjs(date).format("HH:mm:ss");
 
 export const SessionDetail = ({ session }: Props) => {
   return (
-    <Box>
+    <Box w="full">
       <Flex justifyContent="space-between" mb={4}>
         <Text fontWeight="bold" fontSize="xl">
           {formatDate(session.startTime)}
@@ -52,11 +52,7 @@ const RecordingItem = ({ isLast }: RecordingItemProps) => {
         <IconButton
           aria-label="Expand event"
           icon={isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
-          h="min"
-          w="min"
-          minW={0}
-          variant="unstyled"
-          size="lg"
+          variant="outline"
           onClick={() => setIsExpanded((prev) => !prev)}
         />
       </Flex>
