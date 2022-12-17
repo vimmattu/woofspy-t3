@@ -82,7 +82,6 @@ export function useMediaStream({
     activeDeviceType,
     cameraInitialized,
     audioInitialized,
-    stream,
   ]);
 
   const clearStream = () => {
