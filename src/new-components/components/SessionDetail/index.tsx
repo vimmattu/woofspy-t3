@@ -63,7 +63,7 @@ const RecordingItem = ({ isLast, recording }: RecordingItemProps) => {
         </Flex>
         {data && isExpanded && (
           <Box p={4} w="full">
-            <video src={data} autoPlay controls style={{ width: "100%" }} />
+            <video src={data} autoPlay controls />
           </Box>
         )}
       </Box>
