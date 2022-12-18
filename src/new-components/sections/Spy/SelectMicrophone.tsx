@@ -3,19 +3,9 @@ import { useActivityDetector } from "../../../hooks/detector";
 import { useMediaDevices } from "../../../hooks/devices";
 import WaveForm from "../../../components/WaveForm";
 import { BaseDeviceAskProps } from "./types";
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  Select,
-  Slider,
-  SliderFilledTrack,
-  SliderMark,
-  SliderThumb,
-  SliderTrack,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Select, Text } from "@chakra-ui/react";
 import { Head } from "../../components/Head";
+import SensitivitySlider from "../../components/SensitivitySlider";
 
 const SelectMicrophone: React.FC<BaseDeviceAskProps> = ({
   stream,
@@ -60,22 +50,13 @@ const SelectMicrophone: React.FC<BaseDeviceAskProps> = ({
           </option>
         ))}
       </Select>
-      <FormControl w="full" pb={4}>
-        <FormLabel>Sensitivity</FormLabel>
-        <Slider onChange={(e) => setSensitivity(e)} max={2} min={1} step={0.01}>
-          <SliderMark mt={2} ml={-2.5} value={1.1}>
-            High sensitivity
-          </SliderMark>
-          <SliderMark mt={2} ml={-2.5} value={1.9}>
-            Low sensitivity
-          </SliderMark>
-          <SliderTrack>
-            <SliderFilledTrack />
-          </SliderTrack>
-
-          <SliderThumb />
-        </Slider>
-      </FormControl>
+      <SensitivitySlider
+        onChangeSensitivity={setSensitivity}
+        max={2}
+        min={1}
+        step={0.01}
+        defaultValue={sensitivity}
+      />
       <Button w="full" colorScheme="green" onClick={proceedSetup}>
         Start spy
       </Button>

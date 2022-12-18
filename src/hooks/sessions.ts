@@ -11,7 +11,7 @@ export function useCreateSession() {
 export function useEndSession() {
   const router = useRouter();
   return trpc.sessions.endSession.useMutation({
-    onSuccess: () => router.push("/sessions"),
+    onSuccess: () => router.push("/history"),
   });
 }
 

@@ -22,9 +22,12 @@ const SelectMicrophone = dynamic(
   () => import("../../new-components/sections/Spy/SelectMicrophone"),
   { ssr: false }
 );
-const SpyView = dynamic(() => import("../../components/spy/SpyView"), {
-  ssr: false,
-});
+const SpyView = dynamic(
+  () => import("../../new-components/sections/Spy/SpyView"),
+  {
+    ssr: false,
+  }
+);
 
 enum Step {
   PRE_SELECT_CAMERA,
