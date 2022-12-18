@@ -1,9 +1,12 @@
+import { Link, Button, Heading, VStack, Spinner } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import Head from "next/head";
-import { useRouter } from "next/router";
+import NextLink from "next/link";
+import { useSessions } from "../hooks/sessions";
+import { Head } from "../new-components/components/Head";
+import { SessionList } from "../new-components/components/SectionList";
 
 const Home: NextPage = () => {
-  const router = useRouter();
+  const { data, isLoading } = useSessions();
 
   // Display spinner if fetching user data or active session is in loading state,
   // or if an active session is found. (If active session is found, then useActiveSession redirects user to session details)
@@ -12,18 +15,47 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Woofspy</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className="flex h-full items-center">
-        <button
-          className="h-56 w-56 rounded-full bg-red-600 text-2xl text-white shadow-lg transition-colors hover:bg-red-700 focus:bg-red-700"
-          onClick={() => router.push("/spy")}
+      <VStack as="main" mt={4}>
+        <Head title="Dashboard" hasHiddenHeader />
+        {/*<Button as={NextLink} href="/spy" colorScheme="green" w="full">
+          Start spy
+        </Button>*/}
+
+        <Button
+          as={NextLink}
+          href="/spy"
+          colorScheme="red"
+          w="40"
+          h="40"
+          borderRadius="full"
+          fontSize="xl"
+          shadow="lg"
+          m={8}
         >
-          Start session
-        </button>
-      </main>
+          Start spy
+        </Button>
+
+        {/* <Button as={NextLink} href="/spy" colorScheme="red" variant='outline' borderWidth='medium' w="40" h='40' borderRadius='full' fontSize='xl' shadow='lg' m={8} color='black' borderColor='red.600' bg='red.50'>
+          View spy 
+        </Button> */}
+
+        <Heading as="h2" w="full" size="lg">
+          Past sessions
+        </Heading>
+
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          data && (
+            <>
+              <SessionList sessions={data} />
+              <Link color="blue.400" as={NextLink} href="/history">
+                View more
+              </Link>
+            </>
+          )
+        )}
+      </VStack>
     </>
   );
 };

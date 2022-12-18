@@ -1,3 +1,4 @@
+import { Box } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
 import WaveSurfer from "wavesurfer.js";
 
@@ -41,7 +42,7 @@ const WaveForm = ({ stream }: { stream?: MediaStream }) => {
     };
   }, [stream]);
 
-  return <div className="w-full" ref={containerRef} />;
+  return <Box w="full" ref={containerRef} />;
 };
 
 export default WaveForm;

@@ -13,7 +13,7 @@ const Video: React.FC<Props> = ({ stream, src }) => {
     [stream]
   );
 
-  return <video ref={ref} src={src} autoPlay muted />;
+  return <video style={{ width: "100%" }} ref={ref} src={src} autoPlay muted />;
 };
 
 export default Video;
