@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:lts-alpine3.16
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
