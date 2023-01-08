@@ -29,6 +29,7 @@ export const serverSchema = z.object({
   PUSHER_SECRET: z.string(),
   PUSHER_CLUSTER: z.string(),
   PUSHER_USETLS: z.string(),
+  DEV: z.preprocess((val) => !!val, z.boolean()).optional(),
 });
 
 /**
@@ -39,6 +40,7 @@ export const serverSchema = z.object({
 export const clientSchema = z.object({
   NEXT_PUBLIC_PUSHER_KEY: z.string(),
   NEXT_PUBLIC_PUSHER_CLUSTER: z.string(),
+  NEXT_PUBLIC_DEV: z.preprocess((val) => !!val, z.boolean()).optional(),
 });
 
 /**
@@ -50,4 +52,5 @@ export const clientSchema = z.object({
 export const clientEnv = {
   NEXT_PUBLIC_PUSHER_KEY: process.env.NEXT_PUBLIC_PUSHER_KEY,
   NEXT_PUBLIC_PUSHER_CLUSTER: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+  NEXT_PUBLIC_DEV: !!process.env.NEXT_PUBLIC_DEV || false,
 };

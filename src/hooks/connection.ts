@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { PusherHandler } from "../utils/client-signaling";
+import { PusherHandler, SseHandler } from "../utils/client-signaling";
+import { env } from "../env/client.mjs";
 
 interface Opts {
   sessionId?: string;
@@ -18,7 +19,9 @@ export const useLiveConnection = ({
 
   useEffect(() => {
     if (!sessionId) return;
-    const signal = new PusherHandler(sessionId);
+    const signal = env.NEXT_PUBLIC_DEV
+      ? new SseHandler(sessionId)
+      : new PusherHandler(sessionId);
 
     const createPeer = (userId: string) => {
       const peer = new RTCPeerConnection({
@@ -60,9 +63,7 @@ export const useLiveConnection = ({
 
         const peer = createPeer(userId);
         peer.addEventListener("track", (event) => {
-          if (event.track.kind === "video") {
-            onStreamChanged?.(event.streams[0]);
-          }
+          onStreamChanged?.(event.streams[0]);
         });
 
         remotes.current.set(userId, peer);
