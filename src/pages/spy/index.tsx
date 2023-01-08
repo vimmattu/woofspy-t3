@@ -102,6 +102,7 @@ export default function SpyPage() {
 
   function navigateBack() {
     if (step === Step.SPY) return back();
+    if (step === Step.DONE) return back();
     if (step < 1) return back();
     setStep(step - 1);
   }
