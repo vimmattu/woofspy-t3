@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 const post = async (url: string, body: any) => {
   const res = await fetch(url, {
@@ -27,10 +27,28 @@ export const useLiveConnection = ({
   onStreamChanged,
 }: Opts) => {
   const remotes = useRef<Map<string, RTCPeerConnection>>(new Map());
+  const endpoint = useMemo(() => `/api/sessions/${sessionId}/sse`, [sessionId]);
+
+  const createPeer = useCallback(
+    (userId: string) => {
+      const peer = new RTCPeerConnection();
+      peer.addEventListener(
+        "icecandidate",
+        ({ candidate: data }) =>
+          data &&
+          post(endpoint, {
+            to: userId,
+            type: "icecandidate",
+            data,
+          })
+      );
+      return peer;
+    },
+    [endpoint]
+  );
 
   useEffect(() => {
     if (!sessionId) return;
-    const endpoint = `/api/sessions/${sessionId}/sse`;
     const eventSource = new EventSource(endpoint);
 
     eventSource.addEventListener(
@@ -40,18 +58,7 @@ export const useLiveConnection = ({
         console.log(`User ${userId} joined`);
         if (!isHost) return;
 
-        const peer = new RTCPeerConnection();
-        // handle ice candidates
-        peer.addEventListener("icecandidate", (event) => {
-          if (event.candidate) {
-            post(endpoint, {
-              to: userId,
-              type: "icecandidate",
-              data: event.candidate,
-            });
-          }
-        });
-
+        const peer = createPeer(userId);
         remotes.current.set(userId, peer);
         stream?.getTracks().forEach((track) => peer.addTrack(track, stream));
 
@@ -72,18 +79,7 @@ export const useLiveConnection = ({
         const { userId, data } = JSON.parse(event.data);
         console.log(`Received signal from ${userId} of type offer`);
 
-        const peer = new RTCPeerConnection();
-        // handle ice candidates
-        peer.addEventListener("icecandidate", async (event) => {
-          if (event.candidate) {
-            await post(endpoint, {
-              to: userId,
-              type: "icecandidate",
-              data: event.candidate,
-            });
-          }
-        });
-
+        const peer = createPeer(userId);
         peer.addEventListener("track", (event) => {
           if (event.track.kind === "video") {
             onStreamChanged?.(event.streams[0]);
@@ -140,5 +136,5 @@ export const useLiveConnection = ({
     return () => {
       eventSource.close();
     };
-  }, [sessionId, isHost, stream]);
+  }, [endpoint, isHost, stream]);
 };
