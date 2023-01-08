@@ -17,7 +17,9 @@ export function useEndSession() {
 
 export function useActiveSession(redirect?: boolean) {
   const router = useRouter();
-  const query = trpc.sessions.getActiveSession.useQuery();
+  const query = trpc.sessions.getActiveSession.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+  });
 
   if (!!query.data && redirect) {
     router.push(`/sessions/${query.data.id}`);

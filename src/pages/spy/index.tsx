@@ -1,10 +1,14 @@
-import { Button, VStack } from "@chakra-ui/react";
+import { Button, Spinner, VStack } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ActiveDevice } from "../../components/spy/types";
 import { useMediaStream } from "../../hooks/devices";
-import { useCreateSession, useEndSession } from "../../hooks/sessions";
+import {
+  useActiveSession,
+  useCreateSession,
+  useEndSession,
+} from "../../hooks/sessions";
 
 const PreSelectCamera = dynamic(
   () => import("../../new-components/sections/Spy/PreSelectCamera"),
@@ -28,6 +32,12 @@ const SpyView = dynamic(
     ssr: false,
   }
 );
+const GuestView = dynamic(
+  () => import("../../new-components/sections/Spy/GuestView"),
+  {
+    ssr: false,
+  }
+);
 
 enum Step {
   PRE_SELECT_CAMERA,
@@ -35,6 +45,7 @@ enum Step {
   PRE_SELECT_MICROPHONE,
   SELECT_MICROPHONE,
   DONE,
+  SPY,
 }
 
 function getActiveDeviceType(step: Step) {
@@ -46,7 +57,12 @@ function getActiveDeviceType(step: Step) {
 }
 
 export default function SpyPage() {
-  const { data, mutateAsync: createSession } = useCreateSession();
+  const { data: activeSession, isLoading: guestLoading } = useActiveSession();
+  const {
+    data,
+    mutateAsync: createSession,
+    isLoading: hostLoading,
+  } = useCreateSession();
   const { mutateAsync: endSession } = useEndSession();
   const [step, setStep] = useState<Step>(Step.PRE_SELECT_CAMERA);
   const [cameraId, setCameraId] = useState<string | null>();
@@ -88,6 +104,14 @@ export default function SpyPage() {
     if (step < 1) return back();
     setStep(step - 1);
   }
+
+  useEffect(() => {
+    if (!!activeSession) {
+      setStep(Step.SPY);
+    }
+  }, [activeSession]);
+
+  if (guestLoading || hostLoading) return <Spinner />;
 
   const renderView = () => {
     switch (step) {
@@ -150,6 +174,8 @@ export default function SpyPage() {
             setSensitivity={setSensitivity}
           />
         );
+      case Step.SPY:
+        return <GuestView sessionId={activeSession?.id} />;
     }
   };
 

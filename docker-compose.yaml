@@ -15,13 +15,13 @@ services:
       - db:db
       - minio:minio
 
-  storybook:
-    build: .
-    ports:
-      - 6006:6006
-    volumes:
-      - ./:/app/
-    command: "pnpm storybook"
+  # storybook:
+  #   build: .
+  #   ports:
+  #     - 6006:6006
+  #   volumes:
+  #     - ./:/app/
+  #   command: "pnpm storybook"
 
   db:
     image: mysql
@@ -35,15 +35,6 @@ services:
     hostname: 127.0.0.1
     ports:
       - 3306:3306
-
-  signaler:
-    build:
-      dockerfile: signaler/Dockerfile
-      context: .
-    volumes:
-      - ./:/app/
-    ports:
-      - 8001:8001
 
   minio:
     image: minio/minio
