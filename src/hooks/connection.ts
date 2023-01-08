@@ -1,19 +1,6 @@
 import { useEffect, useRef } from "react";
 import { SseHandler } from "../utils/client-signaling";
 
-const post = async (url: string, body: any) => {
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) {
-    console.error(res.body);
-  }
-};
-
 interface Opts {
   sessionId?: string;
   isHost?: boolean;
