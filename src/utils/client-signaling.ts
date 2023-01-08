@@ -1,7 +1,6 @@
 class SignalingHandler extends EventTarget {
   constructor(_sessionId: string) {
     super();
-
     this.onJoin = this.onJoin.bind(this);
     this.onLeave = this.onLeave.bind(this);
     this.onOffer = this.onOffer.bind(this);
@@ -11,35 +10,41 @@ class SignalingHandler extends EventTarget {
     this.close = this.close.bind(this);
   }
 
-  on(event: string, callback: any) {
+  protected onJoin(userId: string) {
+    this.dispatchEvent(new CustomEvent("join", { detail: userId }));
+  }
+
+  protected onLeave(userId: string) {
+    this.dispatchEvent(new CustomEvent("leave", { detail: userId }));
+  }
+
+  protected onOffer(userId: string, offer: RTCSessionDescriptionInit) {
+    this.dispatchEvent(
+      new CustomEvent("offer", { detail: { userId, data: offer } })
+    );
+  }
+
+  protected onAnswer(userId: string, answer: RTCSessionDescriptionInit) {
+    this.dispatchEvent(
+      new CustomEvent("answer", { detail: { userId, data: answer } })
+    );
+  }
+
+  protected onIceCandidate(userId: string, candidate: RTCIceCandidateInit) {
+    this.dispatchEvent(
+      new CustomEvent("icecandidate", { detail: { userId, data: candidate } })
+    );
+  }
+
+  public on(event: string, callback: any) {
     this.addEventListener(event, callback);
   }
 
-  onJoin(_userId: string) {
+  public send(_userId: string, _type: string, _data: any) {
     throw new Error("Not implemented");
   }
 
-  onLeave(_userId: string) {
-    throw new Error("Not implemented");
-  }
-
-  onOffer(_userId: string, _offer: RTCSessionDescription) {
-    throw new Error("Not implemented");
-  }
-
-  onAnswer(_userId: string, _answer: RTCSessionDescription) {
-    throw new Error("Not implemented");
-  }
-
-  onIceCandidate(_userId: string, _candidate: RTCIceCandidate) {
-    throw new Error("Not implemented");
-  }
-
-  send(_userId: string, _type: string, _data: any) {
-    throw new Error("Not implemented");
-  }
-
-  close() {
+  public close() {
     throw new Error("Not implemented");
   }
 }
@@ -94,32 +99,6 @@ export class SseHandler extends SignalingHandler {
         console.log(`Received signal from ${userId} of type icecandidate`);
         this.onIceCandidate(userId, data);
       }
-    );
-  }
-
-  onJoin(userId: string) {
-    this.dispatchEvent(new CustomEvent("join", { detail: userId }));
-  }
-
-  onLeave(userId: string) {
-    this.dispatchEvent(new CustomEvent("leave", { detail: userId }));
-  }
-
-  onOffer(userId: string, offer: RTCSessionDescriptionInit) {
-    this.dispatchEvent(
-      new CustomEvent("offer", { detail: { userId, data: offer } })
-    );
-  }
-
-  onAnswer(userId: string, answer: RTCSessionDescriptionInit) {
-    this.dispatchEvent(
-      new CustomEvent("answer", { detail: { userId, data: answer } })
-    );
-  }
-
-  onIceCandidate(userId: string, candidate: RTCIceCandidateInit) {
-    this.dispatchEvent(
-      new CustomEvent("icecandidate", { detail: { userId, data: candidate } })
     );
   }
 
