@@ -40,6 +40,16 @@ export const sessionsRouter = t.router({
     )
     .query(async ({ ctx, input }) => {
       const sessions = await ctx.prisma.spySession.findMany({
+        select: {
+          id: true,
+          startTime: true,
+          endTime: true,
+          _count: {
+            select: {
+              recordings: true,
+            },
+          },
+        },
         where: {
           userId: ctx.session.user.id,
           startTime: { gte: dayjs().subtract(1, "month").toDate() },
@@ -47,9 +57,6 @@ export const sessionsRouter = t.router({
         },
         orderBy: { startTime: "desc" },
         take: input.limit,
-        include: {
-          recordings: true,
-        },
       });
       return sessions;
     }),
@@ -64,15 +71,22 @@ export const sessionsRouter = t.router({
       const limit = input.limit ?? 50;
       const { cursor } = input;
       const sessions = await ctx.prisma.spySession.findMany({
+        select: {
+          id: true,
+          startTime: true,
+          endTime: true,
+          _count: {
+            select: {
+              recordings: true,
+            },
+          },
+        },
         where: {
           userId: ctx.session.user.id,
         },
         take: limit + 1,
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: { startTime: "desc" },
-        include: {
-          recordings: true,
-        },
       });
       let nextCursor: typeof cursor | undefined;
       if (sessions.length > limit) {
@@ -88,8 +102,17 @@ export const sessionsRouter = t.router({
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.spySession.findFirst({
+        select: {
+          id: true,
+          startTime: true,
+          endTime: true,
+          _count: {
+            select: {
+              recordings: true,
+            },
+          },
+        },
         where: { userId: ctx.session.user.id, id: input.id },
-        include: { recordings: true },
       });
     }),
   getActiveSession: authedProcedure.query(({ ctx }) => {
@@ -143,6 +166,36 @@ export const sessionsRouter = t.router({
         where: { sessionId: input.sessionId },
         orderBy: { startTime: "desc" },
       });
+    }),
+  getInfiniteRecordings: authedProcedure
+    .input(
+      z.object({
+        sessionId: z.string(),
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      await assertSessionBelongsToUser(ctx.session.user.id, input.sessionId);
+
+      const limit = input.limit ?? 50;
+      const { cursor } = input;
+      const recordings = await ctx.prisma.recording.findMany({
+        where: { sessionId: input.sessionId },
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: { startTime: "desc" },
+      });
+
+      let nextCursor: typeof cursor | undefined;
+      if (recordings.length > limit) {
+        const nextItem = recordings.pop();
+        nextCursor = nextItem?.id;
+      }
+      return {
+        recordings,
+        nextCursor,
+      };
     }),
   createRecording: authedProcedure
     .input(z.object({ sessionId: z.string() }))

@@ -1,9 +1,21 @@
-import { Box, Divider, Flex, IconButton, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  IconButton,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import React, { useState } from "react";
 import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
-import type { Session } from "../../../types/inferred";
-import { useRecordingFile } from "../../../hooks/sessions";
+import type { Session, Recording } from "../../../types/inferred";
+import {
+  useInfiniteRecordings,
+  useRecordingFile,
+} from "../../../hooks/sessions";
 
 interface Props {
   session: Session;
@@ -13,6 +25,18 @@ const formatDate = (date: Date) => dayjs(date).format("DD.MM.YYYY");
 const formatTime = (date: Date) => dayjs(date).format("HH:mm:ss");
 
 export const SessionDetail = ({ session }: Props) => {
+  const {
+    data: recordings,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useInfiniteRecordings(session.id);
+
+  if (isLoading || !recordings) {
+    return <Spinner />;
+  }
+
   return (
     <Box w="full">
       <Flex justifyContent="space-between" mb={4}>
@@ -20,18 +44,36 @@ export const SessionDetail = ({ session }: Props) => {
           {formatDate(session.startTime)}
         </Text>
         <Text fontSize="xl">
+          {" "}
           {formatTime(session.startTime)} -{" "}
           {session.endTime ? formatTime(session.endTime) : ""}
         </Text>
       </Flex>{" "}
-      <VStack w="full">
-        {session.recordings.map((recording, i) => (
+      <VStack w="full" mb={8}>
+        {recordings.map((recording, i) => (
           <RecordingItem
             key={recording.id}
-            isLast={i === session.recordings.length - 1}
+            isLast={i === recordings.length - 1}
             recording={recording}
           />
         ))}
+        {hasNextPage && (
+          <>
+            {!isFetchingNextPage ? (
+              <Button
+                colorScheme="gray"
+                onClick={() => fetchNextPage()}
+                fontWeight="normal"
+                w="full"
+                zIndex={1}
+              >
+                Load more
+              </Button>
+            ) : (
+              <Spinner />
+            )}
+          </>
+        )}
       </VStack>
     </Box>
   );
@@ -39,7 +81,7 @@ export const SessionDetail = ({ session }: Props) => {
 
 interface RecordingItemProps {
   isLast?: boolean;
-  recording: Session["recordings"][0];
+  recording: Recording;
 }
 
 const RecordingItem = ({ isLast, recording }: RecordingItemProps) => {

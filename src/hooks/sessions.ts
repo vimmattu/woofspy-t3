@@ -65,6 +65,26 @@ export function useInfiniteSessions() {
   };
 }
 
+export function useInfiniteRecordings(sessionId: string) {
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    trpc.sessions.getInfiniteRecordings.useInfiniteQuery(
+      { sessionId, limit: 8 },
+      { getNextPageParam: (lastPage) => lastPage.nextCursor }
+    );
+
+  const combinedPages = useMemo(() => {
+    return data?.pages.flatMap((page) => page.recordings);
+  }, [data]);
+
+  return {
+    data: combinedPages,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  };
+}
+
 export function useSessionDetails(id: string) {
   return trpc.sessions.getSession.useQuery({ id });
 }

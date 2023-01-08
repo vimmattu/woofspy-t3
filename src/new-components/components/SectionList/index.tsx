@@ -20,7 +20,7 @@ export const SessionList = ({ sessions }: Props) => {
               id={s.id}
               startTime={s.startTime}
               endTime={s.endTime || undefined}
-              eventCount={s.recordings.length}
+              eventCount={s._count.recordings}
               key={s.id}
             />
           ))}

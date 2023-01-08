@@ -11,7 +11,7 @@ const Sessions: NextPage = () => {
 
   return (
     <>
-      <VStack as="main" mt={4}>
+      <VStack as="main" mt={4} mb={8}>
         <Head title="History" />
 
         {isLoading ? (
@@ -24,10 +24,10 @@ const Sessions: NextPage = () => {
                 <>
                   {!isFetchingNextPage ? (
                     <Button
-                      color="blue.400"
-                      variant="link"
+                      colorScheme="gray"
                       onClick={() => fetchNextPage()}
                       fontWeight="normal"
+                      w="full"
                     >
                       Load more
                     </Button>
