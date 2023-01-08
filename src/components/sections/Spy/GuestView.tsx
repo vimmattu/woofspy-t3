@@ -1,6 +1,6 @@
-import Video from "../../../components/Video";
-import WaveForm from "../../../components/WaveForm";
-import { Head } from "../../components/Head";
+import Video from "../../Video";
+import WaveForm from "../../WaveForm";
+import { Head } from "../../Head";
 import { useLiveConnection } from "../../../hooks/connection";
 import { useState } from "react";
 

@@ -2,7 +2,7 @@ import { Button, Spinner, VStack } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ActiveDevice } from "../../components/spy/types";
+import { ActiveDevice } from "../../components/sections/Spy/types";
 import { useMediaStream } from "../../hooks/devices";
 import {
   useActiveSession,
@@ -11,29 +11,26 @@ import {
 } from "../../hooks/sessions";
 
 const PreSelectCamera = dynamic(
-  () => import("../../new-components/sections/Spy/PreSelectCamera"),
+  () => import("../../components/sections/Spy/PreSelectCamera"),
   { ssr: false }
 );
 const PreSelectMicrophone = dynamic(
-  () => import("../../new-components/sections/Spy/PreSelectMicrophone"),
+  () => import("../../components/sections/Spy/PreSelectMicrophone"),
   { ssr: false }
 );
 const SelectCamera = dynamic(
-  () => import("../../new-components/sections/Spy/SelectCamera"),
+  () => import("../../components/sections/Spy/SelectCamera"),
   { ssr: false }
 );
 const SelectMicrophone = dynamic(
-  () => import("../../new-components/sections/Spy/SelectMicrophone"),
+  () => import("../../components/sections/Spy/SelectMicrophone"),
   { ssr: false }
 );
-const SpyView = dynamic(
-  () => import("../../new-components/sections/Spy/SpyView"),
-  {
-    ssr: false,
-  }
-);
+const SpyView = dynamic(() => import("../../components/sections/Spy/SpyView"), {
+  ssr: false,
+});
 const GuestView = dynamic(
-  () => import("../../new-components/sections/Spy/GuestView"),
+  () => import("../../components/sections/Spy/GuestView"),
   {
     ssr: false,
   }

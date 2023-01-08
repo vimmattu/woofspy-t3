@@ -4,8 +4,8 @@ import { useMediaDevices } from "../../../hooks/devices";
 import WaveForm from "../../../components/WaveForm";
 import { BaseDeviceAskProps } from "./types";
 import { Button, Select, Text } from "@chakra-ui/react";
-import { Head } from "../../components/Head";
-import SensitivitySlider from "../../components/SensitivitySlider";
+import { Head } from "../../Head";
+import SensitivitySlider from "../../SensitivitySlider";
 
 const SelectMicrophone: React.FC<BaseDeviceAskProps> = ({
   stream,

@@ -2,8 +2,8 @@ import type { NextPage } from "next";
 import React from "react";
 import { useSessionDetails } from "../../hooks/sessions";
 import { Button, Spinner, VStack } from "@chakra-ui/react";
-import { Head } from "../../new-components/components/Head";
-import { SessionDetail } from "../../new-components/components/SessionDetail";
+import { Head } from "../../components/Head";
+import { SessionDetail } from "../../components/SessionDetail";
 import { useRouter } from "next/router";
 
 const Sessions: NextPage = () => {

@@ -2,8 +2,8 @@ import { Link, Button, Heading, VStack, Spinner } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import NextLink from "next/link";
 import { useActiveSession, useSessions } from "../hooks/sessions";
-import { Head } from "../new-components/components/Head";
-import { SessionList } from "../new-components/components/SectionList";
+import { Head } from "../components/Head";
+import { SessionList } from "../components/SectionList";
 import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {

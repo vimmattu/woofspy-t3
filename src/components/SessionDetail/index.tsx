@@ -11,11 +11,8 @@ import {
 import React, { useState } from "react";
 import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
-import type { Session, Recording } from "../../../types/inferred";
-import {
-  useInfiniteRecordings,
-  useRecordingFile,
-} from "../../../hooks/sessions";
+import type { Session, Recording } from "../../types/inferred";
+import { useInfiniteRecordings, useRecordingFile } from "../../hooks/sessions";
 
 interface Props {
   session: Session;

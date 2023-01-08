@@ -1,6 +1,6 @@
 import { Box, Text } from "@chakra-ui/react";
 import { SessionCard } from "../SessionCard";
-import type { Session } from "../../../types/inferred";
+import type { Session } from "../../types/inferred";
 import { Fragment } from "react";
 
 interface Props {

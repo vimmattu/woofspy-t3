@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useMediaDevices } from "../../../hooks/devices";
-import Video from "../../../components/Video";
+import Video from "../../Video";
 import { BaseDeviceAskProps } from "./types";
-import { Head } from "../../components/Head";
+import { Head } from "../../Head";
 import { Button, Select } from "@chakra-ui/react";
 
 const SelectCamera: React.FC<BaseDeviceAskProps> = ({

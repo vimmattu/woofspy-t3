@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ActiveDevice } from "../components/spy/types";
+import { ActiveDevice } from "../components/sections/Spy/types";
 
 export function useMediaDevices() {
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);

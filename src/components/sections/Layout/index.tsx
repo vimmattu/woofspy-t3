@@ -2,8 +2,8 @@ import { Container } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
-import { Header } from "../../components/Header";
-import { NavigationTabs, TabItem } from "../../components/NavigationTabs";
+import { Header } from "../../../components/Header";
+import { NavigationTabs, TabItem } from "../../../components/NavigationTabs";
 
 interface Props {
   children: React.ReactNode;

@@ -2,12 +2,12 @@ import { useCallback } from "react";
 import { useActivityDetector } from "../../../hooks/detector";
 import { useActivityRecorder } from "../../../hooks/recorder";
 import { useCreateRecording } from "../../../hooks/sessions";
-import Video from "../../../components/Video";
-import WaveForm from "../../../components/WaveForm";
+import Video from "../../Video";
+import WaveForm from "../../WaveForm";
 import { BaseProps } from "./types";
-import { Head } from "../../components/Head";
+import { Head } from "../../Head";
 import { Button, Text } from "@chakra-ui/react";
-import SensitivitySlider from "../../components/SensitivitySlider";
+import SensitivitySlider from "../../SensitivitySlider";
 import { useLiveConnection } from "../../../hooks/connection";
 
 const SpyView: React.FC<BaseProps & { sessionId?: string }> = ({

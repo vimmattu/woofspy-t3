@@ -3,7 +3,7 @@ import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 import type { AppType } from "next/app";
 import { trpc } from "../utils/trpc";
-import { Layout } from "../new-components/sections/Layout";
+import { Layout } from "../components/sections/Layout";
 import { AuthGuard } from "../components/AuthGuard";
 import { ChakraProvider } from "@chakra-ui/react";
 

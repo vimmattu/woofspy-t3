@@ -1,6 +1,6 @@
 import { Box, VStack } from "@chakra-ui/react";
-import { Head } from "../../new-components/components/Head";
-import { Register } from "../../new-components/sections/Register";
+import { Head } from "../../components/Head";
+import { Register } from "../../components/sections/Register";
 
 const SignIn = () => {
   return (

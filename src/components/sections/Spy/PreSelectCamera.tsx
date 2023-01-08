@@ -1,5 +1,5 @@
 import { BaseDeviceAskProps } from "./types";
-import { Head } from "../../components/Head";
+import { Head } from "../../Head";
 import { Button, Text } from "@chakra-ui/react";
 
 const PreSelectCamera: React.FC<BaseDeviceAskProps> = ({
