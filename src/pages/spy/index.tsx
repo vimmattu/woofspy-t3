@@ -112,6 +112,18 @@ export default function SpyPage() {
     }
   }, [activeSession]);
 
+  useEffect(() => {
+    if (step !== Step.DONE) return;
+    if (!data?.id) return;
+    const sendBeacon = () =>
+      navigator.sendBeacon(`/api/sessions/${data.id}/exit`);
+    document.addEventListener("visibilitychange", sendBeacon);
+    return () => {
+      document.removeEventListener("visibilitychange", sendBeacon);
+      sendBeacon();
+    };
+  }, [step]);
+
   if (guestLoading || hostLoading) return <Spinner />;
 
   const renderView = () => {
