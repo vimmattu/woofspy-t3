@@ -4,8 +4,11 @@ import NextLink from "next/link";
 import { useActiveSession, useSessions } from "../hooks/sessions";
 import { Head } from "../new-components/components/Head";
 import { SessionList } from "../new-components/components/SectionList";
+import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
+  const { mutate: closeActive } =
+    trpc.sessions.closeActiveSessions.useMutation();
   const { data, isLoading } = useSessions();
 
   // Display spinner if fetching user data or active session is in loading state,
@@ -57,6 +60,9 @@ const Home: NextPage = () => {
           </Button>
         )}
 
+        {activeSession && (
+          <Button onClick={() => closeActive()}>close active</Button>
+        )}
         <Heading as="h2" w="full" size="lg">
           Past sessions
         </Heading>
