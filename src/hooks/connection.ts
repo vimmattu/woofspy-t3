@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { SseHandler } from "../utils/client-signaling";
+import { PusherHandler } from "../utils/client-signaling";
 
 interface Opts {
   sessionId?: string;
@@ -18,7 +18,7 @@ export const useLiveConnection = ({
 
   useEffect(() => {
     if (!sessionId) return;
-    const signal = new SseHandler(sessionId);
+    const signal = new PusherHandler(sessionId);
 
     const createPeer = (userId: string) => {
       const peer = new RTCPeerConnection({

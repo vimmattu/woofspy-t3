@@ -1,3 +1,6 @@
+import Pusher, { PresenceChannel } from "pusher-js";
+import { env } from "../env/client.mjs";
+
 class SignalingHandler extends EventTarget {
   constructor(_sessionId: string) {
     super();
@@ -115,5 +118,62 @@ export class SseHandler extends SignalingHandler {
 
   close() {
     this.eventSource.close();
+  }
+}
+
+export class PusherHandler extends SignalingHandler {
+  private pusher: Pusher;
+  private channel?: PresenceChannel;
+
+  constructor(sessionId: string) {
+    super(sessionId);
+    this.pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
+      cluster: env.NEXT_PUBLIC_PUSHER_CLUSTER,
+      authEndpoint: "/api/pusher/user-auth",
+    });
+
+    this.channel = this.pusher.subscribe(
+      `presence-session-${sessionId}`
+    ) as PresenceChannel;
+
+    if (!this.channel) return;
+
+    this.channel.bind("pusher:subscription_succeeded", () => {
+      console.log("Joined to signaling channel");
+      console.log(this.pusher.user);
+    });
+
+    this.channel.bind("pusher:member_added", (member: any) => {
+      console.log(`User ${member.id} joined`);
+      this.onJoin(member.id);
+    });
+
+    this.channel.bind("client-offer", (data: any) => {
+      console.log(`Received signal from ${data.from} of type offer`);
+      this.onOffer(data.from, data.data);
+    });
+
+    this.channel.bind("client-answer", (data: any) => {
+      console.log(`Received signal from ${data.from} of type answer`);
+      this.onAnswer(data.from, data.data);
+    });
+
+    this.channel.bind("client-icecandidate", (data: any) => {
+      console.log(`Received signal from ${data.from} of type icecandidate`);
+      this.onIceCandidate(data.from, data.data);
+    });
+
+    this.channel.bind("pusher:member_removed", (member: any) => {
+      console.log(`User ${member.id} left`);
+      this.onLeave(member.id);
+    });
+  }
+
+  send(userId: string, type: string, data: any) {
+    this.channel?.trigger(`client-${type}`, { from: userId, data });
+  }
+
+  close() {
+    this.pusher.disconnect();
   }
 }
