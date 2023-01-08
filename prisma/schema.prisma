@@ -43,6 +43,14 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Group {
+  id        String   @id @default(cuid())
+  name      String
+
+  users UsersInGroups[]
+  spySessions SpySession[]
+}
+
 model User {
   id            String       @id @unique @default(cuid())
   name          String?
@@ -52,6 +60,21 @@ model User {
   accounts      Account[]
   sessions      Session[]
   spySessions   SpySession[]
+
+  groups UsersInGroups[]
+}
+
+model UsersInGroups {
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+  group   Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId String
+  admin  Boolean @default(false)
+  selectByDefault Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([userId, groupId])
 }
 
 model VerificationToken {
@@ -67,8 +90,10 @@ model SpySession {
   startTime  DateTime    @default(now())
   endTime    DateTime?
   recordings Recording[]
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String
+  userId     String?
+  user       User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  groupId    String?
+  group      Group?       @relation(fields: [groupId], references: [id], onDelete: Cascade)
 }
 
 model Recording {
