@@ -31,7 +31,13 @@ export const useLiveConnection = ({
 
   const createPeer = useCallback(
     (userId: string) => {
-      const peer = new RTCPeerConnection();
+      const peer = new RTCPeerConnection({
+        iceServers: [
+          {
+            urls: "stun:stun.l.google.com:19302",
+          },
+        ],
+      });
       peer.addEventListener(
         "icecandidate",
         ({ candidate: data }) =>
