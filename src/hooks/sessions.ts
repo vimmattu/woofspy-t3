@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { trpc } from "../utils/trpc";
 import type { Session } from "../types/inferred";
@@ -12,15 +11,10 @@ export function useEndSession() {
   return trpc.sessions.endSession.useMutation();
 }
 
-export function useActiveSession(redirect?: boolean) {
-  const router = useRouter();
-  const query = trpc.sessions.getActiveSession.useQuery();
-
-  if (!!query.data && redirect) {
-    router.push(`/sessions/${query.data.id}`);
-  }
-
-  return query;
+export function useActiveSession(refetchOnWindowFocus = true) {
+  return trpc.sessions.getActiveSession.useQuery(undefined, {
+    refetchOnWindowFocus,
+  });
 }
 
 const useSessionsGroupedByDate = (data?: Session[]) =>

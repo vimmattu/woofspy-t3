@@ -55,7 +55,8 @@ function getActiveDeviceType(step: Step) {
 
 export default function SpyPage() {
   const alreadyEndedSession = useRef(false);
-  const { data: activeSession, isLoading: guestLoading } = useActiveSession();
+  const { data: activeSession, isLoading: guestLoading } =
+    useActiveSession(false);
   const {
     data,
     mutateAsync: createSession,
