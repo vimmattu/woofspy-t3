@@ -1,7 +1,6 @@
 import { t, authedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { prisma } from "../../db/client";
 import dayjs from "dayjs";
 import AWS from "aws-sdk";
 import { env } from "../../../env/server.mjs";
@@ -16,19 +15,59 @@ const s3 = new AWS.S3({
   },
 });
 
-async function assertSessionBelongsToUser(userId: string, sessionId: string) {
-  const session = await prisma.spySession.findFirst({
-    where: { id: sessionId },
-  });
-  if (session?.userId !== userId)
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "Session does not belong to the requesting user.",
+const sessionOwnerProcedure = authedProcedure
+  .input(z.object({ sessionId: z.string() }))
+  .use(async ({ ctx, next, input }) => {
+    const session = await ctx.prisma.spySession.findFirst({
+      where: { id: input.sessionId },
     });
 
-  // TODO: change so returning session here would be more intuitive
-  return session;
-}
+    if (session?.userId !== ctx.session.user.id)
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Session does not belong to the requesting user.",
+      });
+
+    return next({
+      ctx: {
+        ...ctx,
+        spySession: session,
+      },
+    });
+  });
+
+const recordingOwnerProcedure = authedProcedure
+  .input(z.object({ recordingId: z.string() }))
+  .use(async ({ ctx, next, input }) => {
+    const recording = await ctx.prisma.recording.findFirst({
+      where: { id: input.recordingId },
+    });
+
+    if (!recording) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Could not find recording with given id.",
+      });
+    }
+
+    const session = await ctx.prisma.spySession.findFirst({
+      where: { id: recording.sessionId },
+    });
+
+    if (session?.userId !== ctx.session.user.id)
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Recording does not belong to the requesting user.",
+      });
+
+    return next({
+      ctx: {
+        ...ctx,
+        recording,
+        spySession: session,
+      },
+    });
+  });
 
 export const sessionsRouter = t.router({
   getSessions: authedProcedure
@@ -138,46 +177,34 @@ export const sessionsRouter = t.router({
       },
     });
   }),
-  endSession: authedProcedure
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const session = await assertSessionBelongsToUser(
-        ctx.session.user.id,
-        input.id
-      );
+  endSession: sessionOwnerProcedure.mutation(async ({ ctx }) => {
+    const session = ctx.spySession;
 
-      if (!!session.endTime)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Can't end already ended session.",
-        });
-
-      return ctx.prisma.spySession.update({
-        where: { id: input.id },
-        data: { endTime: new Date() },
+    if (!!session.endTime)
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Can't end already ended session.",
       });
-    }),
-  getRecordings: authedProcedure
-    .input(z.object({ sessionId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      await assertSessionBelongsToUser(ctx.session.user.id, input.sessionId);
 
-      return ctx.prisma.recording.findMany({
-        where: { sessionId: input.sessionId },
-        orderBy: { startTime: "desc" },
-      });
-    }),
-  getInfiniteRecordings: authedProcedure
+    return ctx.prisma.spySession.update({
+      where: { id: session.id },
+      data: { endTime: new Date() },
+    });
+  }),
+  getRecordings: sessionOwnerProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.recording.findMany({
+      where: { sessionId: ctx.spySession.id },
+      orderBy: { startTime: "desc" },
+    });
+  }),
+  getInfiniteRecordings: sessionOwnerProcedure
     .input(
       z.object({
-        sessionId: z.string(),
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.string().nullish(),
       })
     )
     .query(async ({ ctx, input }) => {
-      await assertSessionBelongsToUser(ctx.session.user.id, input.sessionId);
-
       const limit = input.limit ?? 50;
       const { cursor } = input;
       const recordings = await ctx.prisma.recording.findMany({
@@ -197,58 +224,33 @@ export const sessionsRouter = t.router({
         nextCursor,
       };
     }),
-  createRecording: authedProcedure
-    .input(z.object({ sessionId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const session = await assertSessionBelongsToUser(
-        ctx.session.user.id,
-        input.sessionId
-      );
-
-      if (!!session.endTime)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Can't create recording for an ended session.",
-        });
-
-      const recording = await ctx.prisma.recording.create({
-        data: { sessionId: input.sessionId },
+  createRecording: sessionOwnerProcedure.mutation(async ({ ctx }) => {
+    if (!!ctx.spySession.endTime)
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Can't create recording for an ended session.",
       });
 
-      return s3.createPresignedPost({
-        Fields: {
-          key: `recording/${ctx.session.user.id}/${recording.id}`,
-        },
-        Conditions: [
-          ["content-length-range", 0, 10000000],
-          //["starts-with", "$Content-Type", "video/"], //TODO: Add content-type requirement
-        ],
-        Expires: 30,
-        Bucket: env.AWS_S3_BUCKET_NAME,
-      });
-    }),
-  getRecordingSignedUrl: authedProcedure
-    .input(z.object({ recordingId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const recording = await ctx.prisma.recording.findFirst({
-        where: { id: input.recordingId },
-      });
+    const recording = await ctx.prisma.recording.create({
+      data: { sessionId: ctx.spySession.id },
+    });
 
-      if (!recording) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Could not find recording with given id.",
-        });
-      }
-
-      await assertSessionBelongsToUser(
-        ctx.session.user.id,
-        recording.sessionId
-      );
-
-      return s3.getSignedUrlPromise("getObject", {
-        Bucket: env.AWS_S3_BUCKET_NAME,
-        Key: `recording/${ctx.session.user.id}/${recording.id}`,
-      });
-    }),
+    return s3.createPresignedPost({
+      Fields: {
+        key: `recording/${ctx.session.user.id}/${recording.id}`,
+      },
+      Conditions: [
+        ["content-length-range", 0, 10000000],
+        //["starts-with", "$Content-Type", "video/"], //TODO: Add content-type requirement
+      ],
+      Expires: 30,
+      Bucket: env.AWS_S3_BUCKET_NAME,
+    });
+  }),
+  getRecordingSignedUrl: recordingOwnerProcedure.query(async ({ ctx }) => {
+    return s3.getSignedUrlPromise("getObject", {
+      Bucket: env.AWS_S3_BUCKET_NAME,
+      Key: `recording/${ctx.session.user.id}/${ctx.recording.id}`,
+    });
+  }),
 });

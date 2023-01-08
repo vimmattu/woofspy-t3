@@ -95,7 +95,7 @@ export default function SpyPage() {
 
   async function triggerEndSession() {
     if (!data) return;
-    await endSession({ id: data.id });
+    await endSession({ sessionId: data.id });
     alreadyEndedSession.current = true;
     navigate("/history");
   }
@@ -121,7 +121,7 @@ export default function SpyPage() {
     document.addEventListener("visibilitychange", sendBeacon);
     return () => {
       document.removeEventListener("visibilitychange", sendBeacon);
-      if (!alreadyEndedSession.current) endSession({ id: data.id });
+      if (!alreadyEndedSession.current) endSession({ sessionId: data.id });
     };
   }, [step]);
 
