@@ -18,27 +18,9 @@ export const Default: Story = {
     session: {
       startTime: new Date("2022-10-11 10:01:04"),
       endTime: new Date("2022-10-11 13:32:42"),
-      userId: "#",
-      recordings: [
-        {
-          startTime: new Date("2022-10-11 10:01:04"),
-          endTime: new Date("2022-10-11 10:01:04"),
-          id: "#",
-          sessionId: "#",
-        },
-        {
-          startTime: new Date("2022-10-11 10:01:04"),
-          endTime: new Date("2022-10-11 10:01:04"),
-          id: "#",
-          sessionId: "#",
-        },
-        {
-          startTime: new Date("2022-10-11 10:01:04"),
-          endTime: new Date("2022-10-11 10:01:04"),
-          id: "#",
-          sessionId: "#",
-        },
-      ],
+      _count: {
+        recordings: 3,
+      },
       id: "#",
     },
   },
