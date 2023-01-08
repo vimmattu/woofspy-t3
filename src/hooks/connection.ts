@@ -1,17 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
-
-const post = async (url: string, body: any) => {
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) {
-    console.error(res.body);
-  }
-};
+import { useEffect, useRef } from "react";
+import { PusherHandler } from "../utils/client-signaling";
 
 interface Opts {
   sessionId?: string;
@@ -27,10 +15,12 @@ export const useLiveConnection = ({
   onStreamChanged,
 }: Opts) => {
   const remotes = useRef<Map<string, RTCPeerConnection>>(new Map());
-  const endpoint = useMemo(() => `/api/sessions/${sessionId}/sse`, [sessionId]);
 
-  const createPeer = useCallback(
-    (userId: string) => {
+  useEffect(() => {
+    if (!sessionId) return;
+    const signal = new PusherHandler(sessionId);
+
+    const createPeer = (userId: string) => {
       const peer = new RTCPeerConnection({
         iceServers: [
           {
@@ -41,48 +31,31 @@ export const useLiveConnection = ({
       peer.addEventListener(
         "icecandidate",
         ({ candidate: data }) =>
-          data &&
-          post(endpoint, {
-            to: userId,
-            type: "icecandidate",
-            data,
-          })
+          data && signal.send(userId, "icecandidate", data)
       );
       return peer;
-    },
-    [endpoint]
-  );
+    };
 
-  useEffect(() => {
-    if (!sessionId) return;
-    const eventSource = new EventSource(endpoint);
+    signal.on("join", async (event: CustomEvent<string>) => {
+      const userId = event.detail;
+      if (!isHost) return;
 
-    eventSource.addEventListener(
-      "join",
-      async (event: MessageEvent<string>) => {
-        const { userId } = JSON.parse(event.data);
-        console.log(`User ${userId} joined`);
-        if (!isHost) return;
+      const peer = createPeer(userId);
+      remotes.current.set(userId, peer);
+      stream?.getTracks().forEach((track) => peer.addTrack(track, stream));
 
-        const peer = createPeer(userId);
-        remotes.current.set(userId, peer);
-        stream?.getTracks().forEach((track) => peer.addTrack(track, stream));
+      const offer = await peer.createOffer();
+      await peer.setLocalDescription(offer);
+      signal.send(userId, "offer", offer);
+    });
 
-        const offer = await peer.createOffer();
-        await peer.setLocalDescription(offer);
-        await post(endpoint, {
-          to: userId,
-          type: "offer",
-          data: offer,
-        });
-      }
-    );
-
-    eventSource.addEventListener(
+    signal.on(
       "offer",
-      async (event: MessageEvent<string>) => {
+      async (
+        event: CustomEvent<{ userId: string; data: RTCSessionDescription }>
+      ) => {
         if (isHost) return;
-        const { userId, data } = JSON.parse(event.data);
+        const { userId, data } = event.detail;
         console.log(`Received signal from ${userId} of type offer`);
 
         const peer = createPeer(userId);
@@ -96,20 +69,18 @@ export const useLiveConnection = ({
         await peer.setRemoteDescription(data);
         const answer = await peer.createAnswer();
         await peer.setLocalDescription(answer);
-        await post(endpoint, {
-          to: userId,
-          type: "answer",
-          data: answer,
-        });
+
+        signal.send(userId, "answer", answer);
       }
     );
 
-    eventSource.addEventListener(
+    signal.on(
       "answer",
-      async (event: MessageEvent<string>) => {
+      async (
+        event: CustomEvent<{ userId: string; data: RTCSessionDescription }>
+      ) => {
         if (!isHost) return;
-        // handle answer
-        const { userId, data } = JSON.parse(event.data);
+        const { userId, data } = event.detail;
         console.log(`Received signal from ${userId} of type answer`);
         const peer = remotes.current.get(userId);
         if (!peer) return;
@@ -117,10 +88,10 @@ export const useLiveConnection = ({
       }
     );
 
-    eventSource.addEventListener(
+    signal.on(
       "icecandidate",
-      async (event: MessageEvent<string>) => {
-        const { userId, data } = JSON.parse(event.data);
+      async (event: CustomEvent<{ userId: string; data: RTCIceCandidate }>) => {
+        const { userId, data } = event.detail;
         console.log(`Received signal from ${userId} of type icecandidate`);
         const peer = remotes.current.get(userId);
         if (!peer) return;
@@ -128,10 +99,8 @@ export const useLiveConnection = ({
       }
     );
 
-    eventSource.addEventListener("leave", (event: MessageEvent<string>) => {
-      const { userId } = JSON.parse(event.data);
-      console.log(`User ${userId} left`);
-
+    signal.on("leave", (event: CustomEvent<string>) => {
+      const userId = event.detail;
       const peer = remotes.current.get(userId);
       if (peer) {
         peer.close();
@@ -140,7 +109,7 @@ export const useLiveConnection = ({
     });
 
     return () => {
-      eventSource.close();
+      signal.close();
     };
-  }, [endpoint, isHost, stream]);
+  }, [isHost, stream]);
 };
