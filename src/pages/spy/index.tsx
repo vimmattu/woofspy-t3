@@ -9,7 +9,6 @@ import {
   useCreateSession,
   useEndSession,
 } from "../../hooks/sessions";
-import GuestView from "../../new-components/sections/Spy/GuestView";
 
 const PreSelectCamera = dynamic(
   () => import("../../new-components/sections/Spy/PreSelectCamera"),
@@ -29,6 +28,12 @@ const SelectMicrophone = dynamic(
 );
 const SpyView = dynamic(
   () => import("../../new-components/sections/Spy/SpyView"),
+  {
+    ssr: false,
+  }
+);
+const GuestView = dynamic(
+  () => import("../../new-components/sections/Spy/GuestView"),
   {
     ssr: false,
   }
