@@ -9,17 +9,12 @@ export function useCreateSession() {
 }
 
 export function useEndSession() {
-  const router = useRouter();
-  return trpc.sessions.endSession.useMutation({
-    onSuccess: () => router.push("/history"),
-  });
+  return trpc.sessions.endSession.useMutation();
 }
 
 export function useActiveSession(redirect?: boolean) {
   const router = useRouter();
-  const query = trpc.sessions.getActiveSession.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-  });
+  const query = trpc.sessions.getActiveSession.useQuery();
 
   if (!!query.data && redirect) {
     router.push(`/sessions/${query.data.id}`);

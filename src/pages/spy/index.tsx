@@ -1,7 +1,7 @@
 import { Button, Spinner, VStack } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ActiveDevice } from "../../components/spy/types";
 import { useMediaStream } from "../../hooks/devices";
 import {
@@ -57,6 +57,7 @@ function getActiveDeviceType(step: Step) {
 }
 
 export default function SpyPage() {
+  const alreadyEndedSession = useRef(false);
   const { data: activeSession, isLoading: guestLoading } = useActiveSession();
   const {
     data,
@@ -73,7 +74,7 @@ export default function SpyPage() {
     microphoneId,
     activeDeviceType: getActiveDeviceType(step),
   });
-  const { back } = useRouter();
+  const { back, push: navigate } = useRouter();
 
   const askVideo = useCallback(() => {
     setStep(Step.SELECT_CAMERA);
@@ -98,6 +99,8 @@ export default function SpyPage() {
   async function triggerEndSession() {
     if (!data) return;
     await endSession({ id: data.id });
+    alreadyEndedSession.current = true;
+    navigate("/history");
   }
 
   function navigateBack() {
@@ -121,7 +124,7 @@ export default function SpyPage() {
     document.addEventListener("visibilitychange", sendBeacon);
     return () => {
       document.removeEventListener("visibilitychange", sendBeacon);
-      sendBeacon();
+      if (!alreadyEndedSession.current) endSession({ id: data.id });
     };
   }, [step]);
 
