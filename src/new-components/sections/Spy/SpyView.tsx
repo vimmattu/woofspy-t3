@@ -8,6 +8,7 @@ import { BaseProps } from "./types";
 import { Head } from "../../components/Head";
 import { Button, Text } from "@chakra-ui/react";
 import SensitivitySlider from "../../components/SensitivitySlider";
+import { useLiveConnection } from "../../../hooks/connection";
 
 const SpyView: React.FC<BaseProps & { sessionId?: string }> = ({
   stream,
@@ -17,6 +18,7 @@ const SpyView: React.FC<BaseProps & { sessionId?: string }> = ({
   setSensitivity,
 }) => {
   const { mutateAsync: createRecording } = useCreateRecording();
+  useLiveConnection({ sessionId, isHost: true, stream });
 
   const onRecordingAvailable = useCallback(
     async (event: BlobEvent) => {
