@@ -12,10 +12,11 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 
 export const Login = () => {
+  const [email, setEmail] = useState<string>("");
   return (
     <>
       <Box as="form">
@@ -25,7 +26,11 @@ export const Login = () => {
           </Heading>
           <FormControl isRequired>
             <FormLabel>Email address</FormLabel>
-            <Input type="email" />
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </FormControl>
           <FormControl isRequired>
             <FormLabel>Password</FormLabel>
@@ -73,6 +78,17 @@ export const Login = () => {
           </Button>
           <Button w={["full", "unset"]} colorScheme="green">
             Sign in with Google
+          </Button>
+          <Button
+            w={["full", "unset"]}
+            colorScheme="green"
+            onClick={() =>
+              signIn("email", {
+                email,
+              })
+            }
+          >
+            Sign in with email
           </Button>
         </VStack>
       </Box>
