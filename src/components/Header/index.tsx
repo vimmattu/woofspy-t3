@@ -2,6 +2,7 @@ import {
   Avatar,
   Button,
   Flex,
+  Icon,
   Link,
   Popover,
   PopoverArrow,
@@ -15,6 +16,7 @@ import {
 import React from "react";
 import NextLink from "next/link";
 import { useSession, signOut } from "next-auth/react";
+import { GiSpy } from "react-icons/gi";
 
 export const Header = () => {
   const session = useSession();
@@ -26,7 +28,9 @@ export const Header = () => {
   return (
     <Flex as="header" shadow={["", "md"]} p={2} alignItems="center" mb={[0, 2]}>
       <Link as={NextLink} href="/" fontSize="xl" fontWeight="bold">
-        Logo
+        <Text as="span" display="flex" alignItems="center">
+          <Icon as={GiSpy} mr={1} boxSize={12} /> woofspy
+        </Text>
       </Link>
       <Spacer />
       {session.status === "authenticated" && (
