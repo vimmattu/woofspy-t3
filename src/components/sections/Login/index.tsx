@@ -5,12 +5,15 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  Icon,
   Input,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
+import { FaGithub, FaMagic } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 export const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -18,32 +21,18 @@ export const Login = () => {
     <>
       <Box>
         <VStack spacing={2}>
-          <FormControl>
-            <FormLabel>Email address</FormLabel>
-            <Input
-              placeholder="email@example.com"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </FormControl>
-          <Button
-            colorScheme="green"
-            w="full"
-            onClick={() => signIn("email", { email })}
-          >
-            Sign in with email address
+          <Button w="full" colorScheme="gray" variant="outline">
+            <Icon as={FcGoogle} mr={2} />
+            Sign in with Google
           </Button>
 
-          <Flex align="center" w="full">
-            <Divider />
-            <Text fontWeight="semibold" padding={2}>
-              OR
-            </Text>
-            <Divider />
-          </Flex>
-
-          <Button onClick={() => signIn("github")} w="full" colorScheme="gray">
+          <Button
+            onClick={() => signIn("github")}
+            w="full"
+            variant="outline"
+            colorScheme="gray"
+          >
+            <Icon as={FaGithub} mr={2} />
             Sign in with Github
           </Button>
 
@@ -55,8 +44,23 @@ export const Login = () => {
             <Divider />
           </Flex>
 
-          <Button w="full" colorScheme="green">
-            Sign in with Google
+          <FormControl>
+            <FormLabel fontWeight="bold">Sign in with magic link</FormLabel>
+            <Input
+              textAlign="center"
+              placeholder="email@example.com"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </FormControl>
+          <Button
+            colorScheme="green"
+            w="full"
+            onClick={() => signIn("email", { email })}
+          >
+            <Icon as={FaMagic} mr={2} />
+            Send magic link
           </Button>
         </VStack>
       </Box>
