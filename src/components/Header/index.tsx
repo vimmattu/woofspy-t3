@@ -19,7 +19,8 @@ import { useSession, signOut } from "next-auth/react";
 export const Header = () => {
   const session = useSession();
 
-  const name = session.data?.user?.name || undefined;
+  const name =
+    session.data?.user?.name || session.data?.user?.email || undefined;
   const image = session.data?.user?.image || undefined;
 
   return (
