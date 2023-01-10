@@ -16,17 +16,22 @@ export const Login = () => {
   const [email, setEmail] = useState<string>("");
   return (
     <>
-      <Box as="form">
-        <VStack spacing={4}>
+      <Box>
+        <VStack spacing={2}>
           <FormControl>
             <FormLabel>Email address</FormLabel>
             <Input
+              placeholder="email@example.com"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </FormControl>
-          <Button colorScheme="green" w="full" type="submit">
+          <Button
+            colorScheme="green"
+            w="full"
+            onClick={() => signIn("email", { email })}
+          >
             Sign in with email address
           </Button>
 
