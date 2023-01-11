@@ -41,6 +41,7 @@ specifiers:
   lint-staged: ^13.1.0
   next: 13.0.6
   next-auth: ~4.18.4
+  nodemailer: ^6.8.0
   postcss-loader: ^7.0.2
   prettier: ^2.8.1
   prisma: ^4.7.1
@@ -48,6 +49,7 @@ specifiers:
   pusher-js: ^8.0.0
   react: 18.2.0
   react-dom: 18.2.0
+  react-icons: ^4.7.1
   socket.io: ^4.5.4
   socket.io-client: ^4.5.4
   storybook: ^7.0.0-beta.2
@@ -75,11 +77,13 @@ dependencies:
   dayjs: 1.11.7
   framer-motion: 7.6.19_biqbaboplfbrettd7655fr4n2y
   next: 13.0.6_biqbaboplfbrettd7655fr4n2y
-  next-auth: 4.18.4_6jx7hpii6hgsrmhxgqrmo3277u
+  next-auth: 4.18.4_ph7ncimqkfipxkhrqa54rmxzeq
+  nodemailer: 6.8.0
   pusher: 5.1.2
   pusher-js: 8.0.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-icons: 4.7.1_react@18.2.0
   socket.io: 4.5.4
   socket.io-client: 4.5.4
   styled-jsx: 5.1.0_react@18.2.0
@@ -96,7 +100,7 @@ devDependencies:
   '@storybook/nextjs': 7.0.0-beta.2_hfthwjm2emwvjhoskl5faoduk4
   '@storybook/react': 7.0.0-beta.2_o4scbtliisanygemawej7x2d6i
   '@storybook/testing-library': 0.0.13_biqbaboplfbrettd7655fr4n2y
-  '@tomfreudenberg/next-auth-mock': 0.5.5_wqy5am3oe7snb7h6mekq2j6zcu
+  '@tomfreudenberg/next-auth-mock': 0.5.5_aximwv753aqatww35j56y62cay
   '@types/node': 18.11.12
   '@types/react': 18.0.26
   '@types/react-dom': 18.0.9
@@ -2817,7 +2821,7 @@ packages:
       next-auth: ^4
     dependencies:
       '@prisma/client': 4.7.1_prisma@4.7.1
-      next-auth: 4.18.4_6jx7hpii6hgsrmhxgqrmo3277u
+      next-auth: 4.18.4_ph7ncimqkfipxkhrqa54rmxzeq
     dev: false
 
   /@next/env/13.0.6:
@@ -4341,10 +4345,10 @@ packages:
       '@testing-library/dom': 8.19.0
     dev: true
 
-  /@tomfreudenberg/next-auth-mock/0.5.5_wqy5am3oe7snb7h6mekq2j6zcu:
+  /@tomfreudenberg/next-auth-mock/0.5.5_aximwv753aqatww35j56y62cay:
     resolution: {integrity: sha512-2zDZJTAEQE6rGdcbYoFN4ug8piRh0VPtdbi7xPKeqCMAZBYwiaw+EEiAFdc2LG48fqeGdUxWbm3YgRraJyh4hg==}
     dependencies:
-      next-auth: 4.18.4_6jx7hpii6hgsrmhxgqrmo3277u
+      next-auth: 4.18.4_ph7ncimqkfipxkhrqa54rmxzeq
       prop-types: 15.8.1
       react: 18.2.0
     transitivePeerDependencies:
@@ -9360,7 +9364,7 @@ packages:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
     dev: true
 
-  /next-auth/4.18.4_6jx7hpii6hgsrmhxgqrmo3277u:
+  /next-auth/4.18.4_ph7ncimqkfipxkhrqa54rmxzeq:
     resolution: {integrity: sha512-tvXOabxv5U/y6ib56XPkOnc/48tYc+xT6GNOLREIme8WVGYHDTc3CGEfe2+0bVCWAm0ax/GYXH0By5NFoaJDww==}
     engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0}
     peerDependencies:
@@ -9377,6 +9381,7 @@ packages:
       cookie: 0.5.0
       jose: 4.11.1
       next: 13.0.6_biqbaboplfbrettd7655fr4n2y
+      nodemailer: 6.8.0
       oauth: 0.9.15
       openid-client: 5.3.1
       preact: 10.11.3
@@ -9468,6 +9473,10 @@ packages:
   /node-releases/2.0.6:
     resolution: {integrity: sha512-PiVXnNuFm5+iYkLBNeq5211hvO38y63T0i2KKh2KnUs3RpzJ+JtODFjkD8yjLwnDkTYF1eKXheUwdssR+NRZdg==}
     dev: true
+
+  /nodemailer/6.8.0:
+    resolution: {integrity: sha512-EjYvSmHzekz6VNkNd12aUqAco+bOkRe3Of5jVhltqKhEsjw/y0PYPJfp83+s9Wzh1dspYAkUW/YNQ350NATbSQ==}
+    engines: {node: '>=6.0.0'}
 
   /normalize-package-data/2.5.0:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
@@ -10332,6 +10341,14 @@ packages:
       react-clientside-effect: 1.2.6_react@18.2.0
       use-callback-ref: 1.3.0_kzbn2opkn2327fwg5yzwzya5o4
       use-sidecar: 1.1.2_kzbn2opkn2327fwg5yzwzya5o4
+
+  /react-icons/4.7.1_react@18.2.0:
+    resolution: {integrity: sha512-yHd3oKGMgm7zxo3EA7H2n7vxSoiGmHk5t6Ou4bXsfcgWyhfDKMpyKfhHR6Bjnn63c+YXBLBPUql9H4wPJM6sXw==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /react-inspector/6.0.1_react@18.2.0:
     resolution: {integrity: sha512-cxKSeFTf7jpSSVddm66sKdolG90qURAX3g1roTeaN6x0YEbtWc8JpmFN9+yIqLNH2uEkYerWLtJZIXRIFuBKrg==}

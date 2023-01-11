@@ -60,6 +60,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   spySessions   SpySession[]
+  isAdmin       Boolean      @default(false)
 
   groups UsersInGroups[]
 }
