@@ -56,3 +56,10 @@ services:
       /usr/bin/mc policy set public myminio/${AWS_S3_BUCKET_NAME};
       exit 0;
       "
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+

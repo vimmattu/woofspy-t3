@@ -1,60 +1,40 @@
 import {
   Box,
-  Link,
   Button,
   Divider,
   Flex,
   FormControl,
   FormLabel,
-  Heading,
+  Icon,
   Input,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import NextLink from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { signIn } from "next-auth/react";
+import { FaGithub, FaMagic } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 export const Login = () => {
+  const [email, setEmail] = useState<string>("");
   return (
     <>
-      <Box as="form">
-        <VStack spacing={4}>
-          <Heading as="h2" fontSize="xl">
-            Sign in with credentials
-          </Heading>
-          <FormControl isRequired>
-            <FormLabel>Email address</FormLabel>
-            <Input type="email" />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Password</FormLabel>
-            <Input type="password" />
-          </FormControl>
-          <Flex
-            wrap="wrap"
-            justifyContent="space-between"
+      <Box>
+        <VStack spacing={2}>
+          <Button w="full" colorScheme="gray" variant="outline">
+            <Icon as={FcGoogle} mr={2} />
+            Sign in with Google
+          </Button>
+
+          <Button
+            onClick={() => signIn("github")}
             w="full"
-            align="center"
+            variant="outline"
+            colorScheme="gray"
           >
-            <Button
-              colorScheme="green"
-              w={["full", "unset"]}
-              type="submit"
-              mb={[2, 0]}
-            >
-              Sign in
-            </Button>
-            <Link
-              color="blue.400"
-              w={["full", "unset"]}
-              textAlign="center"
-              as={NextLink}
-              href="/auth/signup"
-            >
-              Don&apos;t have an account? Sign up
-            </Link>
-          </Flex>
+            <Icon as={FaGithub} mr={2} />
+            Sign in with Github
+          </Button>
 
           <Flex align="center" w="full">
             <Divider />
@@ -64,15 +44,23 @@ export const Login = () => {
             <Divider />
           </Flex>
 
+          <FormControl>
+            <FormLabel fontWeight="bold">Sign in with magic link</FormLabel>
+            <Input
+              textAlign="center"
+              placeholder="email@example.com"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </FormControl>
           <Button
-            onClick={() => signIn("github")}
-            w={["full", "unset"]}
-            colorScheme="gray"
+            colorScheme="green"
+            w="full"
+            onClick={() => signIn("email", { email })}
           >
-            Sign in with Github
-          </Button>
-          <Button w={["full", "unset"]} colorScheme="green">
-            Sign in with Google
+            <Icon as={FaMagic} mr={2} />
+            Send magic link
           </Button>
         </VStack>
       </Box>

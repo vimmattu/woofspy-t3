@@ -1,4 +1,4 @@
-import { Container } from "@chakra-ui/react";
+import { Center, Container, useBreakpointValue } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
@@ -9,14 +9,45 @@ interface Props {
   children: React.ReactNode;
 }
 
+interface WrapperProps extends Props {
+  isAuthenticated: boolean;
+}
+
+const Wrapper = ({ children, isAuthenticated }: WrapperProps) => {
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
+  if (isMobile || isAuthenticated) {
+    return (
+      <Container w="full" maxW="container.md" px={[0, 4]}>
+        {children}
+      </Container>
+    );
+  }
+
+  return (
+    <Container
+      as={Center}
+      position="fixed"
+      top={0}
+      left={0}
+      right={0}
+      bottom={0}
+      maxW="md"
+    >
+      {children}
+    </Container>
+  );
+};
+
 export const Layout = ({ children }: Props) => {
   const session = useSession();
   const router = useRouter();
+  const isAuthenticated = session.status === "authenticated";
   return (
     <>
       <Header />
-      <Container w="full" maxW="container.md" px={[0, 4]}>
-        {session.status === "authenticated" && (
+      <Wrapper isAuthenticated={isAuthenticated}>
+        {isAuthenticated && (
           <NavigationTabs>
             <TabItem
               title="Dashboard"
@@ -36,7 +67,7 @@ export const Layout = ({ children }: Props) => {
           </NavigationTabs>
         )}
         {children}
-      </Container>
+      </Wrapper>
     </>
   );
 };
