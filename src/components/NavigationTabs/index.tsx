@@ -31,6 +31,7 @@ export const NavigationTabs = ({ children }: Props) => {
 };
 
 export const TabItem = ({ href, title, active }: Tab) => {
+  const bgGradient = "linear(to-b, white, gray.100)";
   return (
     <Link
       as={NextLink}
@@ -40,8 +41,8 @@ export const TabItem = ({ href, title, active }: Tab) => {
       w="full"
       borderRadius="sm"
       borderBottomRadius="none"
-      bg={active ? "gray.100" : "none"}
-      _hover={{ textDecoration: "none", bg: "gray.100" }}
+      bgGradient={active ? bgGradient : "none"}
+      _hover={{ textDecoration: "none", bgGradient }}
       p={2}
     >
       {title}
