@@ -21,7 +21,12 @@ export const Login = () => {
     <>
       <Box>
         <VStack spacing={2}>
-          <Button w="full" colorScheme="gray" variant="outline">
+          <Button
+            onClick={() => signIn("google")}
+            w="full"
+            colorScheme="gray"
+            variant="outline"
+          >
             <Icon as={FcGoogle} mr={2} />
             Sign in with Google
           </Button>
