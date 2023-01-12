@@ -78,6 +78,17 @@ export const sessionsRouter = t.router({
       })
     )
     .query(async ({ ctx, input }) => {
+      // get groups where user belongs
+      const groups = await ctx.prisma.group.findMany({
+        select: { id: true },
+        where: {
+          users: {
+            some: {
+              userId: ctx.session.user.id,
+            },
+          },
+        },
+      });
       const sessions = await ctx.prisma.spySession.findMany({
         select: {
           id: true,
@@ -90,7 +101,16 @@ export const sessionsRouter = t.router({
           },
         },
         where: {
-          userId: ctx.session.user.id,
+          OR: [
+            {
+              userId: ctx.session.user.id,
+            },
+            {
+              groupId: {
+                in: groups.map((g) => g.id),
+              },
+            },
+          ],
           startTime: { gte: dayjs().subtract(1, "month").toDate() },
           endTime: input.excludeActive ? { not: null } : undefined,
         },
