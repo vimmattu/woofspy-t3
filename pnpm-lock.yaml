@@ -23,6 +23,7 @@ specifiers:
   '@trpc/react-query': ^10.4.3
   '@trpc/server': 10.4.3
   '@types/node': 18.11.12
+  '@types/nodemailer': ^6.4.7
   '@types/react': 18.0.26
   '@types/react-dom': 18.0.9
   '@types/wavesurfer.js': ^6.0.3
@@ -102,6 +103,7 @@ devDependencies:
   '@storybook/testing-library': 0.0.13_biqbaboplfbrettd7655fr4n2y
   '@tomfreudenberg/next-auth-mock': 0.5.5_aximwv753aqatww35j56y62cay
   '@types/node': 18.11.12
+  '@types/nodemailer': 6.4.7
   '@types/react': 18.0.26
   '@types/react-dom': 18.0.9
   '@types/wavesurfer.js': 6.0.3
@@ -4607,6 +4609,12 @@ packages:
 
   /@types/node/18.11.12:
     resolution: {integrity: sha512-FgD3NtTAKvyMmD44T07zz2fEf+OKwutgBCEVM8GcvMGVGaDktiLNTDvPwC/LUe3PinMW+X6CuLOF2Ui1mAlSXg==}
+
+  /@types/nodemailer/6.4.7:
+    resolution: {integrity: sha512-f5qCBGAn/f0qtRcd4SEn88c8Fp3Swct1731X4ryPKqS61/A3LmmzN8zaEz7hneJvpjFbUUgY7lru/B/7ODTazg==}
+    dependencies:
+      '@types/node': 18.11.12
+    dev: true
 
   /@types/normalize-package-data/2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
