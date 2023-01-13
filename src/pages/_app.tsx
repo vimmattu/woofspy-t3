@@ -6,13 +6,17 @@ import { trpc } from "../utils/trpc";
 import { Layout } from "../components/sections/Layout";
 import { AuthGuard } from "../components/AuthGuard";
 import { ChakraProvider } from "@chakra-ui/react";
+import { theme } from "../styles/theme";
+import "@fontsource/comic-neue/300.css";
+import "@fontsource/comic-neue/400.css";
+import "@fontsource/comic-neue/700.css";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <SessionProvider session={session}>
         <Layout>
           <AuthGuard>

@@ -2,7 +2,6 @@ import {
   Avatar,
   Button,
   Flex,
-  Icon,
   Link,
   Popover,
   PopoverArrow,
@@ -17,8 +16,8 @@ import {
 import React from "react";
 import NextLink from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { GiSpy } from "react-icons/gi";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { LogoIcon } from "../icons/Logo";
 
 export const Header = () => {
   const session = useSession();
@@ -32,7 +31,8 @@ export const Header = () => {
     <Flex as="header" shadow={["", "md"]} p={2} alignItems="center" mb={[0, 2]}>
       <Link as={NextLink} href="/" fontSize="xl" fontWeight="bold">
         <Text as="span" display="flex" alignItems="center">
-          <Icon as={GiSpy} mr={1} boxSize={12} /> woofspy
+          {/*<Icon as={GiSpy} mr={1} boxSize={12} /> woofspy*/}
+          <LogoIcon /> woofspy
         </Text>
       </Link>
       <Spacer />
