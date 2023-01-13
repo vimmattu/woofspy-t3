@@ -1,6 +1,8 @@
+import { Box, Spinner } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
+import { LogoIcon } from "./icons/Logo";
 
 enum Action {
   LOADING,
@@ -41,5 +43,22 @@ export function AuthGuard({ children }: { children: JSX.Element }) {
 
   if (action === Action.RENDER) return <>{children}</>;
 
-  return <p>Loading spinner</p>;
+  return (
+    <Box
+      position="fixed"
+      top="0"
+      left="0"
+      right="0"
+      bottom="0"
+      backgroundColor="white"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      flexDirection="column"
+      zIndex={9999}
+    >
+      <LogoIcon size={64} />
+      <Spinner size="lg" />
+    </Box>
+  );
 }

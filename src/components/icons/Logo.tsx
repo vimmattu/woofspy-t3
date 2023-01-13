@@ -1,8 +1,12 @@
 import { Icon } from "@chakra-ui/react";
 
-export const LogoIcon = () => {
+interface Props {
+  size?: number;
+}
+
+export const LogoIcon = ({ size = 12 }: Props) => {
   return (
-    <Icon viewBox="-358 300 730 863" boxSize={12}>
+    <Icon viewBox="-358 300 730 863" boxSize={size}>
       <g>
         <path
           fill="#000000"
