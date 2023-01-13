@@ -12,7 +12,7 @@ export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
     signIn({ user }) {
-      return user.isAdmin;
+      return env.DEV || user.isAdmin;
     },
     session({ session, user }) {
       if (session.user) {
