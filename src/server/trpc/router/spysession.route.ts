@@ -3,7 +3,11 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import AWS from "aws-sdk";
 import { env } from "../../../env/server.mjs";
-import { getSessionInput, getSessionsInput } from "../schema/spysession.schema";
+import {
+  createSessionInput,
+  getSessionInput,
+  getSessionsInput,
+} from "../schema/spysession.schema";
 import {
   getManySessionsForUser,
   getSessionForUser,
@@ -84,29 +88,21 @@ export const sessionsRouter = t.router({
     .query(({ ctx, input }) =>
       getSessionForUser(ctx.session.user.id, input.id)
     ),
-  getActiveSession: authedProcedure.query(({ ctx }) => {
-    return ctx.prisma.spySession.findFirst({
-      where: { endTime: null },
-    });
-  }),
-  closeActiveSessions: authedProcedure.mutation(async ({ ctx }) => {
-    await ctx.prisma.spySession.updateMany({
-      where: { endTime: null },
-      data: { endTime: new Date() },
-    });
-  }),
-  createSession: authedProcedure.mutation(async ({ ctx }) => {
-    await ctx.prisma.spySession.updateMany({
-      where: { endTime: null, userId: ctx.session.user.id },
-      data: { endTime: new Date() },
-    });
+  createSession: authedProcedure
+    .input(createSessionInput)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.spySession.updateMany({
+        where: { endTime: null, userId: ctx.session.user.id },
+        data: { endTime: new Date() },
+      });
 
-    return ctx.prisma.spySession.create({
-      data: {
-        userId: ctx.session.user.id,
-      },
-    });
-  }),
+      return ctx.prisma.spySession.create({
+        data: {
+          userId: ctx.session.user.id,
+          groupId: input.groupId,
+        },
+      });
+    }),
   endSession: sessionOwnerProcedure.mutation(async ({ ctx }) => {
     const session = ctx.spySession;
 

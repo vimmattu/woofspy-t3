@@ -1,5 +1,6 @@
 import { prisma } from "../../db/client";
 import { GetSessionsInput } from "../schema/spysession.schema";
+import { infiniteQuery } from "./common.service";
 
 const getUserGroupIds = async (userId: string) => {
   const groups = await prisma.group.findMany({
@@ -46,25 +47,19 @@ export const getManySessionsForUser = async (
   userId: string,
   input: GetSessionsInput
 ) => {
-  const limit = input.limit ?? 8;
-  const { cursor } = input;
   const groups = await getUserGroupIds(userId);
   const baseQuery = baseGetQuery(userId, groups);
+  const [infQuery, getNextCursor] = infiniteQuery("id", input);
   const sessions = await prisma.spySession.findMany({
     ...baseQuery,
+    ...infQuery,
     where: {
       ...baseQuery.where,
       endTime: input.filterActive ? null : undefined,
     },
     orderBy: { startTime: "desc" },
-    take: limit + 1,
-    cursor: input.cursor ? { id: input.cursor } : undefined,
   });
-  let nextCursor: typeof cursor | undefined;
-  if (sessions.length > limit) {
-    const nextItem = sessions.pop();
-    nextCursor = nextItem?.id;
-  }
+  const nextCursor = getNextCursor(sessions);
   return {
     sessions,
     nextCursor,
