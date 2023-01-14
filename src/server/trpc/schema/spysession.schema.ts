@@ -7,7 +7,8 @@ export const sessionMiddlewareInput = z.object({
 
 export const getSessionsInput = z
   .object({
-    filterActive: z.boolean().optional(),
+    isActive: z.boolean().optional(),
+    hasEnded: z.boolean().optional(),
   })
   .merge(infiniteQueryInput);
 

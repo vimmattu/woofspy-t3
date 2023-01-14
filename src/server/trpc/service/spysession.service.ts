@@ -55,7 +55,11 @@ export const getManySessionsForUser = async (
     ...infQuery,
     where: {
       ...baseQuery.where,
-      endTime: input.filterActive ? null : undefined,
+      endTime: input.isActive
+        ? null
+        : input.hasEnded
+        ? { not: null }
+        : undefined,
     },
     orderBy: { startTime: "desc" },
   });

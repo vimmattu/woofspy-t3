@@ -22,16 +22,19 @@ const useSessionsGroupedByDate = (data?: Session[]) =>
     }, {});
   }, [data]);
 
-export function useSessions(opts?: { filterActive: boolean; limit?: number }) {
+export function useSessions(opts?: {
+  isActive?: boolean;
+  hasEnded?: boolean;
+  limit?: number;
+}) {
   const { data, isLoading } = trpc.spySessions.getSessions.useQuery({
     limit: opts?.limit ?? 3,
-    filterActive: opts?.filterActive ?? false,
+    isActive: opts?.isActive ?? false,
+    hasEnded: opts?.hasEnded ?? false,
   });
   const sessions = useSessionsGroupedByDate(data?.sessions);
   return { data: sessions, isLoading };
 }
-
-export const useActiveSessions = () => useSessions({ filterActive: true });
 
 export function useInfiniteSessions() {
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
