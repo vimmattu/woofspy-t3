@@ -31,6 +31,7 @@ const useSessionsGroupedByDate = (data?: Session[]) =>
 export function useSessions() {
   const { data, isLoading } = trpc.sessions.getSessions.useQuery({
     limit: 3,
+    filterActive: false,
   });
   const sessions = useSessionsGroupedByDate(data?.sessions);
   return { data: sessions, isLoading };

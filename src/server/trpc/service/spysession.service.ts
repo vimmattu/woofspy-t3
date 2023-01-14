@@ -49,10 +49,15 @@ export const getManySessionsForUser = async (
   const limit = input.limit ?? 8;
   const { cursor } = input;
   const groups = await getUserGroupIds(userId);
+  const baseQuery = baseGetQuery(userId, groups);
   const sessions = await prisma.spySession.findMany({
-    ...baseGetQuery(userId, groups),
+    ...baseQuery,
+    where: {
+      ...baseQuery.where,
+      endTime: input.filterActive ? null : undefined,
+    },
     orderBy: { startTime: "desc" },
-    take: limit,
+    take: limit + 1,
     cursor: input.cursor ? { id: input.cursor } : undefined,
   });
   let nextCursor: typeof cursor | undefined;
