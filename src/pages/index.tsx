@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import NextLink from "next/link";
 import { useSessions } from "../hooks/sessions";
 import { Head } from "../components/Head";
-import { SessionList } from "../components/SectionList";
+import { SessionList } from "../components/SessionList";
 // import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {

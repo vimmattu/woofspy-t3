@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import React from "react";
 import { useInfiniteSessions } from "../../hooks/sessions";
 import { Button, Spinner, VStack } from "@chakra-ui/react";
-import { SessionList } from "../../components/SectionList";
+import { SessionList } from "../../components/SessionList";
 import { Head } from "../../components/Head";
 
 const Sessions: NextPage = () => {
