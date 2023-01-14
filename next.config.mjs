@@ -1,4 +1,5 @@
 // @ts-check
+import { withSentryConfig } from '@sentry/nextjs';
 import { env } from "./src/env/server.mjs";
 
 /**
@@ -13,7 +14,7 @@ function defineNextConfig(config) {
   return config;
 }
 
-export default defineNextConfig({
+const config = defineNextConfig({
   reactStrictMode: true,
   swcMinify: true,
   // Next.js i18n docs: https://nextjs.org/docs/advanced-features/i18n-routing
@@ -21,4 +22,10 @@ export default defineNextConfig({
     locales: ["en"],
     defaultLocale: "en",
   },
+  sentry: {
+    hideSourceMaps: true,
+  },
 });
+
+export default withSentryConfig(config, { silent: true });
+
