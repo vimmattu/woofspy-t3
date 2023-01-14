@@ -2,7 +2,7 @@
 import { t } from "../trpc";
 import { authRouter } from "./auth";
 import { groupsRouter } from "./groups";
-import { sessionsRouter } from "./sessions";
+import { sessionsRouter } from "./spysession.route";
 
 export const appRouter = t.router({
   auth: authRouter,
