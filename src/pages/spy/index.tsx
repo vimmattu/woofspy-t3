@@ -117,11 +117,14 @@ export default function SpyPage() {
   useEffect(() => {
     if (step !== Step.DONE) return;
     if (!data?.id) return;
-    const sendBeacon = () =>
-      navigator.sendBeacon(`/api/sessions/${data.id}/exit`);
-    document.addEventListener("visibilitychange", sendBeacon);
+    // const sendBeacon = () => {
+    //   if (document.visibilityState === "hidden") {
+    //     navigator.sendBeacon(`/api/sessions/${data.id}/exit`);
+    //   }
+    // }
+    // document.addEventListener("visibilitychange", sendBeacon);
     return () => {
-      document.removeEventListener("visibilitychange", sendBeacon);
+      // document.removeEventListener("visibilitychange", sendBeacon);
       if (!alreadyEndedSession.current) endSession({ sessionId: data.id });
     };
   }, [step]);
