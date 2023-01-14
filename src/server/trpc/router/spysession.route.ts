@@ -76,9 +76,8 @@ const recordingOwnerProcedure = authedProcedure
 export const sessionsRouter = t.router({
   getSessions: authedProcedure
     .input(getSessionsInput)
-    .query(
-      async ({ ctx, input }) =>
-        await getManySessionsForUser(ctx.session.user.id, input)
+    .query(({ ctx, input }) =>
+      getManySessionsForUser(ctx.session.user.id, input)
     ),
   getSession: authedProcedure
     .input(getSessionInput)
