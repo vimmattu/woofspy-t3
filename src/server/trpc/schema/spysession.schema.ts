@@ -1,9 +1,13 @@
 import { z } from "zod";
 import { infiniteQueryInput } from "./common.schema";
 
+export const sessionMiddlewareInput = z.object({
+  sessionId: z.string(),
+});
+
 export const getSessionsInput = z
   .object({
-    filterActive: z.boolean().nullish(),
+    filterActive: z.boolean().optional(),
   })
   .merge(infiniteQueryInput);
 
@@ -12,9 +16,10 @@ export const getSessionInput = z.object({
 });
 
 export const createSessionInput = z.object({
-  groupId: z.string().nullish(),
+  groupId: z.string().optional(),
 });
 
+export type SessionMiddlewareInput = z.infer<typeof sessionMiddlewareInput>;
 export type GetSessionsInput = z.infer<typeof getSessionsInput>;
 export type GetSessionInput = z.infer<typeof getSessionInput>;
 export type CreateSessionInput = z.infer<typeof createSessionInput>;

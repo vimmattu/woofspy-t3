@@ -77,3 +77,25 @@ export const getSessionForUser = async (userId: string, sessionId: string) => {
     },
   });
 };
+
+export const createSession = async (userId: string, groupId?: string) => {
+  // End all sessions for user
+  await prisma.spySession.updateMany({
+    where: { endTime: null, userId },
+    data: { endTime: new Date() },
+  });
+
+  return prisma.spySession.create({
+    data: {
+      userId,
+      groupId,
+    },
+  });
+};
+
+export const endSession = async (id: string) => {
+  return prisma.spySession.update({
+    where: { id },
+    data: { endTime: new Date() },
+  });
+};

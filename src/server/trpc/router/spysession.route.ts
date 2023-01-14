@@ -9,9 +9,12 @@ import {
   getSessionsInput,
 } from "../schema/spysession.schema";
 import {
+  createSession,
+  endSession,
   getManySessionsForUser,
   getSessionForUser,
 } from "../service/spysession.service";
+import { sessionAccessProcedure } from "../middleware/spysession.middleware";
 
 const s3 = new AWS.S3({
   region: "eu-north-1",
@@ -22,27 +25,6 @@ const s3 = new AWS.S3({
     secretAccessKey: env.AWS_S3_SECRET_KEY,
   },
 });
-
-const sessionOwnerProcedure = authedProcedure
-  .input(z.object({ sessionId: z.string() }))
-  .use(async ({ ctx, next, input }) => {
-    const session = await ctx.prisma.spySession.findFirst({
-      where: { id: input.sessionId },
-    });
-
-    if (session?.userId !== ctx.session.user.id)
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Session does not belong to the requesting user.",
-      });
-
-    return next({
-      ctx: {
-        ...ctx,
-        spySession: session,
-      },
-    });
-  });
 
 const recordingOwnerProcedure = authedProcedure
   .input(z.object({ recordingId: z.string() }))
@@ -90,32 +72,16 @@ export const sessionsRouter = t.router({
     ),
   createSession: authedProcedure
     .input(createSessionInput)
-    .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.spySession.updateMany({
-        where: { endTime: null, userId: ctx.session.user.id },
-        data: { endTime: new Date() },
-      });
-
-      return ctx.prisma.spySession.create({
-        data: {
-          userId: ctx.session.user.id,
-          groupId: input.groupId,
-        },
-      });
-    }),
-  endSession: sessionOwnerProcedure.mutation(async ({ ctx }) => {
-    const session = ctx.spySession;
-
-    if (!!session.endTime)
+    .mutation(({ ctx, input }) =>
+      createSession(ctx.session.user.id, input.groupId)
+    ),
+  endSession: sessionAccessProcedure.mutation(({ ctx }) => {
+    if (!!ctx.spySession.endTime)
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "Can't end already ended session.",
       });
-
-    return ctx.prisma.spySession.update({
-      where: { id: session.id },
-      data: { endTime: new Date() },
-    });
+    return endSession(ctx.spySession.id);
   }),
   getRecordings: sessionOwnerProcedure.query(async ({ ctx }) => {
     return ctx.prisma.recording.findMany({
