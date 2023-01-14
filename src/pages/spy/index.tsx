@@ -1,11 +1,11 @@
-import { Button, Spinner, VStack } from "@chakra-ui/react";
+import { Button, VStack } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ActiveDevice } from "../../components/sections/Spy/types";
 import { useMediaStream } from "../../hooks/devices";
 import {
-  useActiveSession,
+  // useActiveSession,
   useCreateSession,
   useEndSession,
 } from "../../hooks/sessions";
@@ -55,8 +55,8 @@ function getActiveDeviceType(step: Step) {
 
 export default function SpyPage() {
   const alreadyEndedSession = useRef(false);
-  const { data: activeSession, isLoading: guestLoading } =
-    useActiveSession(false);
+  // const { data: activeSession, isLoading: guestLoading } =
+  //   useActiveSession(false);
   const {
     data,
     mutateAsync: createSession,
@@ -90,7 +90,7 @@ export default function SpyPage() {
   }
 
   async function proceedToSetSensitivity() {
-    await createSession();
+    await createSession({});
     setStep(Step.DONE);
   }
 
@@ -108,11 +108,11 @@ export default function SpyPage() {
     setStep(step - 1);
   }
 
-  useEffect(() => {
-    if (!!activeSession) {
-      setStep(Step.SPY);
-    }
-  }, [activeSession]);
+  // useEffect(() => {
+  //   if (!!activeSession) {
+  //     setStep(Step.SPY);
+  //   }
+  // }, [activeSession]);
 
   useEffect(() => {
     if (step !== Step.DONE) return;
@@ -129,7 +129,7 @@ export default function SpyPage() {
     };
   }, [step]);
 
-  if (guestLoading || hostLoading) return <Spinner />;
+  // if (guestLoading || hostLoading) return <Spinner />;
 
   const renderView = () => {
     switch (step) {
@@ -193,7 +193,7 @@ export default function SpyPage() {
           />
         );
       case Step.SPY:
-        return <GuestView sessionId={activeSession?.id} />;
+        return <GuestView sessionId={undefined} />;
     }
   };
 

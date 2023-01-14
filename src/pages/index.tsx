@@ -1,31 +1,31 @@
 import { Link, Button, Heading, VStack, Spinner } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import NextLink from "next/link";
-import { useActiveSession, useSessions } from "../hooks/sessions";
+import { useSessions } from "../hooks/sessions";
 import { Head } from "../components/Head";
 import { SessionList } from "../components/SectionList";
-import { trpc } from "../utils/trpc";
+// import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
-  const { mutate: closeActive } =
-    trpc.sessions.closeActiveSessions.useMutation();
+  // const { mutate: closeActive } =
+  //   trpc.sessions.closeActiveSessions.useMutation();
   const { data, isLoading } = useSessions();
 
   // Display spinner if fetching user data or active session is in loading state,
   // or if an active session is found. (If active session is found, then useActiveSession redirects user to session details)
   // TODO: Replace null with spinner
   // if (!shouldRender || isFetchingActiveSession || !!activeSession) return null;
-  const { data: activeSession, isLoading: isFetchingActiveSession } =
-    useActiveSession();
+  // const { data: activeSession, isLoading: isFetchingActiveSession } =
+  //   useActiveSession();
 
-  if (isFetchingActiveSession) return <Spinner />;
+  // if (isFetchingActiveSession) return <Spinner />;
 
   return (
     <>
       <VStack as="main" mt={4}>
         <Head title="Dashboard" hasHiddenHeader />
 
-        {activeSession ? (
+        {false ? (
           <Button
             as={NextLink}
             href="/spy"
@@ -60,9 +60,9 @@ const Home: NextPage = () => {
           </Button>
         )}
 
-        {activeSession && (
+        {/* activeSession && (
           <Button onClick={() => closeActive()}>close active</Button>
-        )}
+        ) */}
         <Heading as="h2" w="full" size="lg">
           Past sessions
         </Heading>

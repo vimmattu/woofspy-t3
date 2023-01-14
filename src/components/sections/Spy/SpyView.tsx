@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useActivityDetector } from "../../../hooks/detector";
 import { useActivityRecorder } from "../../../hooks/recorder";
-import { useCreateRecording } from "../../../hooks/sessions";
+import { useCreateRecording } from "../../../hooks/recordings";
 import Video from "../../Video";
 import WaveForm from "../../WaveForm";
 import { BaseProps } from "./types";

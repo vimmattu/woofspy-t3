@@ -12,7 +12,7 @@ import React, { useState } from "react";
 import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
 import type { Session, Recording } from "../../types/inferred";
-import { useInfiniteRecordings, useRecordingFile } from "../../hooks/sessions";
+import { useRecordings, useRecordingFile } from "../../hooks/recordings";
 
 interface Props {
   session: Session;
@@ -28,7 +28,7 @@ export const SessionDetail = ({ session }: Props) => {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useInfiniteRecordings(session.id);
+  } = useRecordings(session.id);
 
   if (isLoading || !recordings) {
     return <Spinner />;
