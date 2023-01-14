@@ -31,15 +31,14 @@ const useSessionsGroupedByDate = (data?: Session[]) =>
 export function useSessions() {
   const { data, isLoading } = trpc.sessions.getSessions.useQuery({
     limit: 3,
-    excludeActive: true,
   });
-  const sessions = useSessionsGroupedByDate(data);
+  const sessions = useSessionsGroupedByDate(data?.sessions);
   return { data: sessions, isLoading };
 }
 
 export function useInfiniteSessions() {
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    trpc.sessions.getInfiniteSessions.useInfiniteQuery(
+    trpc.sessions.getSessions.useInfiniteQuery(
       { limit: 8 },
       { getNextPageParam: (lastPage) => lastPage.nextCursor }
     );

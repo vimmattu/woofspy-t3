@@ -1,9 +1,13 @@
 import { t, authedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import dayjs from "dayjs";
 import AWS from "aws-sdk";
 import { env } from "../../../env/server.mjs";
+import { getSessionInput, getSessionsInput } from "../schema/spysession.schema";
+import {
+  getManySessionsForUser,
+  getSessionForUser,
+} from "../service/spysession.service";
 
 const s3 = new AWS.S3({
   region: "eu-north-1",
@@ -71,109 +75,16 @@ const recordingOwnerProcedure = authedProcedure
 
 export const sessionsRouter = t.router({
   getSessions: authedProcedure
-    .input(
-      z.object({
-        limit: z.number().optional(),
-        excludeActive: z.boolean().optional(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      // get groups where user belongs
-      const groups = await ctx.prisma.group.findMany({
-        select: { id: true },
-        where: {
-          users: {
-            some: {
-              userId: ctx.session.user.id,
-            },
-          },
-        },
-      });
-      const sessions = await ctx.prisma.spySession.findMany({
-        select: {
-          id: true,
-          startTime: true,
-          endTime: true,
-          _count: {
-            select: {
-              recordings: true,
-            },
-          },
-        },
-        where: {
-          OR: [
-            {
-              userId: ctx.session.user.id,
-            },
-            {
-              groupId: {
-                in: groups.map((g) => g.id),
-              },
-            },
-          ],
-          startTime: { gte: dayjs().subtract(1, "month").toDate() },
-          endTime: input.excludeActive ? { not: null } : undefined,
-        },
-        orderBy: { startTime: "desc" },
-        take: input.limit,
-      });
-      return sessions;
-    }),
-  getInfiniteSessions: authedProcedure
-    .input(
-      z.object({
-        limit: z.number().min(1).max(100).nullish(),
-        cursor: z.string().nullish(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const limit = input.limit ?? 50;
-      const { cursor } = input;
-      const sessions = await ctx.prisma.spySession.findMany({
-        select: {
-          id: true,
-          startTime: true,
-          endTime: true,
-          _count: {
-            select: {
-              recordings: true,
-            },
-          },
-        },
-        where: {
-          userId: ctx.session.user.id,
-        },
-        take: limit + 1,
-        cursor: cursor ? { id: cursor } : undefined,
-        orderBy: { startTime: "desc" },
-      });
-      let nextCursor: typeof cursor | undefined;
-      if (sessions.length > limit) {
-        const nextItem = sessions.pop();
-        nextCursor = nextItem?.id;
-      }
-      return {
-        sessions,
-        nextCursor,
-      };
-    }),
+    .input(getSessionsInput)
+    .query(
+      async ({ ctx, input }) =>
+        await getManySessionsForUser(ctx.session.user.id, input)
+    ),
   getSession: authedProcedure
-    .input(z.object({ id: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.spySession.findFirst({
-        select: {
-          id: true,
-          startTime: true,
-          endTime: true,
-          _count: {
-            select: {
-              recordings: true,
-            },
-          },
-        },
-        where: { userId: ctx.session.user.id, id: input.id },
-      });
-    }),
+    .input(getSessionInput)
+    .query(({ ctx, input }) =>
+      getSessionForUser(ctx.session.user.id, input.id)
+    ),
   getActiveSession: authedProcedure.query(({ ctx }) => {
     return ctx.prisma.spySession.findFirst({
       where: { endTime: null },
