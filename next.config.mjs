@@ -1,5 +1,5 @@
 // @ts-check
-import { withSentryConfig } from '@sentry/nextjs';
+import { withSentryConfig } from "@sentry/nextjs";
 import { env } from "./src/env/server.mjs";
 
 /**
@@ -28,4 +28,3 @@ const config = defineNextConfig({
 });
 
 export default withSentryConfig(config, { silent: true });
-

@@ -10,6 +10,7 @@ import { theme } from "../styles/theme";
 import "@fontsource/comic-neue/300.css";
 import "@fontsource/comic-neue/400.css";
 import "@fontsource/comic-neue/700.css";
+import { SpyStateProvider } from "../components/SpyStateProvider";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -17,13 +18,15 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <ChakraProvider theme={theme}>
-      <SessionProvider session={session}>
-        <Layout>
-          <AuthGuard>
-            <Component {...pageProps} />
-          </AuthGuard>
-        </Layout>
-      </SessionProvider>
+      <SpyStateProvider>
+        <SessionProvider session={session}>
+          <Layout>
+            <AuthGuard>
+              <Component {...pageProps} />
+            </AuthGuard>
+          </Layout>
+        </SessionProvider>
+      </SpyStateProvider>
     </ChakraProvider>
   );
 };

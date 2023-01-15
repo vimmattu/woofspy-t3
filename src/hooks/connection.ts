@@ -1,24 +1,25 @@
 import { useEffect, useRef } from "react";
 import { PusherHandler, SseHandler } from "../utils/client-signaling";
 import { env } from "../env/client.mjs";
+import { useSpyMode } from "./spy";
 
 interface Opts {
-  sessionId?: string;
-  isHost?: boolean;
-  stream?: MediaStream;
-  onStreamChanged?: (stream?: MediaStream) => void;
+  sessionId: string;
+  streamToSend?: MediaStream;
+  onRemoteStream?: (stream?: MediaStream) => void;
 }
 
 export const useLiveConnection = ({
   sessionId,
-  isHost = false,
-  stream,
-  onStreamChanged,
+  streamToSend,
+  onRemoteStream,
 }: Opts) => {
+  const [isHost] = useSpyMode();
   const remotes = useRef<Map<string, RTCPeerConnection>>(new Map());
 
   useEffect(() => {
     if (!sessionId) return;
+    if (isHost && !streamToSend) return;
     const signal = env.NEXT_PUBLIC_DEV
       ? new SseHandler(sessionId)
       : new PusherHandler(sessionId);
@@ -45,7 +46,9 @@ export const useLiveConnection = ({
 
       const peer = createPeer(userId);
       remotes.current.set(userId, peer);
-      stream?.getTracks().forEach((track) => peer.addTrack(track, stream));
+      streamToSend
+        ?.getTracks()
+        .forEach((track) => peer.addTrack(track, streamToSend));
 
       const offer = await peer.createOffer();
       await peer.setLocalDescription(offer);
@@ -63,7 +66,8 @@ export const useLiveConnection = ({
 
         const peer = createPeer(userId);
         peer.addEventListener("track", (event) => {
-          onStreamChanged?.(event.streams[0]);
+          console.log("ON REMOTE!", event.streams[0]);
+          onRemoteStream && onRemoteStream(event.streams[0]);
         });
 
         remotes.current.set(userId, peer);
@@ -112,5 +116,5 @@ export const useLiveConnection = ({
     return () => {
       signal.close();
     };
-  }, [isHost, stream]);
+  }, [isHost, streamToSend, sessionId]);
 };

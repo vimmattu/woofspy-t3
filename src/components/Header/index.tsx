@@ -11,17 +11,14 @@ import {
   PopoverTrigger,
   Spacer,
   Text,
-  useColorMode,
 } from "@chakra-ui/react";
 import React from "react";
 import NextLink from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { LogoIcon } from "../icons/Logo";
 
 export const Header = () => {
   const session = useSession();
-  const { colorMode, toggleColorMode } = useColorMode();
 
   const name =
     session.data?.user?.name || session.data?.user?.email || undefined;
@@ -36,9 +33,6 @@ export const Header = () => {
         </Text>
       </Link>
       <Spacer />
-      <Button onClick={toggleColorMode} variant="ghost">
-        {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-      </Button>
       {session.status === "authenticated" && (
         <Popover placement="bottom-start">
           <PopoverTrigger>

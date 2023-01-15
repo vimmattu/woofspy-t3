@@ -50,19 +50,19 @@ export const Layout = ({ children }: Props) => {
         {isAuthenticated && (
           <NavigationTabs>
             <TabItem
-              title="Dashboard"
-              href="/"
-              active={router.pathname === "/"}
-            />
-            <TabItem
               title="Spy"
-              href="/spy"
-              active={router.pathname.startsWith("/spy")}
+              href="/"
+              active={router.pathname === "/" || router.pathname === "/spy"}
             />
             <TabItem
               title="History"
               href="/history"
               active={router.pathname.startsWith("/history")}
+            />
+            <TabItem
+              title="Settings"
+              href="/settings"
+              active={router.pathname.startsWith("/settings")}
             />
           </NavigationTabs>
         )}

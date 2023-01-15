@@ -1,24 +1,34 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useActivityDetector } from "../../../hooks/detector";
 import { useActivityRecorder } from "../../../hooks/recorder";
-import { useCreateRecording } from "../../../hooks/sessions";
+import { useCreateRecording } from "../../../hooks/recordings";
 import Video from "../../Video";
 import WaveForm from "../../WaveForm";
-import { BaseProps } from "./types";
 import { Head } from "../../Head";
 import { Button, Text } from "@chakra-ui/react";
 import SensitivitySlider from "../../SensitivitySlider";
 import { useLiveConnection } from "../../../hooks/connection";
+import { useMediaStream } from "../../../hooks/devices";
+import { useEndSession } from "../../../hooks/sessions";
+import { useRouter } from "next/router";
 
-const SpyView: React.FC<BaseProps & { sessionId?: string }> = ({
-  stream,
-  proceedSetup,
-  sessionId,
-  sensitivity,
-  setSensitivity,
-}) => {
+const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
+  const hasMounted = useRef(false);
+  const { mutateAsync: endSession } = useEndSession();
   const { mutateAsync: createRecording } = useCreateRecording();
-  useLiveConnection({ sessionId, isHost: true, stream });
+  const { stream, startStream } = useMediaStream();
+  const { push: navigate } = useRouter();
+  useLiveConnection({
+    sessionId,
+    streamToSend: stream,
+  });
+
+  useEffect(() => {
+    if (!hasMounted.current) {
+      startStream();
+      hasMounted.current = true;
+    }
+  }, []);
 
   const onRecordingAvailable = useCallback(
     async (event: BlobEvent) => {
@@ -49,11 +59,14 @@ const SpyView: React.FC<BaseProps & { sessionId?: string }> = ({
   });
 
   const detectActive = useActivityDetector({
-    stream,
     onStart,
     onEnd,
-    sensitivity,
   });
+
+  const handleEndSession = async () => {
+    await endSession({ sessionId });
+    navigate("/history");
+  };
 
   const hasVideoTracks = !!stream?.getTracks().filter((d) => d.kind === "video")
     .length;
@@ -65,19 +78,13 @@ const SpyView: React.FC<BaseProps & { sessionId?: string }> = ({
       <Text>
         Status: {detectActive ? "Recording activity" : "Listening for activity"}
       </Text>
-      <SensitivitySlider
-        onChangeSensitivity={setSensitivity}
-        max={2}
-        min={1}
-        step={0.01}
-        defaultValue={sensitivity}
-      />
+      <SensitivitySlider max={2} min={1} step={0.01} />
       <Button
         w="full"
         borderRadius="md"
         colorScheme="red"
         title="You will be redirected to select microphone"
-        onClick={() => proceedSetup()}
+        onClick={handleEndSession}
       >
         End spy
       </Button>

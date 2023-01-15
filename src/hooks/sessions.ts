@@ -1,26 +1,14 @@
 import dayjs from "dayjs";
-import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { trpc } from "../utils/trpc";
 import type { Session } from "../types/inferred";
 
 export function useCreateSession() {
-  return trpc.sessions.createSession.useMutation();
+  return trpc.spySessions.createSession.useMutation();
 }
 
 export function useEndSession() {
-  return trpc.sessions.endSession.useMutation();
-}
-
-export function useActiveSession(redirect?: boolean) {
-  const router = useRouter();
-  const query = trpc.sessions.getActiveSession.useQuery();
-
-  if (!!query.data && redirect) {
-    router.push(`/sessions/${query.data.id}`);
-  }
-
-  return query;
+  return trpc.spySessions.endSession.useMutation();
 }
 
 const useSessionsGroupedByDate = (data?: Session[]) =>
@@ -34,18 +22,23 @@ const useSessionsGroupedByDate = (data?: Session[]) =>
     }, {});
   }, [data]);
 
-export function useSessions() {
-  const { data, isLoading } = trpc.sessions.getSessions.useQuery({
-    limit: 3,
-    excludeActive: true,
+export function useSessions(opts?: {
+  isActive?: boolean;
+  hasEnded?: boolean;
+  limit?: number;
+}) {
+  const { data, isLoading } = trpc.spySessions.getSessions.useQuery({
+    limit: opts?.limit ?? 3,
+    isActive: opts?.isActive ?? false,
+    hasEnded: opts?.hasEnded ?? false,
   });
-  const sessions = useSessionsGroupedByDate(data);
+  const sessions = useSessionsGroupedByDate(data?.sessions);
   return { data: sessions, isLoading };
 }
 
 export function useInfiniteSessions() {
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    trpc.sessions.getInfiniteSessions.useInfiniteQuery(
+    trpc.spySessions.getSessions.useInfiniteQuery(
       { limit: 8 },
       { getNextPageParam: (lastPage) => lastPage.nextCursor }
     );
@@ -65,34 +58,6 @@ export function useInfiniteSessions() {
   };
 }
 
-export function useInfiniteRecordings(sessionId: string) {
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    trpc.sessions.getInfiniteRecordings.useInfiniteQuery(
-      { sessionId, limit: 8 },
-      { getNextPageParam: (lastPage) => lastPage.nextCursor }
-    );
-
-  const combinedPages = useMemo(() => {
-    return data?.pages.flatMap((page) => page.recordings);
-  }, [data]);
-
-  return {
-    data: combinedPages,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  };
-}
-
 export function useSessionDetails(id: string) {
-  return trpc.sessions.getSession.useQuery({ id });
-}
-
-export function useCreateRecording() {
-  return trpc.sessions.createRecording.useMutation();
-}
-
-export function useRecordingFile(recordingId: string) {
-  return trpc.sessions.getRecordingSignedUrl.useQuery({ recordingId });
+  return trpc.spySessions.getSession.useQuery({ id });
 }

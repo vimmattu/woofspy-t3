@@ -1,4 +1,9 @@
+import { atom, useAtom } from "jotai";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useStream } from "./devices";
+
+const sensitivityAtom = atom<number>(1.5);
+export const useSensitivity = () => useAtom(sensitivityAtom);
 
 const useAnimationFrame = (handler: () => void) => {
   const frame = useRef(0);
@@ -38,18 +43,13 @@ const useTimer = (callback: () => void, delay: number) => {
 };
 
 interface IActivityDetector {
-  stream?: MediaStream;
-  sensitivity: number;
   onStart?: () => void | undefined;
   onEnd?: () => void | undefined;
 }
 
-export const useActivityDetector = ({
-  stream,
-  sensitivity = 1.5,
-  onStart,
-  onEnd,
-}: IActivityDetector) => {
+export const useActivityDetector = ({ onStart, onEnd }: IActivityDetector) => {
+  const [stream] = useStream();
+  const [sensitivity] = useSensitivity();
   const audioCtx = useRef(new AudioContext());
   const analyser = useRef(audioCtx.current.createAnalyser());
   const dataArray = useRef(new Uint8Array(analyser.current.frequencyBinCount));

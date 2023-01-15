@@ -1,11 +1,9 @@
-import { BaseDeviceAskProps } from "./types";
 import { Head } from "../../Head";
 import { Button, Text } from "@chakra-ui/react";
+import { SpySetupStep, useSpySetup } from "../../../hooks/spy";
 
-const PreSelectCamera: React.FC<BaseDeviceAskProps> = ({
-  proceedSetup,
-  askForDevice,
-}) => {
+const PreSelectCamera: React.FC = () => {
+  const { goToStep, goToNextStep } = useSpySetup();
   return (
     <>
       <Head title="Select camera" />
@@ -21,7 +19,7 @@ const PreSelectCamera: React.FC<BaseDeviceAskProps> = ({
         w="full"
         borderRadius="md"
         colorScheme="green"
-        onClick={() => askForDevice()}
+        onClick={goToNextStep}
       >
         I want to use camera
       </Button>
@@ -30,7 +28,7 @@ const PreSelectCamera: React.FC<BaseDeviceAskProps> = ({
         borderRadius="md"
         colorScheme="red"
         title="You will be redirected to select microphone"
-        onClick={() => proceedSetup()}
+        onClick={() => goToStep(SpySetupStep.PRE_SELECT_MICROPHONE)}
       >
         I don&apos;t want to use camera
       </Button>

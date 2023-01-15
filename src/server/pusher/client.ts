@@ -6,5 +6,5 @@ export const pusherClient = new Pusher({
   key: env.PUSHER_KEY,
   secret: env.PUSHER_SECRET,
   cluster: env.PUSHER_CLUSTER,
-  useTLS: !!env.PUSHER_USETLS,
+  useTLS: true,
 });
