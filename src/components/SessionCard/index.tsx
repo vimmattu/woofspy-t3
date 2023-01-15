@@ -1,16 +1,8 @@
-import {
-  Button,
-  Flex,
-  LinkBox,
-  LinkOverlay,
-  Spacer,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Text, VStack } from "@chakra-ui/react";
 import React from "react";
-import NextLink from "next/link";
-import { ChevronRightIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
+import { Card } from "../Card";
+import { SessionCardAction } from "./SessionCardAction";
 
 interface Props {
   id: string;
@@ -22,18 +14,9 @@ interface Props {
 const formatTime = (date: Date) => dayjs(date).format("HH:mm:ss");
 
 export const SessionCard = ({ id, startTime, endTime, eventCount }: Props) => {
+  const href = endTime ? `/sessions/${id}` : `/spy/${id}`;
   return (
-    <Flex
-      as={LinkBox}
-      alignItems="center"
-      borderWidth="thin"
-      borderStyle="solid"
-      borderColor="gray.200"
-      borderRadius="md"
-      shadow="xs"
-      p={2}
-      mb={2}
-    >
+    <Card action={<SessionCardAction href={href} isActive={!endTime} />}>
       <VStack spacing={4} textAlign="left">
         <Text fontWeight="bold" w="full">
           {formatTime(startTime)} -{" "}
@@ -41,14 +24,6 @@ export const SessionCard = ({ id, startTime, endTime, eventCount }: Props) => {
         </Text>
         <Text w="full">{eventCount} detected events</Text>
       </VStack>
-      <Spacer />
-      <NextLink href={`${endTime ? "sessions" : "spy"}/${id}`} passHref>
-        <LinkOverlay>
-          <Button variant="outline">
-            {endTime ? "" : "View live"} <ChevronRightIcon />
-          </Button>
-        </LinkOverlay>
-      </NextLink>
-    </Flex>
+    </Card>
   );
 };
