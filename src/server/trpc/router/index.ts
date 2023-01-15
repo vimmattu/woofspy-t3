@@ -1,6 +1,6 @@
 // src/server/trpc/router/index.ts
 import { t } from "../trpc";
-import { groupsRouter } from "./groups";
+import { groupsRouter } from "./group.route";
 import { spySessionsRouter } from "./spysession.route";
 import { recordingsRouter } from "./recording.route";
 
