@@ -9,11 +9,15 @@ import { Button, Text } from "@chakra-ui/react";
 import SensitivitySlider from "../../SensitivitySlider";
 import { useLiveConnection } from "../../../hooks/connection";
 import { useMediaStream } from "../../../hooks/devices";
+import { useEndSession } from "../../../hooks/sessions";
+import { useRouter } from "next/router";
 
 const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
   const hasMounted = useRef(false);
+  const { mutateAsync: endSession } = useEndSession();
   const { mutateAsync: createRecording } = useCreateRecording();
   const { stream, startStream } = useMediaStream();
+  const { push: navigate } = useRouter();
   useLiveConnection({
     sessionId,
     streamToSend: stream,
@@ -59,6 +63,11 @@ const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
     onEnd,
   });
 
+  const handleEndSession = async () => {
+    await endSession({ sessionId });
+    navigate("/history");
+  };
+
   const hasVideoTracks = !!stream?.getTracks().filter((d) => d.kind === "video")
     .length;
   return (
@@ -75,6 +84,7 @@ const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
         borderRadius="md"
         colorScheme="red"
         title="You will be redirected to select microphone"
+        onClick={handleEndSession}
       >
         End spy
       </Button>
