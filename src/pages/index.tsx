@@ -32,7 +32,7 @@ const Home: NextPage = () => {
           Start spy
         </Button>
 
-        {activeSessions?.length && (
+        {activeSessions && (
           <Heading as="h2" w="full" size="lg">
             Active sessions
           </Heading>
