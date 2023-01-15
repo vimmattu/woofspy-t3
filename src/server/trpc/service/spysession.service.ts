@@ -75,6 +75,10 @@ export const getSessionForUser = async (userId: string, sessionId: string) => {
   const baseQuery = baseGetQuery(userId, groups);
   return prisma.spySession.findFirst({
     ...baseQuery,
+    select: {
+      ...baseQuery.select,
+      userId: true,
+    },
     where: {
       ...baseQuery.where,
       id: sessionId,

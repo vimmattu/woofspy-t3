@@ -24,6 +24,8 @@ export const recordingsRouter = t.router({
     return createRecordingForSession(ctx.session.user.id, ctx.spySession.id);
   }),
   getRecordingFile: recordingAccessProcedure.query(({ ctx }) =>
-    getRecordingSignedUrl(ctx.session.user.id, ctx.recording.id)
+    // TODO: Change spysession user id to be requred
+    // TODO: Also, change the key to be group id and use user id as fallback
+    getRecordingSignedUrl(ctx.spySession.userId!, ctx.recording.id)
   ),
 });
