@@ -1,27 +1,25 @@
 import { useEffect, useRef } from "react";
 import { PusherHandler, SseHandler } from "../utils/client-signaling";
 import { env } from "../env/client.mjs";
+import { useSpyMode } from "./spy";
 
 interface Opts {
   sessionId: string;
-  isHost: boolean;
   streamToSend?: MediaStream;
   onRemoteStream?: (stream?: MediaStream) => void;
-  canConnect?: boolean;
 }
 
 export const useLiveConnection = ({
   sessionId,
-  isHost,
   streamToSend,
   onRemoteStream,
-  canConnect,
 }: Opts) => {
+  const [isHost] = useSpyMode();
   const remotes = useRef<Map<string, RTCPeerConnection>>(new Map());
 
   useEffect(() => {
     if (!sessionId) return;
-    if (!canConnect) return;
+    if (isHost && !streamToSend) return;
     const signal = env.NEXT_PUBLIC_DEV
       ? new SseHandler(sessionId)
       : new PusherHandler(sessionId);
@@ -118,5 +116,5 @@ export const useLiveConnection = ({
     return () => {
       signal.close();
     };
-  }, [isHost, streamToSend, sessionId, canConnect]);
+  }, [isHost, streamToSend, sessionId]);
 };

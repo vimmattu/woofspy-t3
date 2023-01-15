@@ -11,20 +11,18 @@ import { useLiveConnection } from "../../../hooks/connection";
 import { useMediaStream } from "../../../hooks/devices";
 
 const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
+  const hasMounted = useRef(false);
   const { mutateAsync: createRecording } = useCreateRecording();
-  const ref = useRef(false);
   const { stream, startStream } = useMediaStream();
   useLiveConnection({
     sessionId,
-    isHost: true,
     streamToSend: stream,
-    canConnect: stream !== undefined,
   });
 
   useEffect(() => {
-    if (!ref.current) {
+    if (!hasMounted.current) {
       startStream();
-      ref.current = true;
+      hasMounted.current = true;
     }
   }, []);
 
