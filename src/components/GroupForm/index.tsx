@@ -84,11 +84,13 @@ export const GroupForm: React.FC<Props> = ({
       <FormControl>
         <FormLabel fontWeight="bold">Users</FormLabel>
         <VStack w="full">
-          <HStack w="full">
-            <Text>You</Text>
-            <Spacer />
-            <Text>Admin</Text>
-          </HStack>
+          {!isEdit && (
+            <HStack w="full">
+              <Text>You</Text>
+              <Spacer />
+              <Text>Admin</Text>
+            </HStack>
+          )}
           {emails.map((email) => (
             <HStack w="full" key={email}>
               <Text>{email}</Text>
