@@ -2,7 +2,6 @@ import { Text, VStack } from "@chakra-ui/react";
 import React from "react";
 import dayjs from "dayjs";
 import { Card } from "../Card";
-import { SessionCardAction } from "./SessionCardAction";
 
 interface Props {
   id: string;
@@ -16,7 +15,7 @@ const formatTime = (date: Date) => dayjs(date).format("HH:mm:ss");
 export const SessionCard = ({ id, startTime, endTime, eventCount }: Props) => {
   const href = endTime ? `/sessions/${id}` : `/spy/${id}`;
   return (
-    <Card action={<SessionCardAction href={href} isActive={!endTime} />}>
+    <Card href={href} actionText={!endTime ? "View live" : ""}>
       <VStack spacing={4} textAlign="left">
         <Text fontWeight="bold" w="full">
           {formatTime(startTime)} -{" "}

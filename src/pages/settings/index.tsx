@@ -1,16 +1,11 @@
 import type { NextPage } from "next";
 import React from "react";
-import { Button, FormControl, Heading, Input, VStack } from "@chakra-ui/react";
+import { Box, Button, Heading, VStack } from "@chakra-ui/react";
 import { Head } from "../../components/Head";
-import { useRouter } from "next/router";
-import { trpc } from "../../utils/trpc";
+import { GroupList } from "../../components/GroupList";
+import Link from "next/link";
 
 const Settings: NextPage = () => {
-  const router = useRouter();
-  const { data } = trpc.groups.getGroups.useQuery();
-  const [name, setName] = React.useState<string>("");
-  const { mutateAsync } = trpc.groups.createGroup.useMutation();
-
   return (
     <>
       <VStack as="main" mt={4}>
@@ -20,24 +15,10 @@ const Settings: NextPage = () => {
           Groups
         </Heading>
 
-        <FormControl>
-          <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Group name"
-          />
-        </FormControl>
-        <Button
-          onClick={() => {
-            mutateAsync({
-              name,
-              emails: ["test@example.com", "hello@test.com"],
-            });
-          }}
-          w="full"
-        >
-          Create
-        </Button>
+        <Box as={Link} href="/settings/group/create" w="full">
+          <Button colorScheme="green">Create group</Button>
+        </Box>
+        <GroupList />
       </VStack>
     </>
   );
