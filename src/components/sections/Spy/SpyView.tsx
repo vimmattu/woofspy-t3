@@ -14,7 +14,12 @@ const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
   const { mutateAsync: createRecording } = useCreateRecording();
   const ref = useRef(false);
   const { stream, startStream } = useMediaStream();
-  useLiveConnection(sessionId);
+  useLiveConnection({
+    sessionId,
+    isHost: true,
+    streamToSend: stream,
+    canConnect: stream !== undefined,
+  });
 
   useEffect(() => {
     if (!ref.current) {
