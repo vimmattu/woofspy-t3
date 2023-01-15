@@ -1,8 +1,26 @@
-import { useCallback, useEffect, useState } from "react";
+import { atom, useAtom } from "jotai";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { ActiveDevice } from "../components/sections/Spy/types";
+import { SpySetupStep, useSpySetupStep } from "./spy";
+
+const devicesAtom = atom<MediaDeviceInfo[]>([]);
+const cameraInitialized = atom<boolean>(false);
+const microphoneInitialized = atom<boolean>(false);
+const cameraIdAtom = atom<string | null | undefined>(undefined);
+const microphoneIdAtom = atom<string | undefined>(undefined);
+const errorAtom = atom<Error | undefined>(undefined);
+const streamAtom = atom<MediaStream | undefined>(undefined);
+
+export const useDeviceList = () => useAtom(devicesAtom);
+export const useCameraInitialized = () => useAtom(cameraInitialized);
+export const useMicrophoneInitialized = () => useAtom(microphoneInitialized);
+export const useCameraId = () => useAtom(cameraIdAtom);
+export const useMicrophoneId = () => useAtom(microphoneIdAtom);
+export const useDeviceError = () => useAtom(errorAtom);
+export const useStream = () => useAtom(streamAtom);
 
 export function useMediaDevices() {
-  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+  const [devices, setDevices] = useDeviceList();
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then(setDevices);
@@ -14,57 +32,45 @@ export function useMediaDevices() {
 function getConstraintForType(
   devices: MediaDeviceInfo[],
   kind: "videoinput" | "audioinput",
-  active: ActiveDevice,
   allowed: boolean,
   id?: string | null
 ) {
   if (!devices.filter((d) => d.kind === kind).length) return false;
   if (!allowed) return false;
-  if (active === ActiveDevice.CAMERA && kind === "audioinput") return false;
-  if (active === ActiveDevice.MICROPHONE && kind === "videoinput") return false;
   if (id) return { deviceId: { exact: id } };
   return true;
 }
 
-export function useMediaStream({
-  cameraId,
-  microphoneId,
-  activeDeviceType,
-}: {
-  cameraId?: string | null;
-  microphoneId?: string;
-  activeDeviceType: ActiveDevice;
-}) {
+export function useMediaStream() {
+  const f = useRef(false);
   const devices = useMediaDevices();
-  const [error, setError] = useState<Error>();
-  const [stream, setStream] = useState<MediaStream>();
-  const [cameraInitialized, setCameraInitialized] = useState<boolean>(false);
-  const [audioInitialized, setAudioInitialized] = useState<boolean>(false);
+  const [error, setError] = useDeviceError();
+  const [stream, setStream] = useStream();
+  const [cameraId] = useCameraId();
+  const [microphoneId] = useMicrophoneId();
+  const [cameraInitialized, setCameraInitialized] = useCameraInitialized();
+  const [audioInitialized, setAudioInitialized] = useMicrophoneInitialized();
+  const [step] = useSpySetupStep();
 
-  const stopTracks = useCallback(() => {
-    stream?.getTracks().forEach((t) => t.stop());
-  }, [stream]);
+  const activeDeviceType = useMemo(() => {
+    if (step <= SpySetupStep.SELECT_CAMERA) return ActiveDevice.CAMERA;
+    if (step <= SpySetupStep.SELECT_MICROPHONE) return ActiveDevice.MICROPHONE;
+    return ActiveDevice.BOTH;
+  }, [step]);
 
-  useEffect(() => {
-    if (!devices.length) return;
-    if (!cameraInitialized && !audioInitialized) return;
-    if (activeDeviceType === ActiveDevice.MICROPHONE && !audioInitialized)
-      return;
-    if (activeDeviceType === ActiveDevice.CAMERA && !cameraInitialized) return;
+  const startStream = useCallback(() => {
     stream?.getTracks().forEach((t) => t.stop());
     navigator.mediaDevices
       .getUserMedia({
         video: getConstraintForType(
           devices,
           "videoinput",
-          activeDeviceType,
           cameraInitialized,
           cameraId
         ),
         audio: getConstraintForType(
           devices,
           "audioinput",
-          activeDeviceType,
           audioInitialized,
           microphoneId
         ),
@@ -84,10 +90,17 @@ export function useMediaStream({
     audioInitialized,
   ]);
 
-  const clearStream = () => {
-    stopTracks();
-    setStream(undefined);
-  };
+  const clearStream = useCallback(
+    (startAfter?: boolean) => {
+      setStream((stream) => {
+        console.log(stream, startAfter);
+        stream?.getTracks().forEach((t) => t.stop());
+        f.current = startAfter ?? false;
+        return undefined;
+      });
+    },
+    [stream]
+  );
 
   const askForDevice = useCallback(
     (type: "video" | "audio") => {
@@ -98,7 +111,6 @@ export function useMediaStream({
           setStream(stream);
           if (type === "video") setCameraInitialized(true);
           else setAudioInitialized(true);
-          console.log("should be set", type);
         })
         .catch((e) => {
           const error = e as Error;
@@ -112,5 +124,5 @@ export function useMediaStream({
   // Stop each track of stream on unmount
   useEffect(() => () => stream?.getTracks().forEach((t) => t.stop()), [stream]);
 
-  return { error, stream, askForDevice, clearStream };
+  return { error, stream, askForDevice, clearStream, startStream };
 }

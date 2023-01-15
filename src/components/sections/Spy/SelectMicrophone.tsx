@@ -1,27 +1,33 @@
-import { useState } from "react";
 import { useActivityDetector } from "../../../hooks/detector";
-import { useMediaDevices } from "../../../hooks/devices";
+import {
+  useDeviceError,
+  useMediaDevices,
+  useMicrophoneId,
+  useStream,
+} from "../../../hooks/devices";
 import WaveForm from "../../../components/WaveForm";
-import { BaseDeviceAskProps } from "./types";
 import { Button, Select, Text } from "@chakra-ui/react";
 import { Head } from "../../Head";
 import SensitivitySlider from "../../SensitivitySlider";
+import { useCreateSession } from "../../../hooks/sessions";
+import { useRouter } from "next/router";
+import { useSpyMode } from "../../../hooks/spy";
 
-const SelectMicrophone: React.FC<BaseDeviceAskProps> = ({
-  stream,
-  error,
-  proceedSetup,
-  onChangeDevice,
-  sensitivity,
-  setSensitivity,
-}) => {
+const SelectMicrophone: React.FC = () => {
+  const [, setIsHost] = useSpyMode();
   const devices = useMediaDevices();
-  const [selected, setSelected] = useState<string>();
+  const [selected, setSelected] = useMicrophoneId();
+  const [stream] = useStream();
+  const [error] = useDeviceError();
+  const detectActive = useActivityDetector({});
+  const { mutateAsync: createSession } = useCreateSession();
+  const { push: navigate } = useRouter();
 
-  const detectActive = useActivityDetector({
-    stream,
-    sensitivity,
-  });
+  const handleStart = async () => {
+    const session = await createSession({});
+    setIsHost(true);
+    navigate(`/spy/${session.id}`);
+  };
 
   const audioDevices = devices.filter((d) => d.kind === "audioinput");
   if (error)
@@ -33,31 +39,20 @@ const SelectMicrophone: React.FC<BaseDeviceAskProps> = ({
       </>
     );
 
-  function handleChange(id: string) {
-    setSelected(id);
-    onChangeDevice && onChangeDevice(id);
-  }
-
   return (
     <>
       <Head title="Select microphone" />
       <WaveForm stream={stream} />
       <Text>{detectActive ? "Detecting activity" : "Idle"}</Text>
-      <Select onChange={(e) => handleChange(e.target.value)} value={selected}>
+      <Select onChange={(e) => setSelected(e.target.value)} value={selected}>
         {audioDevices.map((device) => (
           <option key={device.deviceId} value={device.deviceId}>
             {device.label}
           </option>
         ))}
       </Select>
-      <SensitivitySlider
-        onChangeSensitivity={setSensitivity}
-        max={2}
-        min={1}
-        step={0.01}
-        defaultValue={sensitivity}
-      />
-      <Button w="full" colorScheme="green" onClick={proceedSetup}>
+      <SensitivitySlider max={2} min={1} step={0.01} />
+      <Button w="full" colorScheme="green" onClick={handleStart}>
         Start spy
       </Button>
     </>

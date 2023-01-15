@@ -1,18 +1,20 @@
-import { useState } from "react";
-import { useMediaDevices } from "../../../hooks/devices";
+import {
+  useCameraId,
+  useDeviceError,
+  useMediaDevices,
+  useStream,
+} from "../../../hooks/devices";
 import Video from "../../Video";
-import { BaseDeviceAskProps } from "./types";
 import { Head } from "../../Head";
 import { Button, Select } from "@chakra-ui/react";
+import { useSpySetup } from "../../../hooks/spy";
 
-const SelectCamera: React.FC<BaseDeviceAskProps> = ({
-  stream,
-  error,
-  proceedSetup,
-  onChangeDevice,
-}) => {
+const SelectCamera: React.FC = () => {
   const devices = useMediaDevices();
-  const [selected, setSelected] = useState<string>();
+  const [selected, setSelected] = useCameraId();
+  const [stream] = useStream();
+  const [error] = useDeviceError();
+  const { goToNextStep } = useSpySetup();
 
   const videoDevices = devices.filter((d) => d.kind === "videoinput");
   if (error)
@@ -24,23 +26,21 @@ const SelectCamera: React.FC<BaseDeviceAskProps> = ({
       </>
     );
 
-  function handleChange(id: string) {
-    setSelected(id);
-    onChangeDevice && onChangeDevice(id);
-  }
-
   return (
     <>
       <Head title="Select camera" />
       <Video stream={stream} />
-      <Select onChange={(e) => handleChange(e.target.value)} value={selected}>
+      <Select
+        onChange={(e) => setSelected(e.target.value)}
+        value={selected ?? undefined}
+      >
         {videoDevices.map((device) => (
           <option key={device.deviceId} value={device.deviceId}>
             {device.label}
           </option>
         ))}
       </Select>
-      <Button w="full" colorScheme="green" onClick={proceedSetup}>
+      <Button w="full" colorScheme="green" onClick={goToNextStep}>
         Next
       </Button>
     </>

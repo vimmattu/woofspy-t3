@@ -31,6 +31,7 @@
     "aws-sdk": "^2.1272.0",
     "dayjs": "^1.11.7",
     "framer-motion": "^7.6.19",
+    "jotai": "^1.13.0",
     "next": "13.0.6",
     "next-auth": "~4.18.4",
     "nodemailer": "^6.8.0",

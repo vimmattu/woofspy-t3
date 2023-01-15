@@ -1,20 +1,12 @@
 import { useEffect, useRef } from "react";
 import { PusherHandler, SseHandler } from "../utils/client-signaling";
 import { env } from "../env/client.mjs";
+import { useStream } from "./devices";
+import { useSpyMode } from "./spy";
 
-interface Opts {
-  sessionId?: string;
-  isHost?: boolean;
-  stream?: MediaStream;
-  onStreamChanged?: (stream?: MediaStream) => void;
-}
-
-export const useLiveConnection = ({
-  sessionId,
-  isHost = false,
-  stream,
-  onStreamChanged,
-}: Opts) => {
+export const useLiveConnection = (sessionId: string) => {
+  const [isHost] = useSpyMode();
+  const [stream, setStream] = useStream();
   const remotes = useRef<Map<string, RTCPeerConnection>>(new Map());
 
   useEffect(() => {
@@ -63,7 +55,7 @@ export const useLiveConnection = ({
 
         const peer = createPeer(userId);
         peer.addEventListener("track", (event) => {
-          onStreamChanged?.(event.streams[0]);
+          setStream(event.streams[0]);
         });
 
         remotes.current.set(userId, peer);

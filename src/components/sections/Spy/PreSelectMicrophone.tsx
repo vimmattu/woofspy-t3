@@ -1,10 +1,9 @@
-import { BaseDeviceAskProps } from "./types";
 import { Head } from "../../Head";
 import { Button, Text } from "@chakra-ui/react";
+import { useSpySetup } from "../../../hooks/spy";
 
-const PreSelectMicrophone: React.FC<BaseDeviceAskProps> = ({
-  askForDevice,
-}) => {
+const PreSelectMicrophone: React.FC = () => {
+  const { goToNextStep } = useSpySetup();
   return (
     <>
       <Head title="Select microphone" />
@@ -17,7 +16,7 @@ const PreSelectMicrophone: React.FC<BaseDeviceAskProps> = ({
         w="full"
         borderRadius="md"
         colorScheme="green"
-        onClick={() => askForDevice()}
+        onClick={goToNextStep}
       >
         Select microphone
       </Button>
