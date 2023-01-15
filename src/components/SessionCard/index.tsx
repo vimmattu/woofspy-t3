@@ -42,10 +42,10 @@ export const SessionCard = ({ id, startTime, endTime, eventCount }: Props) => {
         <Text w="full">{eventCount} detected events</Text>
       </VStack>
       <Spacer />
-      <NextLink href={`sessions/${id}`} passHref>
+      <NextLink href={`${endTime ? "sessions" : "spy"}/${id}`} passHref>
         <LinkOverlay>
           <Button variant="outline">
-            <ChevronRightIcon />
+            {endTime ? "" : "View live"} <ChevronRightIcon />
           </Button>
         </LinkOverlay>
       </NextLink>
