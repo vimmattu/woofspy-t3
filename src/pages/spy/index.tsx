@@ -2,6 +2,10 @@ import { Button, VStack } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import { SpySetupStep, useSpySetup } from "../../hooks/spy";
 
+const SelectGroup = dynamic(
+  () => import("../../components/sections/Spy/SelectGroup"),
+  { ssr: false }
+);
 const PreSelectCamera = dynamic(
   () => import("../../components/sections/Spy/PreSelectCamera"),
   { ssr: false }
@@ -24,6 +28,8 @@ export default function SpyPage() {
 
   const renderView = () => {
     switch (step) {
+      case SpySetupStep.SELECT_GROUP:
+        return <SelectGroup />;
       case SpySetupStep.PRE_SELECT_CAMERA:
         return <PreSelectCamera />;
       case SpySetupStep.SELECT_CAMERA:
