@@ -11,7 +11,7 @@ import { Head } from "../../Head";
 import SensitivitySlider from "../../SensitivitySlider";
 import { useCreateSession } from "../../../hooks/sessions";
 import { useRouter } from "next/router";
-import { useSpyMode } from "../../../hooks/spy";
+import { useSelectedGroup, useSpyMode } from "../../../hooks/spy";
 
 const SelectMicrophone: React.FC = () => {
   const [, setIsHost] = useSpyMode();
@@ -22,9 +22,10 @@ const SelectMicrophone: React.FC = () => {
   const detectActive = useActivityDetector({});
   const { mutateAsync: createSession } = useCreateSession();
   const { push: navigate } = useRouter();
+  const [groupId] = useSelectedGroup();
 
   const handleStart = async () => {
-    const session = await createSession({});
+    const session = await createSession({ groupId });
     setIsHost(true);
     navigate(`/spy/${session.id}`);
   };
