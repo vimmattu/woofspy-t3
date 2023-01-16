@@ -1,5 +1,5 @@
 import { ChevronRightIcon } from "@chakra-ui/icons";
-import { Button, Flex, LinkBox, LinkOverlay, Spacer } from "@chakra-ui/react";
+import { Button, Flex, LinkBox, Spacer } from "@chakra-ui/react";
 import NextLink from "next/link";
 
 interface Props {
@@ -30,13 +30,9 @@ export const Card: React.FC<Props> = ({
     {href && (
       <>
         <Spacer />
-        <NextLink href={href} passHref>
-          <LinkOverlay>
-            <Button variant="outline">
-              {actionText} {actionIcon || <ChevronRightIcon />}
-            </Button>
-          </LinkOverlay>
-        </NextLink>
+        <Button as={NextLink} href={href} variant="outline">
+          {actionText} {actionIcon || <ChevronRightIcon />}
+        </Button>
       </>
     )}
   </Flex>
