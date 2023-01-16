@@ -15,6 +15,7 @@ import dayjs from "dayjs";
 import type { Session, Recording } from "../../types/inferred";
 import { useRecordings, useRecordingFile } from "../../hooks/recordings";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 interface Props {
   session: Session;
@@ -24,6 +25,7 @@ const formatDate = (date: Date) => dayjs(date).format("DD.MM.YYYY");
 const formatTime = (date: Date) => dayjs(date).format("HH:mm:ss");
 
 export const SessionDetail = ({ session }: Props) => {
+  const authSession = useSession();
   const {
     data: recordings,
     isLoading,
@@ -40,8 +42,11 @@ export const SessionDetail = ({ session }: Props) => {
     <Box w="full">
       {session.group && (
         <Text>
-          Session started by {session.user?.name ?? session.user?.email} in
-          group{" "}
+          Session started by{" "}
+          {session.user?.id === authSession.data?.user?.id
+            ? "you"
+            : session.user?.name ?? session.user?.email}{" "}
+          in group{" "}
           <Badge
             as={Link}
             href={`/settings/group/${session.group?.id}`}
