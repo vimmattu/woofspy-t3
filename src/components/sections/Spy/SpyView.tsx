@@ -5,7 +5,7 @@ import { useCreateRecording } from "../../../hooks/recordings";
 import Video from "../../Video";
 import WaveForm from "../../WaveForm";
 import { Head } from "../../Head";
-import { Button, Text } from "@chakra-ui/react";
+import { Button, Text, ToastId, useToast } from "@chakra-ui/react";
 import SensitivitySlider from "../../SensitivitySlider";
 import { useLiveConnection } from "../../../hooks/connection";
 import { useMediaStream } from "../../../hooks/devices";
@@ -13,6 +13,8 @@ import { useEndSession } from "../../../hooks/sessions";
 import { useRouter } from "next/router";
 
 const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
+  const toast = useToast();
+  const loadingToastRef = useRef<ToastId>();
   const hasMounted = useRef(false);
   const { mutateAsync: endSession } = useEndSession();
   const { mutateAsync: createRecording } = useCreateRecording();
@@ -34,6 +36,9 @@ const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
     async (event: BlobEvent) => {
       if (!sessionId) return;
 
+      if (loadingToastRef.current)
+        toast.update(loadingToastRef.current, { title: "Uploading recording" });
+
       const { url, fields } = await createRecording({ sessionId });
 
       const data = {
@@ -45,18 +50,37 @@ const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
       const formData = new FormData();
       Object.entries(data).forEach(([key, val]) => formData.append(key, val));
 
-      fetch(url, {
+      await fetch(url, {
         method: "POST",
         body: formData,
+      });
+
+      loadingToastRef.current && toast.close(loadingToastRef.current);
+
+      toast({
+        position: "bottom-right",
+        title: "Recording uploaded",
+        status: "success",
+        duration: 5000,
       });
     },
     [sessionId, createRecording]
   );
 
-  const { start: onStart, end: onEnd } = useActivityRecorder({
+  const { start: startRecording, end: onEnd } = useActivityRecorder({
     stream,
     onFinish: onRecordingAvailable,
   });
+
+  const onStart = () => {
+    startRecording();
+    loadingToastRef.current = toast({
+      position: "bottom-right",
+      title: "Detected activity",
+      status: "loading",
+      duration: null,
+    });
+  };
 
   const detectActive = useActivityDetector({
     onStart,

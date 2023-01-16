@@ -2,13 +2,52 @@ import dayjs from "dayjs";
 import { useMemo } from "react";
 import { trpc } from "../utils/trpc";
 import type { Session } from "../types/inferred";
+import { useToast } from "@chakra-ui/react";
 
 export function useCreateSession() {
-  return trpc.spySessions.createSession.useMutation();
+  const toast = useToast();
+  return trpc.spySessions.createSession.useMutation({
+    onSuccess: () => {
+      toast({
+        position: "bottom-right",
+        title: "Session started",
+        status: "success",
+        isClosable: true,
+      });
+    },
+    onError: (err) => {
+      toast({
+        position: "bottom-right",
+        title: "Error",
+        description: err.message,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
 }
 
 export function useEndSession() {
-  return trpc.spySessions.endSession.useMutation();
+  const toast = useToast();
+  return trpc.spySessions.endSession.useMutation({
+    onSuccess: () => {
+      toast({
+        position: "bottom-right",
+        title: "Session ended",
+        status: "success",
+        isClosable: true,
+      });
+    },
+    onError: (err) => {
+      toast({
+        position: "bottom-right",
+        title: "Error",
+        description: err.message,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
 }
 
 const useSessionsGroupedByDate = (data?: Session[]) =>
