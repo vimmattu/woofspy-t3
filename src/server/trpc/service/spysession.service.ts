@@ -23,6 +23,13 @@ const baseGetQuery = (userId: string, groupIds: string[]) => ({
     id: true,
     startTime: true,
     endTime: true,
+    user: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    },
     group: {
       select: {
         id: true,
