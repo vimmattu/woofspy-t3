@@ -1,10 +1,11 @@
-import { Box, VStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { Head } from "../../components/Head";
+import { MainContentContainer } from "../../components/MainContentContainer";
 import { Login } from "../../components/sections/Login";
 
 const SignIn = () => {
   return (
-    <VStack w="full" as="main" mt={4}>
+    <MainContentContainer variant="auth">
       <Head title="Sign in" />
       <Box
         w="full"
@@ -17,7 +18,7 @@ const SignIn = () => {
       >
         <Login />
       </Box>
-    </VStack>
+    </MainContentContainer>
   );
 };
 

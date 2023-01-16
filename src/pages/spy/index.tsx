@@ -1,5 +1,6 @@
-import { Button, VStack } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
+import { MainContentContainer } from "../../components/MainContentContainer";
 import { SpySetupStep, useSpySetup } from "../../hooks/spy";
 
 const SelectGroup = dynamic(
@@ -42,11 +43,11 @@ export default function SpyPage() {
   };
 
   return (
-    <VStack my={4} spacing={2} w="full" alignItems="start">
+    <MainContentContainer variant="spy">
       <Button onClick={goToPreviousStep} variant="outline">
         Back
       </Button>
       {renderView()}
-    </VStack>
+    </MainContentContainer>
   );
 }

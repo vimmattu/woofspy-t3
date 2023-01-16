@@ -1,9 +1,10 @@
-import { Link, Button, Heading, VStack, Spinner } from "@chakra-ui/react";
+import { Link, Button, Heading, Spinner } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import NextLink from "next/link";
 import { useSessions } from "../hooks/sessions";
 import { Head } from "../components/Head";
 import { SessionList } from "../components/SessionList";
+import { MainContentContainer } from "../components/MainContentContainer";
 
 const Home: NextPage = () => {
   const { data: endedSessions, isLoading: isLoadingEndedSessions } =
@@ -15,7 +16,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <VStack as="main" mt={4}>
+      <MainContentContainer>
         <Head title="Dashboard" hasHiddenHeader />
 
         <Button
@@ -62,7 +63,7 @@ const Home: NextPage = () => {
             </>
           )
         )}
-      </VStack>
+      </MainContentContainer>
     </>
   );
 };

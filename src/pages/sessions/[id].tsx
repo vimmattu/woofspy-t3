@@ -1,10 +1,11 @@
 import type { NextPage } from "next";
 import React from "react";
 import { useSessionDetails } from "../../hooks/sessions";
-import { Button, Spinner, VStack } from "@chakra-ui/react";
+import { Button, Spinner } from "@chakra-ui/react";
 import { Head } from "../../components/Head";
 import { SessionDetail } from "../../components/SessionDetail";
 import { useRouter } from "next/router";
+import { MainContentContainer } from "../../components/MainContentContainer";
 
 const Sessions: NextPage = () => {
   const {
@@ -14,18 +15,16 @@ const Sessions: NextPage = () => {
   const { data, isLoading } = useSessionDetails(id as string);
 
   return (
-    <>
-      <VStack as="main" mt={4}>
-        <Head title="Session detail" hasHiddenHeader />
+    <MainContentContainer>
+      <Head title="Session detail" hasHiddenHeader />
 
-        <Button alignSelf="start" variant="outline" onClick={back}>
-          Back
-        </Button>
+      <Button alignSelf="start" variant="outline" onClick={back}>
+        Back
+      </Button>
 
-        {isLoading && <Spinner />}
-        {data && <SessionDetail session={data} />}
-      </VStack>
-    </>
+      {isLoading && <Spinner />}
+      {data && <SessionDetail session={data} />}
+    </MainContentContainer>
   );
 };
 
