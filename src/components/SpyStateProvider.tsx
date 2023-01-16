@@ -10,6 +10,5 @@ export const SpyStateProvider = ({
   const router = useRouter();
   const isSpyRoute = router.asPath.startsWith("/spy");
   if (isSpyRoute) return <JotaiProvider>{children}</JotaiProvider>;
-  console.log("not spy route");
   return <>{children}</>;
 };
