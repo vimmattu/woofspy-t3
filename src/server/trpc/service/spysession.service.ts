@@ -23,6 +23,12 @@ const baseGetQuery = (userId: string, groupIds: string[]) => ({
     id: true,
     startTime: true,
     endTime: true,
+    group: {
+      select: {
+        id: true,
+        name: true,
+      },
+    },
     _count: {
       select: {
         recordings: true,

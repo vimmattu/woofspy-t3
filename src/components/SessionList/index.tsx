@@ -22,6 +22,8 @@ export const SessionList = ({ sessions }: Props) => {
               endTime={s.endTime || undefined}
               eventCount={s._count.recordings}
               key={s.id}
+              groupId={s.group?.id}
+              groupName={s.group?.name}
             />
           ))}
         </Fragment>
