@@ -9,7 +9,6 @@ export function useCreateSession() {
   return trpc.spySessions.createSession.useMutation({
     onSuccess: () => {
       toast({
-        position: "bottom-right",
         title: "Session started",
         status: "success",
         isClosable: true,
@@ -17,7 +16,6 @@ export function useCreateSession() {
     },
     onError: (err) => {
       toast({
-        position: "bottom-right",
         title: "Error",
         description: err.message,
         status: "error",
@@ -32,7 +30,6 @@ export function useEndSession() {
   return trpc.spySessions.endSession.useMutation({
     onSuccess: () => {
       toast({
-        position: "bottom-right",
         title: "Session ended",
         status: "success",
         isClosable: true,
@@ -40,7 +37,6 @@ export function useEndSession() {
     },
     onError: (err) => {
       toast({
-        position: "bottom-right",
         title: "Error",
         description: err.message,
         status: "error",

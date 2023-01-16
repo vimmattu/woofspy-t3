@@ -58,7 +58,6 @@ const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
       loadingToastRef.current && toast.close(loadingToastRef.current);
 
       toast({
-        position: "bottom-right",
         title: "Recording uploaded",
         status: "success",
         duration: 5000,
@@ -75,7 +74,6 @@ const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
   const onStart = () => {
     startRecording();
     loadingToastRef.current = toast({
-      position: "bottom-right",
       title: "Detected activity",
       status: "loading",
       duration: null,
