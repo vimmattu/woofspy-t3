@@ -7,11 +7,29 @@ import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "../../../server/db/client";
 import { env } from "../../../env/server.mjs";
+import {
+  addUserToGroup,
+  deleteInvitation,
+  getAcceptedInvitationsByEmail,
+} from "../../../server/trpc/service/group.service";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
+  events: {
+    async signIn({ user }) {
+      const invitations = await getAcceptedInvitationsByEmail(user.email!);
+      await Promise.all(
+        invitations.map((invitation) =>
+          addUserToGroup(user.id!, invitation.groupId)
+        )
+      );
+      Promise.all(
+        invitations.map((invitation) => deleteInvitation(invitation.token))
+      );
+    },
+  },
   callbacks: {
-    signIn({ user }) {
+    async signIn({ user }) {
       return env.DEV || user.isAdmin;
     },
     session({ session, user }) {

@@ -1,3 +1,4 @@
+import { InvitationStatus } from "@prisma/client";
 import { randomBytes } from "crypto";
 import { sendGroupInvitationEmail } from "../../../utils/email";
 import { prisma } from "../../db/client";
@@ -155,4 +156,69 @@ export const updateGroup = async (
   ]);
 
   inviteUsersToGroup(newUsers, group.id, input.name);
+};
+
+export const addUserToGroup = async (userId: string, groupId: string) => {
+  return prisma.group.update({
+    where: {
+      id: groupId,
+    },
+    data: {
+      users: {
+        create: {
+          userId,
+        },
+      },
+    },
+  });
+};
+
+export const getInvitationByToken = async (token: string) => {
+  return prisma.invitationToGroup.findFirst({
+    select: {
+      token: true,
+      email: true,
+      groupId: true,
+    },
+    where: {
+      token,
+      expires: {
+        gt: new Date(),
+      },
+    },
+  });
+};
+
+export const acceptInvitationByToken = async (token: string) => {
+  await prisma.invitationToGroup.update({
+    where: {
+      token,
+    },
+    data: {
+      expires: new Date(),
+      status: InvitationStatus.ACCEPTED,
+    },
+  });
+};
+
+export const getAcceptedInvitationsByEmail = async (email: string) => {
+  return prisma.invitationToGroup.findMany({
+    select: {
+      token: true,
+      email: true,
+      groupId: true,
+    },
+    where: {
+      email,
+      status: InvitationStatus.ACCEPTED,
+    },
+  });
+};
+
+export const deleteInvitation = async (token: string) => {
+  return prisma.invitationToGroup.delete({
+    where: {
+      token,
+    },
+  });
 };

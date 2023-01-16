@@ -85,8 +85,14 @@ model InvitationToGroup {
   group   Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId String
   expires DateTime
+  status  InvitationStatus   @default(PENDING)
 
   @@unique([email, token])
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
 }
 
 model VerificationToken {
