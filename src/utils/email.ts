@@ -39,11 +39,12 @@ export const sendGroupInvitationEmail = ({
   token,
   groupName,
 }: SendInviteEmailOptions) => {
+  const host = env.DEV ? "http://localhost:3000" : "https://woofspy.com";
   sendEmail({
     to,
     subject: `Woofspy invitation to ${groupName}`,
     text: `You have been invited to join the group ${groupName}\nJoin group`,
     html: `<p>You have been invited to join the group ${groupName}</p>
-<a href="http://localhost:3000/api/invitation?token=${token}">Join group</a>`,
+<a href="${host}/api/invitation?token=${token}">Join group</a>`,
   });
 };
