@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Button,
   Divider,
@@ -13,6 +14,7 @@ import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
 import type { Session, Recording } from "../../types/inferred";
 import { useRecordings, useRecordingFile } from "../../hooks/recordings";
+import Link from "next/link";
 
 interface Props {
   session: Session;
@@ -36,6 +38,19 @@ export const SessionDetail = ({ session }: Props) => {
 
   return (
     <Box w="full">
+      {session.group && (
+        <Text>
+          Session started by {session.user?.name ?? session.user?.email} in
+          group{" "}
+          <Badge
+            as={Link}
+            href={`/settings/group/${session.group?.id}`}
+            colorScheme="yellow"
+          >
+            {session.group?.name}
+          </Badge>
+        </Text>
+      )}
       <Flex justifyContent="space-between" mb={4}>
         <Text fontWeight="bold" fontSize="xl">
           {formatDate(session.startTime)}
