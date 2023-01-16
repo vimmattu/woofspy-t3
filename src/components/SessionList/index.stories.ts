@@ -18,6 +18,8 @@ export const Default: Story = {
     sessions: {
       "2022-10-11": [
         {
+          group: { id: "1", name: "Group 1" },
+          user: { id: "1", name: "User 1", email: "test@test.com" },
           id: "session-4",
           startTime: new Date("2022-10-11 13:41:51"),
           endTime: new Date("2022-10-11 17:20:21"),
@@ -26,6 +28,8 @@ export const Default: Story = {
           },
         },
         {
+          group: { id: "1", name: "Group 1" },
+          user: { id: "1", name: "User 1", email: "test@test.com" },
           id: "session-3",
           startTime: new Date("2022-10-11 08:30:03"),
           endTime: new Date("2022-10-11 10:13:42"),
@@ -36,6 +40,8 @@ export const Default: Story = {
       ],
       "2022-10-10": [
         {
+          group: { id: "1", name: "Group 1" },
+          user: { id: "1", name: "User 1", email: "test@test.com" },
           id: "session-2",
           startTime: new Date("2022-10-11 13:41:51"),
           endTime: new Date("2022-10-11 17:20:21"),
@@ -44,6 +50,8 @@ export const Default: Story = {
           },
         },
         {
+          group: { id: "1", name: "Group 1" },
+          user: { id: "1", name: "User 1", email: "test@test.com" },
           id: "session-1",
           startTime: new Date("2022-10-11 08:30:03"),
           endTime: new Date("2022-10-11 10:13:42"),
