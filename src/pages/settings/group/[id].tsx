@@ -27,7 +27,7 @@ const Settings: NextPage = () => {
           Back
         </Button>
       </Box>
-      <Head title="Create group" />
+      <Head title="Edit group" />
       {isLoading ? (
         <Spinner />
       ) : (
