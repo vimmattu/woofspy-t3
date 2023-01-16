@@ -28,7 +28,7 @@ const Home: NextPage = () => {
           borderRadius="full"
           fontSize="xl"
           shadow="lg"
-          m={8}
+          m="auto !important"
         >
           Start spy
         </Button>
