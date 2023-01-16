@@ -16,6 +16,8 @@ type Story = StoryObj<typeof SessionDetail>;
 export const Default: Story = {
   args: {
     session: {
+      group: { id: "1", name: "Group 1" },
+      user: { id: "1", name: "User 1", email: "test@test.com" },
       startTime: new Date("2022-10-11 10:01:04"),
       endTime: new Date("2022-10-11 13:32:42"),
       _count: {
