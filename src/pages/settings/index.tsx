@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import React from "react";
-import { Box, Button, Heading } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
 import { Head } from "../../components/Head";
 import { GroupList } from "../../components/GroupList";
 import Link from "next/link";
@@ -15,9 +15,14 @@ const Settings: NextPage = () => {
         Groups
       </Heading>
 
-      <Box as={Link} href="/settings/group/create" w="full">
-        <Button colorScheme="green">Create group</Button>
-      </Box>
+      <Button
+        as={Link}
+        href="/settings/group/create"
+        w="fit-content"
+        colorScheme="green"
+      >
+        Create group
+      </Button>
       <GroupList />
     </MainContentContainer>
   );
