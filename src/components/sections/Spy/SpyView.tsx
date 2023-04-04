@@ -8,7 +8,6 @@ import { Head } from "../../Head";
 import { Button, Text, ToastId, useToast } from "@chakra-ui/react";
 import SensitivitySlider from "../../SensitivitySlider";
 import { useLiveConnection } from "../../../hooks/connection";
-import { useStream } from "../../../hooks/devices";
 import { useMediaStream, useStream } from "../../../hooks/devices";
 import { useEndSession } from "../../../hooks/sessions";
 import { useRouter } from "next/router";
