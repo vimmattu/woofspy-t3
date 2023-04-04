@@ -9,8 +9,10 @@ import { Button, Text, ToastId, useToast } from "@chakra-ui/react";
 import SensitivitySlider from "../../SensitivitySlider";
 import { useLiveConnection } from "../../../hooks/connection";
 import { useStream } from "../../../hooks/devices";
+import { useMediaStream, useStream } from "../../../hooks/devices";
 import { useEndSession } from "../../../hooks/sessions";
 import { useRouter } from "next/router";
+import { SpySetupStep, useSpySetupStep } from "../../../hooks/spy";
 
 const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
   const toast = useToast();
@@ -24,12 +26,16 @@ const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
     sessionId,
     streamToSend: stream,
   });
+  useMediaStream();
+
+  const [, setStep] = useSpySetupStep();
 
   useEffect(() => {
     streamRef.current = stream;
   }, [stream]);
 
   useEffect(() => {
+    setStep(SpySetupStep.DONE);
     return () => {
       streamRef.current?.getTracks().forEach((t) => t.stop());
     };

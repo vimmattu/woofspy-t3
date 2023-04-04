@@ -11,11 +11,11 @@ import { Head } from "../../Head";
 import SensitivitySlider from "../../SensitivitySlider";
 import { useCreateSession } from "../../../hooks/sessions";
 import { useRouter } from "next/router";
-import { useSelectedGroup, useSpyMode, useSpySetup } from "../../../hooks/spy";
+import { useSelectedGroup, useSpyMode } from "../../../hooks/spy";
 
 const SelectMicrophone: React.FC = () => {
   const [, setIsHost] = useSpyMode();
-  const { goToNextStep } = useSpySetup();
+  //const { goToNextStep } = useSpySetup();
   const devices = useMediaDevices();
   const [selected, setSelected] = useMicrophoneId();
   const [stream] = useStream();
@@ -28,7 +28,7 @@ const SelectMicrophone: React.FC = () => {
   const handleStart = async () => {
     const session = await createSession({ groupId });
     setIsHost(true);
-    goToNextStep();
+    // goToNextStep();
     navigate(`/spy/${session.id}`);
   };
 
