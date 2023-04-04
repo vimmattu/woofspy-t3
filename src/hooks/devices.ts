@@ -93,7 +93,6 @@ export function useMediaStream() {
   const clearStream = useCallback(
     (startAfter?: boolean) => {
       setStream((stream) => {
-        console.log(stream, startAfter);
         stream?.getTracks().forEach((t) => t.stop());
         f.current = startAfter ?? false;
         return undefined;
