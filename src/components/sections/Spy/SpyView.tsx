@@ -8,17 +8,17 @@ import { Head } from "../../Head";
 import { Button, Text, ToastId, useToast } from "@chakra-ui/react";
 import SensitivitySlider from "../../SensitivitySlider";
 import { useLiveConnection } from "../../../hooks/connection";
-import { useMediaStream } from "../../../hooks/devices";
+import { useStream } from "../../../hooks/devices";
 import { useEndSession } from "../../../hooks/sessions";
 import { useRouter } from "next/router";
 
 const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
   const toast = useToast();
   const loadingToastRef = useRef<ToastId>();
-  const hasMounted = useRef(false);
   const { mutateAsync: endSession } = useEndSession();
   const { mutateAsync: createRecording } = useCreateRecording();
-  const { stream, startStream } = useMediaStream();
+  const [stream] = useStream();
+  const streamRef = useRef(stream);
   const { push: navigate } = useRouter();
   useLiveConnection({
     sessionId,
@@ -26,10 +26,13 @@ const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
   });
 
   useEffect(() => {
-    if (!hasMounted.current) {
-      startStream();
-      hasMounted.current = true;
-    }
+    streamRef.current = stream;
+  }, [stream]);
+
+  useEffect(() => {
+    return () => {
+      streamRef.current?.getTracks().forEach((t) => t.stop());
+    };
   }, []);
 
   const onRecordingAvailable = useCallback(

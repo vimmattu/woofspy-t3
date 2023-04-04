@@ -7,6 +7,7 @@ const WaveForm = ({ stream }: { stream?: MediaStream }) => {
 
   useEffect(() => {
     if (!containerRef.current || !stream) return;
+    if (!stream.getAudioTracks().length) return;
 
     const audioContext = new AudioContext();
     const source = audioContext.createMediaStreamSource(stream);

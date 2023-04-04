@@ -23,27 +23,25 @@ export const useSelectedGroup = () => useAtom(selectedGroupAtom);
 export const useSpySetup = () => {
   const [step, setStep] = useSpySetupStep();
   const { back } = useRouter();
-  const { askForDevice, clearStream } = useMediaStream();
+  const { setupDevice } = useMediaStream();
 
   const goToStep = useCallback((step: SpySetupStep) => {
     switch (step) {
       case SpySetupStep.SELECT_CAMERA:
         setStep(step);
-        askForDevice("video");
+        setupDevice("video");
         break;
       case SpySetupStep.SELECT_MICROPHONE:
         setStep(step);
-        askForDevice("audio");
+        setupDevice("audio");
         break;
       case SpySetupStep.PRE_SELECT_CAMERA:
         setStep(step);
         break;
       case SpySetupStep.PRE_SELECT_MICROPHONE:
-        clearStream();
         setStep(step);
         break;
       case SpySetupStep.DONE:
-        clearStream(true);
         setStep(step);
         break;
       default:

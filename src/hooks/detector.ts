@@ -83,6 +83,7 @@ export const useActivityDetector = ({ onStart, onEnd }: IActivityDetector) => {
 
   useEffect(() => {
     if (!stream) return;
+    if (!stream.getAudioTracks().length) return;
     audioCtx.current.createMediaStreamSource(stream).connect(analyser.current);
   }, [stream]);
 

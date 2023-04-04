@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Button, Spinner } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import { MainContentContainer } from "../../components/MainContentContainer";
 import { SpySetupStep, useSpySetup } from "../../hooks/spy";
@@ -39,6 +39,8 @@ export default function SpyPage() {
         return <PreSelectMicrophone />;
       case SpySetupStep.SELECT_MICROPHONE:
         return <SelectMicrophone />;
+      default:
+        return <Spinner />;
     }
   };
 
