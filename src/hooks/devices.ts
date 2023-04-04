@@ -98,6 +98,10 @@ export function useMediaStream() {
     }
   }, [step, cameraId, microphoneId]);
 
+  useEffect(() => {
+    return () => stopStream();
+  }, [stream]);
+
   return {
     stopStream,
     setupDevice,
