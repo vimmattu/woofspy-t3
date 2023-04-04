@@ -11,7 +11,7 @@ const GuestView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
   return (
     <>
       <Head title="Spy" />
-      <Video stream={stream} />
+      <Video stream={stream} muted={false} />
       <WaveForm stream={stream} />
     </>
   );
