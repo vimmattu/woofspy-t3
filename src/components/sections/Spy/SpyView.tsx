@@ -71,14 +71,14 @@ const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
     onFinish: onRecordingAvailable,
   });
 
-  const onStart = () => {
+  const onStart = useCallback(() => {
     startRecording();
     loadingToastRef.current = toast({
       title: "Detected activity",
       status: "loading",
       duration: null,
     });
-  };
+  }, [startRecording]);
 
   const detectActive = useActivityDetector({
     onStart,

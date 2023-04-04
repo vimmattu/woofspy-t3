@@ -3,7 +3,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useStream } from "./devices";
 
 const sensitivityAtom = atom<number>(1.5);
+const sensitivityEditableAtom = atom<boolean>(true);
 export const useSensitivity = () => useAtom(sensitivityAtom);
+export const useSensitivityEditable = () => useAtom(sensitivityEditableAtom);
 
 const useAnimationFrame = (handler: () => void) => {
   const frame = useRef(0);
@@ -50,6 +52,7 @@ interface IActivityDetector {
 export const useActivityDetector = ({ onStart, onEnd }: IActivityDetector) => {
   const [stream] = useStream();
   const [sensitivity] = useSensitivity();
+  const [, setSensitivityEditable] = useSensitivityEditable();
   const audioCtx = useRef(new AudioContext());
   const analyser = useRef(audioCtx.current.createAnalyser());
   const dataArray = useRef(new Uint8Array(analyser.current.frequencyBinCount));
@@ -58,6 +61,7 @@ export const useActivityDetector = ({ onStart, onEnd }: IActivityDetector) => {
 
   const triggerTimer = useTimer(() => {
     setActive(false);
+    setSensitivityEditable(true);
   }, 5000);
 
   const handleAnimationFrame = useCallback(() => {
@@ -71,6 +75,7 @@ export const useActivityDetector = ({ onStart, onEnd }: IActivityDetector) => {
     if (highestActivity < sensitivity) return;
 
     setActive(true);
+    setSensitivityEditable(false);
     triggerTimer();
   }, [sensitivity, triggerTimer]);
 

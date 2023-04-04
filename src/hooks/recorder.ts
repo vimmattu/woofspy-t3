@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 interface IActivityRecorder {
   stream?: MediaStream;
@@ -29,12 +29,11 @@ export const useActivityRecorder = ({
     };
   }, [stream, onFinish]);
 
-  return {
-    start: () => {
-      recorder.current?.state !== "recording" && recorder.current?.start();
-    },
-    end: () => {
-      recorder.current?.state === "recording" && recorder.current?.stop();
-    },
-  };
+  const start = useCallback(() => {
+    recorder.current?.state !== "recording" && recorder.current?.start();
+  }, []);
+  const end = useCallback(() => {
+    recorder.current?.state === "recording" && recorder.current?.stop();
+  }, []);
+  return { start, end };
 };

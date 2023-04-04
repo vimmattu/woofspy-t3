@@ -7,7 +7,7 @@ import {
   SliderThumb,
   SliderTrack,
 } from "@chakra-ui/react";
-import { useSensitivity } from "../../hooks/detector";
+import { useSensitivity, useSensitivityEditable } from "../../hooks/detector";
 
 interface Props {
   min: number;
@@ -17,10 +17,16 @@ interface Props {
 
 const SensitivitySlider = ({ ...props }: Props) => {
   const [sensitivity, setSensitivity] = useSensitivity();
+  const [canEdit] = useSensitivityEditable();
   return (
     <FormControl w="full" pb={4}>
       <FormLabel>Sensitivity</FormLabel>
-      <Slider {...props} onChange={setSensitivity} value={sensitivity}>
+      <Slider
+        isDisabled={!canEdit}
+        {...props}
+        onChange={canEdit ? setSensitivity : undefined}
+        value={sensitivity}
+      >
         <SliderMark mt={2} ml={-2.5} value={1.1}>
           High sensitivity
         </SliderMark>
