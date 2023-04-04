@@ -55,7 +55,7 @@ const SpyView: React.FC<{ sessionId: string }> = ({ sessionId }) => {
         body: formData,
       });
 
-      loadingToastRef.current && toast.close(loadingToastRef.current);
+      toast.closeAll();
 
       toast({
         title: "Recording uploaded",
