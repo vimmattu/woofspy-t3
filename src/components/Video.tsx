@@ -17,6 +17,7 @@ const StreamRenderer: React.FC<Props> = ({
 
   useEffect(() => {
     if (stream && ref.current) ref.current.srcObject = stream;
+    ref.current?.play();
     return () => {
       if (ref.current) ref.current.srcObject = null;
     };
