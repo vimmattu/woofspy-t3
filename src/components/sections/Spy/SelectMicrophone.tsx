@@ -26,6 +26,7 @@ const SelectMicrophone: React.FC = () => {
   const [groupId] = useSelectedGroup();
 
   const handleStart = async () => {
+    stream?.getTracks().forEach((t) => t.stop());
     const session = await createSession({ groupId });
     setIsHost(true);
     // goToNextStep();
